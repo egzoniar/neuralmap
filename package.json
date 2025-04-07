@@ -3,22 +3,40 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^4.4.1",
+    "@dhmk/zustand-lens": "^5.0.0",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@tanstack/react-query": "^5.71.10",
+    "@tanstack/react-query-devtools": "^5.66.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "immer": "^10.1.1",
+    "lucide-react": "^0.487.0",
+    "next": "^15.3.0-canary.40",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.4"
+    "sonner": "^2.0.3",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
-  }
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "autoprefixer": "10.4.18",
+    "postcss": "8.4.35",
+    "tailwindcss": "3.4.1",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "yarn@4.8.1"
 }
