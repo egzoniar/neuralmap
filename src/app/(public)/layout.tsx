@@ -13,11 +13,11 @@ export default function PublicLayout({
 						<a href="/about" className="hover:underline">
 							About
 						</a>
-						<a href="/auth/login" className="text-primary hover:underline">
+						<a href="/login" className="text-primary hover:underline">
 							Login
 						</a>
 						<a
-							href="/auth/register"
+							href="/register"
 							className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
 						>
 							Sign Up

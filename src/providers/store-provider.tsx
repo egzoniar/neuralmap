@@ -6,9 +6,11 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import type { CounterSlice } from "@/lib/features/counter/counter-slice";
 import { createCounterSlice } from "@/lib/features/counter/counter-slice";
+import { createMindmapSlice, type MindmapSlice } from "@/lib/features/mindmap/mindmap-slice";
 export interface Store {
 	// TODO: Add store types here
 	counter: CounterSlice;
+	mindmap: MindmapSlice;
 }
 
 export type StoreApi = ReturnType<typeof createStore>;
@@ -19,6 +21,7 @@ const createStore = (initialProps?: Partial<Store>) =>
 			withLenses({
 				// TODO: Add slices here
 				counter: createCounterSlice,
+				mindmap: createMindmapSlice,
 				...initialProps,
 			}),
 		),

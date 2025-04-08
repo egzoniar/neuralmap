@@ -11,10 +11,10 @@ export default function HomePage() {
 			</p>
 			<div className="flex gap-4">
 				<Button asChild size="lg">
-					<Link href="/auth/register">Get Started</Link>
+					<Link href="/register">Get Started</Link>
 				</Button>
 				<Button variant="outline" asChild size="lg">
-					<Link href="/auth/login">Sign In</Link>
+					<Link href="/login">Sign In</Link>
 				</Button>
 			</div>
 		</div>
