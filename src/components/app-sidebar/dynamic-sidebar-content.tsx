@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { MindmapSwitcher } from "@/components/app-sidebar/mindmap-switcher";
 import { NavMain } from "@/components/app-sidebar/nav-main";
@@ -17,9 +16,13 @@ import { APP_SIDEBAR_DATA } from "@/constants/ui";
 import { PUBLIC_SIDEBAR_DATA } from "@/constants/ui"; // Create this file with public navigation items
 import { NavPublic } from "@/components/app-sidebar/nav-public";
 
-export function DynamicSidebarContent() {
-	const pathname = usePathname();
+interface DynamicSidebarContentProps {
+	pathname: string;
+}
 
+export function DynamicSidebarContent({
+	pathname,
+}: DynamicSidebarContentProps) {
 	// Determine if the user is on an authenticated route
 	// This is a simple check - you might want to use your auth state instead
 	const isAuthRoute = useMemo(() => {

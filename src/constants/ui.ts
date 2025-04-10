@@ -12,6 +12,10 @@ import {
 	Home,
 	Info,
 } from "lucide-react";
+import { RootNode } from "@/components/mindmap-ui/root-node";
+import { NeuralNode } from "@/components/mindmap-ui/neural-node";
+import type { NodeTypes, EdgeTypes } from "reactflow";
+import { BaseEdge } from "@/components/mindmap-ui/base-edge";
 
 export const SIDEBAR_WIDTH = "16rem";
 export const SIDEBAR_WIDTH_MOBILE = "18rem";
@@ -23,14 +27,13 @@ export const UI = {
 	},
 };
 
-export const NODE_TYPES = {
-	DEFAULT: "default",
-	// CUSTOM_NODE: 'customNode',
+export const NODE_TYPES: NodeTypes = {
+	rootNode: RootNode,
+	neuralNode: NeuralNode,
 };
 
-export const EDGE_TYPES = {
-	DEFAULT: "default",
-	// CUSTOM_EDGE: 'customEdge',
+export const EDGE_TYPES: EdgeTypes = {
+	baseEdge: BaseEdge,
 };
 
 export const APP_SIDEBAR_DATA = {

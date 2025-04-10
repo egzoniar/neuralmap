@@ -20,6 +20,7 @@ export type MindmapSlice = {
 	onSelectionDragStart: (selection: Selection) => void;
 	onSelectionDrag: (selection: Selection) => void;
 	onSelectionDragEnd: (selection: Selection) => void;
+	removeSelection: () => void;
 };
 
 export const createMindmapSlice = lens<MindmapSlice>((set) => ({
@@ -58,4 +59,41 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 	onSelectionDragStart: (selection) => set({ selection }),
 	onSelectionDrag: (selection) => set({ selection }),
 	onSelectionDragEnd: (selection) => set({ selection }),
+	removeSelection: () =>
+		set((state) => {
+			const selection = state.selection;
+			const nodes = selection?.nodes;
+			const edges = selection?.edges;
+
+			if (!nodes && !edges) {
+				return state;
+			}
+
+			let updatedNodes = state.nodes;
+			let updatedEdges = state.edges;
+
+			if (nodes && nodes.length > 0) {
+				updatedNodes = updatedNodes.map((node) => {
+					if (nodes[0].id === node.id) {
+						return { ...node, selected: false };
+					}
+					return node;
+				});
+			}
+
+			if (edges && edges.length > 0) {
+				updatedEdges = updatedEdges.map((edge) => {
+					if (edges[0].id === edge.id) {
+						return { ...edge, selected: false };
+					}
+					return edge;
+				});
+			}
+
+			return {
+				nodes: updatedNodes,
+				edges: updatedEdges,
+				selection: undefined,
+			};
+		}),
 }));

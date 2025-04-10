@@ -3,15 +3,13 @@
 import { useMemo } from "react";
 import ReactFlow, {
 	Background,
-	Controls,
 	MiniMap,
 	type Edge,
 	type Node,
-	type NodeTypes,
-	type EdgeTypes,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useAppStore } from "@/providers/store-provider";
+import { NODE_TYPES } from "@/constants/ui";
 
 interface MindmapViewerProps {
 	initialNodes: Node[];
@@ -32,28 +30,18 @@ export default function MindmapViewer({
 		onEdgesChange,
 		onConnect,
 		onSelectionChange,
+		selection,
 	} = useAppStore((state) => state.mindmap);
 
 	// Memoize nodeTypes and edgeTypes to prevent recreation on each render
-	const nodeTypes = useMemo<NodeTypes>(
-		() => ({
-			// Empty object for now, will add custom nodes later if needed
-		}),
-		[],
-	);
-
-	const edgeTypes = useMemo<EdgeTypes>(
-		() => ({
-			// Empty object for now, will add custom edges later if needed
-		}),
-		[],
-	);
+	const nodeTypes = useMemo(() => ({ ...NODE_TYPES }), []);
 
 	return (
 		<div style={{ width: "100vw", height: "100vh" }}>
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
+				nodeTypes={nodeTypes}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
@@ -61,7 +49,6 @@ export default function MindmapViewer({
 				fitView
 			>
 				<Background />
-				<Controls />
 				<MiniMap />
 			</ReactFlow>
 		</div>

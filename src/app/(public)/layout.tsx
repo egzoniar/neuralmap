@@ -1,3 +1,5 @@
+import { MindmapSheet } from "@/components/mindmap-ui/mindmap-sheet";
+
 export default function PublicLayout({
 	children,
 }: {
@@ -26,6 +28,7 @@ export default function PublicLayout({
 				</nav>
 			</header> */}
 
+			<MindmapSheet />
 			<main className="container w-full">{children}</main>
 
 			{/* <footer className="border-t p-4">

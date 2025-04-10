@@ -1,9 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_MOBILE } from "@/constants/ui";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface SidebarProviderProps {
@@ -11,17 +12,14 @@ interface SidebarProviderProps {
 }
 
 export function AppSidebarProvider({ children }: SidebarProviderProps) {
+	const pathname = usePathname();
+	const isMapView = pathname.startsWith("/map");
 	return (
 		<SidebarProvider
 			id="sidebar-provider"
-			style={
-				{
-					"--sidebar-width": SIDEBAR_WIDTH,
-					"--sidebar-width-mobile": SIDEBAR_WIDTH_MOBILE,
-				} as React.CSSProperties
-			}
+			className={cn(isMapView && "mapview-sidebar")}
 		>
-			<AppSidebar />
+			<AppSidebar pathname={pathname} />
 			<main>{children}</main>
 		</SidebarProvider>
 	);

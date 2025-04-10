@@ -1,8 +1,8 @@
 @tailwind base;
-
-@custom-variant dark (&:is(.dark *));
 @tailwind components;
 @tailwind utilities;
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
 	--color-background: var(--background);
@@ -131,9 +131,14 @@
 	}
 }
 
-#sidebar-provider > div[data-variant="sidebar"] {
+#sidebar-provider.mapview-sidebar > div[data-variant="sidebar"] {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
+}
+
+#sidebar-provider div[data-radix-menu-content],
+div[role="menu"] {
+	min-width: 240px;
 }
