@@ -1,43 +1,36 @@
+"use client";
+
 import {
-	Frame,
-	PieChart,
 	AudioWaveform,
 	BookOpen,
 	Bot,
 	Command,
+	Frame,
 	GalleryVerticalEnd,
+	Map as MapIcon,
+	PieChart,
 	Settings2,
 	SquareTerminal,
-	Map as MapIcon,
-	Home,
-	Info,
 } from "lucide-react";
 
-export const SIDEBAR_WIDTH = "16rem";
-export const SIDEBAR_WIDTH_MOBILE = "18rem";
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
+	SidebarRail,
+} from "@/components/ui/sidebar";
 
-export const UI = {
-	BUTTON: {
-		PRIMARY: "primary",
-		SECONDARY: "secondary",
-	},
-};
-
-export const NODE_TYPES = {
-	DEFAULT: "default",
-	// CUSTOM_NODE: 'customNode',
-};
-
-export const EDGE_TYPES = {
-	DEFAULT: "default",
-	// CUSTOM_EDGE: 'customEdge',
-};
-
-export const APP_SIDEBAR_DATA = {
+// This is sample data.
+const data = {
 	user: {
 		name: "shadcn",
 		email: "m@example.com",
-		avatar: "https://avatars.githubusercontent.com/u/124599?v=4shadcn.jpg",
+		avatar: "/avatars/shadcn.jpg",
 	},
 	teams: [
 		{
@@ -162,40 +155,20 @@ export const APP_SIDEBAR_DATA = {
 	],
 };
 
-export const PUBLIC_SIDEBAR_DATA = {
-	teams: [
-		{
-			name: "MindMap App",
-			logo: Home,
-			plan: "Public Access",
-		},
-	],
-	navMain: [
-		{
-			title: "Home",
-			url: "/",
-			icon: Home,
-			isActive: true,
-		},
-		{
-			title: "About",
-			url: "/about",
-			icon: Info,
-		},
-		{
-			title: "Documentation",
-			url: "/docs",
-			icon: BookOpen,
-			items: [
-				{
-					title: "Getting Started",
-					url: "/docs/getting-started",
-				},
-				{
-					title: "Features",
-					url: "/docs/features",
-				},
-			],
-		},
-	],
-};
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	return (
+		<Sidebar collapsible="icon" {...props}>
+			<SidebarHeader>
+				<TeamSwitcher teams={data.teams} />
+			</SidebarHeader>
+			<SidebarContent>
+				<NavMain items={data.navMain} />
+				<NavProjects projects={data.projects} />
+			</SidebarContent>
+			<SidebarFooter>
+				<NavUser user={data.user} />
+			</SidebarFooter>
+			<SidebarRail />
+		</Sidebar>
+	);
+}

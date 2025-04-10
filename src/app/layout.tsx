@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
 import { StoreProvider } from "@/providers/store-provider";
+import { AppSidebarProvider } from "@/providers/app-sidebar-provider";
 
 import "@/app/globals.css";
 import { Toaster } from "sonner";
@@ -42,7 +43,7 @@ export default function RootLayout({
 			>
 				<StoreProvider>
 					<QueryProvider>
-						{children}
+						<AppSidebarProvider>{children}</AppSidebarProvider>
 						<Toaster richColors />
 					</QueryProvider>
 				</StoreProvider>

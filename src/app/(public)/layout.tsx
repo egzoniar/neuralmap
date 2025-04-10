@@ -6,7 +6,7 @@ export default function PublicLayout({
 	return (
 		<div className="min-h-screen">
 			{/* Public navigation */}
-			<header className="border-b p-4">
+			{/* <header className="border-b p-4">
 				<nav className="container mx-auto flex items-center justify-between">
 					<h1 className="text-xl font-bold">Your App</h1>
 					<div className="flex gap-4">
@@ -24,15 +24,15 @@ export default function PublicLayout({
 						</a>
 					</div>
 				</nav>
-			</header>
+			</header> */}
 
-			<main className="container mx-auto py-8">{children}</main>
+			<main className="container w-full">{children}</main>
 
-			<footer className="border-t p-4">
+			{/* <footer className="border-t p-4">
 				<div className="container mx-auto text-center text-muted-foreground">
 					© {new Date().getFullYear()} Your App
 				</div>
-			</footer>
+			</footer> */}
 		</div>
 	);
 }
