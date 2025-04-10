@@ -15,7 +15,7 @@ import { APP_SIDEBAR_DATA } from "@/constants/ui";
 
 // You might want to create separate data constants for authenticated and unauthenticated users
 import { PUBLIC_SIDEBAR_DATA } from "@/constants/ui"; // Create this file with public navigation items
-import { NavPublic } from "./nav-public";
+import { NavPublic } from "@/components/app-sidebar/nav-public";
 
 export function DynamicSidebarContent() {
 	const pathname = usePathname();

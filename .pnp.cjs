@@ -46,6 +46,7 @@ const RAW_RUNTIME_STATE =
           ["class-variance-authority", "npm:0.7.1"],\
           ["clsx", "npm:2.1.1"],\
           ["date-fns", "npm:4.1.0"],\
+          ["husky", "npm:9.1.7"],\
           ["immer", "npm:10.1.1"],\
           ["lucide-react", "virtual:4eb49e6ba5c0274f371b661c6770f114f030d70e38479216c20c5a78266c33a86a4488c44484ae107ea8dfcbb47ace384e9496eda5da8ce1317c139c7efe2b4b#npm:0.487.0"],\
           ["neuralmap", "workspace:."],\
@@ -3022,6 +3023,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["husky", [\
+      ["npm:9.1.7", {\
+        "packageLocation": "../../.yarn/berry/cache/husky-npm-9.1.7-5b02eaabc4-10c0.zip/node_modules/husky/",\
+        "packageDependencies": [\
+          ["husky", "npm:9.1.7"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["iconv-lite", [\
       ["npm:0.6.3", {\
         "packageLocation": "../../.yarn/berry/cache/iconv-lite-npm-0.6.3-24b8aae27e-10c0.zip/node_modules/iconv-lite/",\
@@ -3431,6 +3441,7 @@ const RAW_RUNTIME_STATE =
           ["class-variance-authority", "npm:0.7.1"],\
           ["clsx", "npm:2.1.1"],\
           ["date-fns", "npm:4.1.0"],\
+          ["husky", "npm:9.1.7"],\
           ["immer", "npm:10.1.1"],\
           ["lucide-react", "virtual:4eb49e6ba5c0274f371b661c6770f114f030d70e38479216c20c5a78266c33a86a4488c44484ae107ea8dfcbb47ace384e9496eda5da8ce1317c139c7efe2b4b#npm:0.487.0"],\
           ["neuralmap", "workspace:."],\

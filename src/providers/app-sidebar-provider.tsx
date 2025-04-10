@@ -22,9 +22,7 @@ export function AppSidebarProvider({ children }: SidebarProviderProps) {
 			}
 		>
 			<AppSidebar />
-			<main>
-				{children}
-			</main>
+			<main>{children}</main>
 		</SidebarProvider>
 	);
 }
