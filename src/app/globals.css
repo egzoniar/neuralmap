@@ -131,6 +131,12 @@
 	}
 }
 
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
 #sidebar-provider.mapview-sidebar > div[data-variant="sidebar"] {
 	position: absolute;
 	top: 0;
@@ -141,4 +147,141 @@
 #sidebar-provider div[data-radix-menu-content],
 div[role="menu"] {
 	min-width: 240px;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+}
+
+.hide-scrollbar {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+}
+
+div .react-flow__attribution {
+  display: none;
+}
+
+/* Basic editor styles */
+.tiptap > * + * {
+  margin-top: 0.70em;
+}
+
+.tiptap p {
+  margin-top: 0
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding: 0 1rem;
+}
+
+.tiptap ul {
+  list-style-type: disc;
+  padding-left: 1.5rem; /* Adjust padding as needed */
+  margin-bottom: 1rem; /* Adjust margin as needed */
+}
+
+.tiptap ul li {
+  margin-bottom: -3px; /* Adjust margin as needed */
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem; /* Adjust padding as needed */
+  margin-bottom: 1rem; /* Adjust margin as needed */
+}
+
+.tiptap ol li {
+  margin-bottom: -5px; /* Adjust margin as needed */
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  line-height: 1.1;
+}
+
+.tiptap h1 { 
+  font-size: 2.25rem; 
+  font-weight: 700;
+}
+.tiptap h2 { 
+  font-size: 1.75rem; 
+  font-weight: 600;
+}
+.tiptap h3 { 
+  font-size: 1.5rem; 
+  font-weight: 500;
+}
+.tiptap h4 { 
+  font-size: 1.25rem; 
+  font-weight: 500;
+}
+.tiptap h5 { font-size: 1rem; }
+.tiptap h6 { font-size: 0.875rem; }
+
+.tiptap code {
+  background-color: rgba(97, 97, 97, 0.2);
+  color: rgb(24, 24, 27);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  padding: 2px 4px;
+}
+
+.tiptap pre {
+  background: #0D0D0D;
+  color: #FFF;
+  font-family: 'JetBrainsMono', monospace;
+  border-radius: 0.5rem;
+  line-height: 18px;
+}
+
+.tiptap pre code {
+  overflow-y: scroll;
+  word-wrap: normal;
+  color: inherit;
+  padding: 10px;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.tiptap img {
+  max-width: 100%;
+  height: auto;
+}
+
+.tiptap blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(13, 13, 13, 0.1);
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid rgba(13, 13, 13, 0.1);
+  margin: 1.4rem 0;
+}
+
+.ProseMirror pre {
+  white-space: revert;
+  overflow-x: scroll;
+	padding: .7rem;
+  line-height: 14px;
+  width: auto;
+  min-width: max-content;
+	min-height: 40px;
+}
+
+.ProseMirror pre code {
+  word-wrap: normal;
+  line-height: 13px;
+  font-size: 0.7rem;
+  padding: 0;
 }

@@ -1078,6 +1078,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-toggle@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@radix-ui/react-toggle@npm:1.1.3"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.2"
+    "@radix-ui/react-primitive": "npm:2.0.3"
+    "@radix-ui/react-use-controllable-state": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/12ff7e229cedab9b5a6a1bd9db404584d0de1b0734abdb553d038b6391dae7421b55a3b6efa80447e88a0777ca2a1c99be193921648b8a3577fa43323e60d4a3
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-tooltip@npm:^1.2.0":
   version: 1.2.0
   resolution: "@radix-ui/react-tooltip@npm:1.2.0"
@@ -1437,6 +1458,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-code-block-lowlight@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-code-block-lowlight@npm:2.11.7"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+    "@tiptap/extension-code-block": ^2.7.0
+    "@tiptap/pm": ^2.7.0
+    highlight.js: ^11
+    lowlight: ^2 || ^3
+  checksum: 10c0/da1e21fb4b0d88b11e2645b1e580e4ee10caadea1193eb538cc51d5ae2a1b2b5ffe5f037c503a4ec37edb4aec8833e60f252fd10d6b28eb5d2a5a7185fb4a4cf
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-code-block@npm:^2.11.7":
   version: 2.11.7
   resolution: "@tiptap/extension-code-block@npm:2.11.7"
@@ -1453,6 +1487,16 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.7.0
   checksum: 10c0/d7ead669641525b5b2fa2e4d4beaf91122994a13e4ec37b7d42b2b6b671e6ed66b721314283a87674aac116dd78e9d073b0cc36ece720df8039a6de054230267
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-color@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-color@npm:2.11.7"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+    "@tiptap/extension-text-style": ^2.7.0
+  checksum: 10c0/d9d32a6b7bdd25edfbc78eb295ebee8227e7205ee3f15476f6e3aa8afe85972e0561fba9797185269cfb05e60bf5446e8ff81d2d02857b616ef6a01f8a3a3b9b
   languageName: node
   linkType: hard
 
@@ -1535,6 +1579,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-image@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-image@npm:2.11.7"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+  checksum: 10c0/cc06768ae7387bdb9289cec2fda825568c5e9fb14bda814162a0c6e7e361848ccec5f503727e857bbb677a581827fb3e53c2aeed806f9a6464303f296b328880
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-italic@npm:^2.11.7":
   version: 2.11.7
   resolution: "@tiptap/extension-italic@npm:2.11.7"
@@ -1568,6 +1621,16 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.7.0
   checksum: 10c0/9ae3fbb1418dcf1efe213c8db74d8d90d0a79223f45f8e4ab2b16f801348233777149201485ed4a2889c263a307961c9d1a77bf0937496e34a058116916b397c
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-placeholder@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-placeholder@npm:2.11.7"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+    "@tiptap/pm": ^2.7.0
+  checksum: 10c0/542c9c2473c4ed2a65329a96a7ce7d53d71bd9d48df3ee5e1ed157ddfaa52317c812acbbfaaacd3299758726410a052124c50e130f413da7905df1fe040f8ea3
   languageName: node
   linkType: hard
 
@@ -1950,10 +2013,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hast@npm:^3.0.0":
+  version: 3.0.4
+  resolution: "@types/hast@npm:3.0.4"
+  dependencies:
+    "@types/unist": "npm:*"
+  checksum: 10c0/3249781a511b38f1d330fd1e3344eed3c4e7ea8eff82e835d35da78e637480d36fad37a78be5a7aed8465d237ad0446abc1150859d0fde395354ea634decf9f7
+  languageName: node
+  linkType: hard
+
 "@types/linkify-it@npm:^5":
   version: 5.0.0
   resolution: "@types/linkify-it@npm:5.0.0"
   checksum: 10c0/7bbbf45b9dde17bf3f184fee585aef0e7342f6954f0377a24e4ff42ab5a85d5b806aaa5c8d16e2faf2a6b87b2d94467a196b7d2b85c9c7de2f0eaac5487aaab8
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4":
+  version: 4.17.16
+  resolution: "@types/lodash@npm:4.17.16"
+  checksum: 10c0/cf017901b8ab1d7aabc86d5189d9288f4f99f19a75caf020c0e2c77b8d4cead4db0d0b842d009b029339f92399f49f34377dd7c2721053388f251778b4c23534
   languageName: node
   linkType: hard
 
@@ -1998,6 +2077,13 @@ __metadata:
   dependencies:
     csstype: "npm:^3.0.2"
   checksum: 10c0/632fd20ee176e55801a61c5f854141b043571a3e363ef106b047b766a813a12735cbb37abb3d61d126346979f530f2ed269a60c8ef3cdee54e5e9fe4174e5dad
+  languageName: node
+  linkType: hard
+
+"@types/unist@npm:*":
+  version: 3.0.3
+  resolution: "@types/unist@npm:3.0.3"
+  checksum: 10c0/2b1e4adcab78388e088fcc3c0ae8700f76619dbcb4741d7d201f87e2cb346bfc29a89003cfea2d76c996e1061452e14fcd737e8b25aacf949c1f2d6b2bc3dd60
   languageName: node
   linkType: hard
 
@@ -2433,7 +2519,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:^2.0.3":
+"dequal@npm:^2.0.0, dequal@npm:^2.0.3":
   version: 2.0.3
   resolution: "dequal@npm:2.0.3"
   checksum: 10c0/f98860cdf58b64991ae10205137c0e97d384c3a4edc7f807603887b7c4b850af1224a33d88012009f150861cbee4fa2d322c4cc04b9313bee312e47f6ecaa888
@@ -2451,6 +2537,15 @@ __metadata:
   version: 1.1.0
   resolution: "detect-node-es@npm:1.1.0"
   checksum: 10c0/e562f00de23f10c27d7119e1af0e7388407eb4b06596a25f6d79a360094a109ff285de317f02b090faae093d314cf6e73ac3214f8a5bb3a0def5bece94557fbe
+  languageName: node
+  linkType: hard
+
+"devlop@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "devlop@npm:1.1.0"
+  dependencies:
+    dequal: "npm:^2.0.0"
+  checksum: 10c0/e0928ab8f94c59417a2b8389c45c55ce0a02d9ac7fd74ef62d01ba48060129e1d594501b77de01f3eeafc7cb00773819b0df74d96251cf20b31c5b3071f45c0e
   languageName: node
   linkType: hard
 
@@ -2706,6 +2801,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight.js@npm:^11.11.1, highlight.js@npm:~11.11.0":
+  version: 11.11.1
+  resolution: "highlight.js@npm:11.11.1"
+  checksum: 10c0/40f53ac19dac079891fcefd5bd8a21cf2e8931fd47da5bd1dca73b7e4375c1defed0636fc39120c639b9c44119b7d110f7f0c15aa899557a5a1c8910f3c0144c
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -2900,6 +3002,24 @@ __metadata:
   dependencies:
     uc.micro: "npm:^2.0.0"
   checksum: 10c0/ff4abbcdfa2003472fc3eb4b8e60905ec97718e11e33cca52059919a4c80cc0e0c2a14d23e23d8c00e5402bc5a885cdba8ca053a11483ab3cc8b3c7a52f88e2d
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
+"lowlight@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "lowlight@npm:3.3.0"
+  dependencies:
+    "@types/hast": "npm:^3.0.0"
+    devlop: "npm:^1.0.0"
+    highlight.js: "npm:~11.11.0"
+  checksum: 10c0/9b796fa8443b0334ebf18bc57387c9ee31432d8c263cf2089d23e1087c653d708447284e0647bf993cb2cdc810e0b268a28f51ea27b4a624893b97bdd3f025f4
   languageName: node
   linkType: hard
 
@@ -3121,11 +3241,22 @@ __metadata:
     "@radix-ui/react-select": "npm:^2.1.7"
     "@radix-ui/react-separator": "npm:^1.1.3"
     "@radix-ui/react-slot": "npm:^1.2.0"
+    "@radix-ui/react-toggle": "npm:^1.1.3"
     "@radix-ui/react-tooltip": "npm:^1.2.0"
     "@tanstack/react-query": "npm:^5.71.10"
     "@tanstack/react-query-devtools": "npm:^5.66.7"
+    "@tiptap/core": "npm:^2.11.7"
+    "@tiptap/extension-bubble-menu": "npm:^2.11.7"
+    "@tiptap/extension-code-block": "npm:^2.11.7"
+    "@tiptap/extension-code-block-lowlight": "npm:^2.11.7"
+    "@tiptap/extension-color": "npm:^2.11.7"
+    "@tiptap/extension-image": "npm:^2.11.7"
+    "@tiptap/extension-placeholder": "npm:^2.11.7"
+    "@tiptap/extension-text-style": "npm:^2.11.7"
+    "@tiptap/pm": "npm:^2.11.7"
     "@tiptap/react": "npm:^2.11.7"
     "@tiptap/starter-kit": "npm:^2.11.7"
+    "@types/lodash": "npm:^4"
     "@types/node": "npm:^22.14.0"
     "@types/react": "npm:^19.1.0"
     "@types/react-dom": "npm:^19.1.1"
@@ -3133,8 +3264,11 @@ __metadata:
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     date-fns: "npm:^4.1.0"
+    highlight.js: "npm:^11.11.1"
     husky: "npm:^9.1.7"
     immer: "npm:^10.1.1"
+    lodash: "npm:^4.17.21"
+    lowlight: "npm:^3.3.0"
     lucide-react: "npm:^0.487.0"
     next: "npm:^15.3.0-canary.40"
     postcss: "npm:8.4.31"

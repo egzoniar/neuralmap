@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { MindmapNodeData } from "@/types/mindmap";
+import { TiptapEditor } from "../tiptap-editor/tiptap";
 
 interface NodeSheetContentProps {
 	nodeData: MindmapNodeData;
@@ -20,8 +21,8 @@ export function NodeSheetContent({ nodeData, onClose }: NodeSheetContentProps) {
 		console.log(e.target.value);
 	};
 
-	const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		console.log(e.target.value);
+	const handleContentChange = (richText: string) => {
+		console.log(richText);
 	};
 
 	return (
@@ -34,7 +35,7 @@ export function NodeSheetContent({ nodeData, onClose }: NodeSheetContentProps) {
 					write code or format text any way you want.
 				</SheetDescription>
 			</SheetHeader>
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4 sidebar-content">
 				<div className="flex flex-col gap-2">
 					<Label>Title</Label>
 					<Input
@@ -44,9 +45,11 @@ export function NodeSheetContent({ nodeData, onClose }: NodeSheetContentProps) {
 					/>
 				</div>
 				{nodeData.content && (
-					<div className="flex flex-col gap-2">
-						<Label>Content</Label>
-						<Textarea value={nodeData.content} onChange={handleContentChange} />
+					<div className="flex flex-col gap-2 sidebar-content">
+						<TiptapEditor
+							content={nodeData.content}
+							onChange={handleContentChange}
+						/>
 					</div>
 				)}
 			</div>
