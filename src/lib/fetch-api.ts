@@ -35,7 +35,7 @@ export async function fetchApi<T>(
 		...headers,
 	};
 
-	let token: string;
+	let token: string | undefined;
 
 	try {
 		if (isServer) {
@@ -43,9 +43,17 @@ export async function fetchApi<T>(
 		} else {
 			token = await getAccessToken();
 		}
-		requestHeaders.Authorization = `Bearer ${token}`;
+
+		if (token) {
+			requestHeaders.Authorization = `Bearer ${token}`;
+		}
 	} catch (error) {
-		redirect("/auth/login");
+		// Only redirect if we're not on the server and not already on the login page
+		if (!isServer && !window.location.pathname.includes("/auth/login")) {
+			redirect("/api/auth/login");
+		}
+		// On server, we'll let the request proceed without a token
+		// The API should handle unauthorized requests appropriately
 	}
 
 	const baseUrl = internal

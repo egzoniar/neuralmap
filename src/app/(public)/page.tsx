@@ -1,6 +1,5 @@
 // src/app/(public)/page.tsx
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { LoginButton } from "@/components/auth/login-button";
 
 export default function HomePage() {
 	return (
@@ -9,14 +8,7 @@ export default function HomePage() {
 			<p className="max-w-md text-muted-foreground">
 				A powerful application for managing your tasks and projects.
 			</p>
-			<div className="flex gap-4">
-				<Button asChild size="lg">
-					<Link href="/register">Get Started</Link>
-				</Button>
-				<Button variant="outline" asChild size="lg">
-					<Link href="/login">Sign In</Link>
-				</Button>
-			</div>
+			<LoginButton />
 		</div>
 	);
 }
