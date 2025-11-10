@@ -21,7 +21,8 @@ const createStore = (initialProps?: Partial<Store>) =>
 			withLenses({
 				mindmap: createMindmapSlice,
 				...initialProps,
-			})),
+			}),
+		),
 	);
 
 export const StoreContext = createContext<StoreApi | undefined>(undefined);
