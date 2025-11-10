@@ -1,26 +1,50 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
-import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_MOBILE } from "@/constants/ui";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface SidebarProviderProps {
 	children: ReactNode;
 }
 
 export function AppSidebarProvider({ children }: SidebarProviderProps) {
-	const pathname = usePathname();
-	const isMapView = pathname.startsWith("/map");
 	return (
-		<SidebarProvider
-			id="sidebar-provider"
-			className={cn(isMapView && "mapview-sidebar")}
-		>
-			<AppSidebar pathname={pathname} />
-			<main>{children}</main>
+		<SidebarProvider>
+			<AppSidebar />
+			<SidebarInset>
+				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+					<div className="flex items-center gap-2 px-4">
+						<SidebarTrigger className="-ml-1" />
+						<Separator orientation="vertical" className="mr-2 h-4" />
+						<Breadcrumb>
+							<BreadcrumbList>
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="#">
+										Building Your Application
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator className="hidden md:block" />
+								<BreadcrumbItem>
+									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
+					</div>
+				</header>
+				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+					{children}
+				</div>
+			</SidebarInset>
 		</SidebarProvider>
 	);
 }

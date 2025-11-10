@@ -14,7 +14,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import html from "highlight.js/lib/languages/xml";
 import css from "highlight.js/lib/languages/css";
 import { cn } from "@/lib/utils";
-import { handleTiptapShortcuts } from "@/utils/tiptap-shortcuts";
+import { handleTiptapShortcuts } from "@/components/tiptap-editor/tiptap-shortcuts";
 // Built-in Highlight.js Themes
 // import "highlight.js/styles/default.css"; // Default
 import "highlight.js/styles/atom-one-dark.css"; // Atom One Dark

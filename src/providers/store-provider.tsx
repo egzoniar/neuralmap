@@ -4,22 +4,13 @@ import { type ReactNode, createContext, useContext, useRef } from "react";
 import { withLenses } from "@dhmk/zustand-lens";
 import { useStore, create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import type { CounterSlice } from "@/lib/features/counter/counter-slice";
-import { createCounterSlice } from "@/lib/features/counter/counter-slice";
 import {
 	createMindmapSlice,
 	type MindmapSlice,
 } from "@/lib/features/mindmap/mindmap-slice";
-import {
-	createAppSidebarSlice,
-	type AppSidebarSlice,
-} from "@/lib/features/app-sidebar/app-sidebar-slice";
 
 export interface Store {
-	// TODO: Add store types here
-	counter: CounterSlice;
 	mindmap: MindmapSlice;
-	appSidebar: AppSidebarSlice;
 }
 
 export type StoreApi = ReturnType<typeof createStore>;
@@ -28,13 +19,9 @@ const createStore = (initialProps?: Partial<Store>) =>
 	create(
 		immer(
 			withLenses({
-				// TODO: Add slices here
-				counter: createCounterSlice,
 				mindmap: createMindmapSlice,
-				appSidebar: createAppSidebarSlice,
 				...initialProps,
-			}),
-		),
+			})),
 	);
 
 export const StoreContext = createContext<StoreApi | undefined>(undefined);
