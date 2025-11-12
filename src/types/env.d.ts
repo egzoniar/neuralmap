@@ -12,6 +12,7 @@ declare global {
 		interface ProcessEnv {
 			NODE_ENV: "development" | "production";
 
+			AUTH0_BASE_URL: string;
 			AUTH0_DOMAIN: string;
 			AUTH0_CLIENT_ID: string;
 			AUTH0_CLIENT_SECRET: string;

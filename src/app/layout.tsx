@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
 import { StoreProvider } from "@/providers/store-provider";
-import { AppSidebarProvider } from "@/providers/app-sidebar-provider";
 import { Auth0Provider } from "@/providers/auth0-provider";
 
 import "@/app/globals.css";
@@ -19,18 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Your App",
-	description: "Your app description",
+	title: "NeuralMap",
+	description: "Visualize your thoughts with interactive mind maps",
 };
-
-// const [meResponse] = await Promise.all([
-//   tryCatch(authServerActions.getMe()),
-// ]);
-
-// if (meResponse.error) {
-//   console.error(meResponse.error);
-//   return redirect('/auth/login');
-// }
 
 export default function RootLayout({
 	children,
@@ -45,7 +35,7 @@ export default function RootLayout({
 				<Auth0Provider>
 					<StoreProvider>
 						<QueryProvider>
-							<AppSidebarProvider>{children}</AppSidebarProvider>
+							{children}
 							<Toaster richColors />
 						</QueryProvider>
 					</StoreProvider>

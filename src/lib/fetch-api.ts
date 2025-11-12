@@ -1,8 +1,6 @@
-import { auth0 } from "@/lib/auth0";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { FetchError } from "@/types/errors";
 import { getPublicEnv } from "@/utils/env-config";
-import { redirect } from "next/navigation";
 
 type FetchOptions = Omit<RequestInit, "headers" | "body"> & {
 	headers?: Record<string, string>;
@@ -39,21 +37,31 @@ export async function fetchApi<T>(
 
 	try {
 		if (isServer) {
-			({ token } = await auth0.getAccessToken());
+			const result = await getAccessToken();
+			token = result?.accessToken;
 		} else {
-			token = await getAccessToken();
+			// Client-side: fetch from the session endpoint
+			const sessionRes = await fetch('/api/auth/me');
+			if (sessionRes.ok) {
+				const session = await sessionRes.json();
+				token = session?.accessToken;
+			}
 		}
 
 		if (token) {
 			requestHeaders.Authorization = `Bearer ${token}`;
 		}
 	} catch (error) {
-		// Only redirect if we're not on the server and not already on the login page
-		if (!isServer && !window.location.pathname.includes("/auth/login")) {
-			redirect("/api/auth/login");
+		// Only redirect if we're on the client and not already on the login page
+		if (!isServer && typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+			// Use window.location for client-side redirects (redirect() only works in Server Components)
+			window.location.href = "/api/auth/login";
+			// Throw error to prevent further execution
+			throw new FetchError("Authentication required", 401, "Redirecting to login");
 		}
 		// On server, we'll let the request proceed without a token
 		// The API should handle unauthorized requests appropriately
+		console.warn("Failed to get access token:", error);
 	}
 
 	const baseUrl = internal
@@ -88,6 +96,21 @@ export async function fetchApi<T>(
 	});
 
 	if (!response.ok) {
+		// Handle 401 Unauthorized - likely expired token
+		if (response.status === 401) {
+			console.warn("Unauthorized request - token may be expired");
+			
+			// If on client-side, redirect to login
+			if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+				window.location.href = "/api/auth/login";
+				throw new FetchError(
+					"Unauthorized - Redirecting to login",
+					401,
+					"Token expired or invalid",
+				);
+			}
+		}
+		
 		const errorData = await response.json();
 		console.error(
 			`fetchApi error: ${response.status} - ${response.statusText}`,

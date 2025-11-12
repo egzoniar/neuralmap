@@ -1,9 +1,8 @@
 export const ROUTES = {
 	HOME: "/",
-	LOGIN: "/auth/login",
-	REGISTER: "/auth/register",
-	DASHBOARD: "/dashboard",
-	PROFILE: "/profile",
-	SETTINGS: "/settings",
-	MINDMAP: (id: string) => `/mindmap/${id}`,
-};
+	LOGIN: "/login",
+	MAP: (id: string) => `/map/${id}`,
+	API_AUTH_LOGIN: "/api/auth/login",
+	API_AUTH_LOGOUT: "/api/auth/logout",
+	API_AUTH_CALLBACK: "/api/auth/callback",
+} as const;

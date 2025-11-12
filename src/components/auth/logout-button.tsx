@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component
-import Link from "next/link";
 
 interface LogoutButtonProps {
 	className?: string;
@@ -16,7 +15,7 @@ export function LogoutButton({
 }: LogoutButtonProps) {
 	return (
 		<Button variant={variant} size={size} className={className} asChild>
-			<Link href="/api/auth/logout">Logout</Link>
+			<a href="/api/auth/logout">Logout</a>
 		</Button>
 	);
 }

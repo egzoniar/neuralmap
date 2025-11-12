@@ -1,31 +1,24 @@
-// src/app/(public)/login/page.tsx
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { ROUTES } from "@/constants/routes";
 
 export default function LoginPage() {
 	return (
-		<div className="mx-auto max-w-md space-y-6">
-			<div className="space-y-2 text-center">
-				<h1 className="text-2xl font-bold">Sign In</h1>
-				<p className="text-muted-foreground">
-					Enter your credentials to access your account
-				</p>
-			</div>
+		<div className="flex min-h-screen items-center justify-center">
+			<div className="mx-auto w-full max-w-md space-y-6 p-6">
+				<div className="space-y-2 text-center">
+					<h1 className="text-3xl font-bold">Welcome to NeuralMap</h1>
+					<p className="text-muted-foreground">
+						Sign in to access your mind maps
+					</p>
+				</div>
 
-			<div className="space-y-4">
-				<Button className="w-full" asChild>
-					<Link href="/api/auth/login">Sign in with Auth0</Link>
-				</Button>
+				<div className="space-y-4">
+					<Button className="w-full" size="lg" asChild>
+						<a href={ROUTES.API_AUTH_LOGIN}>Sign in with Auth0</a>
+					</Button>
 
-				<div className="text-center text-sm">
-					<p>
-						Don't have an account?{" "}
-						<Link
-							href="/auth/register"
-							className="text-primary hover:underline"
-						>
-							Sign up
-						</Link>
+					<p className="text-center text-xs text-muted-foreground">
+						By signing in, you agree to our Terms of Service and Privacy Policy
 					</p>
 				</div>
 			</div>

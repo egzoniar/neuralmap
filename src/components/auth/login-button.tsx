@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component
-import Link from "next/link";
 
 interface LoginButtonProps {
 	className?: string;
@@ -16,7 +15,7 @@ export function LoginButton({
 }: LoginButtonProps) {
 	return (
 		<Button variant={variant} size={size} className={className} asChild>
-			<Link href="/api/auth/login">Login</Link>
+			<a href="/api/auth/login">Login</a>
 		</Button>
 	);
 }
