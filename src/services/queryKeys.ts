@@ -3,4 +3,8 @@
 export const queryKeys = {
 	user: ["user"],
 	userProfile: ["userProfile"],
+	auth: {
+		user: ["auth", "user"],
+		accessToken: ["auth", "accessToken"],
+	},
 };
