@@ -8,9 +8,14 @@ import {
 	createMindmapSlice,
 	type MindmapSlice,
 } from "@/lib/features/mindmap/mindmap-slice";
+import {
+	createMindmapsSlice,
+	type MindmapsSlice,
+} from "@/lib/features/mindmap/mindmaps-slice";
 
 export interface Store {
 	mindmap: MindmapSlice;
+	mindmaps: MindmapsSlice;
 }
 
 export type StoreApi = ReturnType<typeof createStore>;
@@ -20,6 +25,7 @@ const createStore = (initialProps?: Partial<Store>) =>
 		immer(
 			withLenses({
 				mindmap: createMindmapSlice,
+				mindmaps: createMindmapsSlice,
 				...initialProps,
 			}),
 		),

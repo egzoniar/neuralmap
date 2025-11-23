@@ -8,3 +8,9 @@ export type MindmapEdge = {
 	source: string;
 	target: string;
 };
+
+export type Mindmap = {
+	id: string;
+	name: string;
+	createdAt: string;
+};
