@@ -1,3 +1,12 @@
-// Auth0 configuration is handled in the route handler
-// This file exports helper functions for getting tokens
-export { getAccessToken, getSession } from "@auth0/nextjs-auth0";
+export const auth0Config = {
+	domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
+	clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
+	authorizationParams: {
+		redirect_uri: process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI as string,
+		audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE as string,
+		scope: "openid profile email offline_access",
+	},
+	// Use refresh tokens for better security
+	useRefreshTokens: true,
+	cacheLocation: "localstorage" as const,
+};
