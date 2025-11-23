@@ -1,27 +1,28 @@
 "use client";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
+import type { AuthState } from "@/types/auth";
 
-export function useAuth() {
-	const { user, error, isLoading } = useUser();
+export function useAuth(): AuthState {
+	const { user, isAuthenticated, isLoading, error } = useAuth0();
 
 	// Log authentication errors for debugging
 	useEffect(() => {
 		if (error) {
 			console.error("Authentication error:", error);
 
-			// You can add additional error handling here, such as:
-			// - Sending errors to a logging service (e.g., Sentry)
-			// - Showing a toast notification to the user
-			// - Triggering a re-authentication flow
+			// You can add additional error handling here:
+			// - Send to Sentry
+			// - Show toast notification
+			// - Trigger re-authentication
 		}
 	}, [error]);
 
 	return {
-		user,
-		isAuthenticated: !!user,
+		user: user || null,
+		isAuthenticated,
 		isLoading,
-		error,
+		error: error || null,
 	};
 }
