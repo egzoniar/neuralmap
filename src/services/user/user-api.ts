@@ -2,16 +2,17 @@ import { fetchApi } from "@/lib/fetch-api";
 import type { UserProfile } from "@/types/user";
 
 export const userApiService = {
-	async getUser() {
-		return await fetchApi("/api/user");
+	async getUser(token: string) {
+		return await fetchApi("/api/user", { token });
 	},
-	async getUserProfile() {
-		return await fetchApi("/api/user/profile");
+	async getUserProfile(token: string) {
+		return await fetchApi("/api/user/profile", { token });
 	},
-	async updateUserProfile(profile: UserProfile) {
+	async updateUserProfile(token: string, profile: UserProfile) {
 		return await fetchApi("/api/user/profile", {
 			method: "PUT",
 			body: profile,
+			token,
 		});
 	},
 };
