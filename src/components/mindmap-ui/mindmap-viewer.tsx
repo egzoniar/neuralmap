@@ -37,7 +37,7 @@ export default function MindmapViewer({
 	const nodeTypes = useMemo(() => ({ ...NODE_TYPES }), []);
 
 	return (
-		<div style={{ width: "100vw", height: "100vh" }}>
+		<div className="w-full" style={{ height: "calc(100vh - 64px - 1rem)" }}>
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
