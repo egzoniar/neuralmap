@@ -1,26 +1,37 @@
+"use client";
+
 import { AppSidebarProvider } from "@/providers/app-sidebar-provider";
 import { MindmapSheet } from "@/components/mindmap-ui/mindmap-sheet";
-import { getSession } from "@auth0/nextjs-auth0";
-import { redirect } from "next/navigation";
+import { useRouteGuard } from "@/hooks/use-route-guard";
 
-export default async function AuthLayout({
-  children,
+export default function AuthLayout({
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  // Server-side authentication check
-  const session = await getSession();
+	const { isLoading, canRender } = useRouteGuard({
+		requireAuth: true,
+		redirectTo: "/login",
+	});
 
-  // Redirect to login if not authenticated
-  if (!session || !session.user) {
-    redirect("/api/auth/login");
-  }
+	// Show loading state while checking authentication
+	if (isLoading) {
+		return (
+			<div className="flex h-screen items-center justify-center">
+				<div className="text-lg">Loading...</div>
+			</div>
+		);
+	}
 
-  return (
-    <>
-      <MindmapSheet />
-      <AppSidebarProvider>{children}</AppSidebarProvider>
-    </>
-  );
+	// Don't render content if not authenticated
+	if (!canRender) {
+		return null;
+	}
+
+	return (
+		<>
+			<MindmapSheet />
+			<AppSidebarProvider>{children}</AppSidebarProvider>
+		</>
+	);
 }
-
