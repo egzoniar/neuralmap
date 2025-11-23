@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button"; // Assuming you have a Button component
+import { Button } from "@/components/ui/button";
+import { useLogout } from "@/services/auth/mutations";
 
 interface LogoutButtonProps {
 	className?: string;
@@ -13,9 +14,17 @@ export function LogoutButton({
 	variant = "default",
 	size = "default",
 }: LogoutButtonProps) {
+	const { mutate: logout, isPending } = useLogout();
+
 	return (
-		<Button variant={variant} size={size} className={className} asChild>
-			<a href="/api/auth/logout">Logout</a>
+		<Button
+			variant={variant}
+			size={size}
+			className={className}
+			onClick={() => logout()}
+			disabled={isPending}
+		>
+			{isPending ? "Logging out..." : "Logout"}
 		</Button>
 	);
 }
