@@ -11,7 +11,7 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@auth0/nextjs-auth0": "3.5.0",
+		"@auth0/auth0-react": "^2.9.0",
 		"@dhmk/zustand-lens": "^5.0.0",
 		"@radix-ui/react-avatar": "^1.1.4",
 		"@radix-ui/react-collapsible": "^1.1.4",
