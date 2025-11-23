@@ -8,6 +8,7 @@ import {
 	LogOut,
 	Sparkles,
 } from "lucide-react";
+import { useLogout } from "@/services/auth/mutations";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -37,6 +38,7 @@ export function NavUser({
 	};
 }) {
 	const { isMobile } = useSidebar();
+	const { mutate: logout } = useLogout();
 
 	// Generate initials from user's name
 	const getInitials = (name: string) => {
@@ -55,7 +57,7 @@ export function NavUser({
 					<DropdownMenuTrigger asChild>
 						<SidebarMenuButton
 							size="lg"
-							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
 								<AvatarImage src={user.avatar} alt={user.name} />
@@ -63,11 +65,11 @@ export function NavUser({
 									{getInitials(user.name)}
 								</AvatarFallback>
 							</Avatar>
-							<div className="grid flex-1 text-left text-sm leading-tight">
+							<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
 								<span className="truncate font-semibold">{user.name}</span>
 								<span className="truncate text-xs">{user.email}</span>
 							</div>
-							<ChevronsUpDown className="ml-auto size-4" />
+							<ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
@@ -113,11 +115,9 @@ export function NavUser({
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem asChild>
-							<a href={ROUTES.API_AUTH_LOGOUT}>
-								<LogOut />
-								Log out
-							</a>
+						<DropdownMenuItem onClick={() => logout()}>
+							<LogOut />
+							Log out
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

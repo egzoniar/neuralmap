@@ -2,22 +2,20 @@
 
 import * as React from "react";
 import {
-	AudioWaveform,
 	BookOpen,
 	Bot,
-	Command,
 	Frame,
-	GalleryVerticalEnd,
 	Map,
 	PieChart,
 	Settings2,
 	SquareTerminal,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { NavMain } from "@/components/app-sidebar/nav-main";
 import { NavProjects } from "@/components/app-sidebar/nav-projects";
 import { NavUser } from "@/components/app-sidebar/nav-user";
-import { TeamSwitcher } from "@/components/app-sidebar/team-switcher";
+import { MindmapSwitcher } from "@/components/app-sidebar/mindmap-switcher";
 import {
 	Sidebar,
 	SidebarContent,
@@ -29,23 +27,6 @@ import { useAuth } from "@/hooks/use-auth";
 
 // This is sample data.
 const data = {
-	teams: [
-		{
-			name: "Acme Inc",
-			logo: GalleryVerticalEnd,
-			plan: "Enterprise",
-		},
-		{
-			name: "Acme Corp.",
-			logo: AudioWaveform,
-			plan: "Startup",
-		},
-		{
-			name: "Evil Corp.",
-			logo: Command,
-			plan: "Free",
-		},
-	],
 	navMain: [
 		{
 			title: "Playground",
@@ -154,6 +135,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useAuth();
+	const pathname = usePathname();
 
 	const userData = {
 		name: user?.name || user?.nickname || "User",
@@ -161,10 +143,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		avatar: user?.picture || "",
 	};
 
+	// Hide mindmap switcher on home page (/)
+	const showMindmapSwitcher = pathname !== "/";
+
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<TeamSwitcher teams={data.teams} />
+				{showMindmapSwitcher && <MindmapSwitcher />}
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={data.navMain} />
