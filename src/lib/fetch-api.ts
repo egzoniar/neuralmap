@@ -1,31 +1,18 @@
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { FetchError } from "@/types/errors";
 import { getPublicEnv } from "@/utils/env-config";
 
 type FetchOptions = Omit<RequestInit, "headers" | "body"> & {
 	headers?: Record<string, string>;
-	isServer?: boolean;
-	internal?: boolean;
 	body?: Record<string, unknown> | unknown[] | string | FormData | null;
 	responseType?: "json" | "blob";
+	token?: string; // Pass token directly for authenticated requests
 };
 
 export async function fetchApi<T>(
 	endpoint: string,
-	options: Omit<FetchOptions, "isServer"> & { isServerOverride?: boolean } = {
-		internal: false,
-	},
+	options: FetchOptions = {},
 ): Promise<T> {
-	// Check if we're on the server - token retrival depends on this
-	const isServer = options.isServerOverride ?? typeof window === "undefined";
-
-	const {
-		headers = {},
-		internal = false,
-		isServerOverride,
-		responseType = "json",
-		...init
-	} = options;
+	const { headers = {}, responseType = "json", token, ...init } = options;
 
 	// Set the default headers
 	let requestHeaders: Record<string, string> = {
@@ -33,50 +20,20 @@ export async function fetchApi<T>(
 		...headers,
 	};
 
-	let token: string | undefined;
-
-	try {
-		if (isServer) {
-			const result = await getAccessToken();
-			token = result?.accessToken;
-		} else {
-			// Client-side: fetch from the session endpoint
-			const sessionRes = await fetch('/api/auth/me');
-			if (sessionRes.ok) {
-				const session = await sessionRes.json();
-				token = session?.accessToken;
-			}
-		}
-
-		if (token) {
-			requestHeaders.Authorization = `Bearer ${token}`;
-		}
-	} catch (error) {
-		// Only redirect if we're on the client and not already on the login page
-		if (!isServer && typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
-			// Use window.location for client-side redirects (redirect() only works in Server Components)
-			window.location.href = "/api/auth/login";
-			// Throw error to prevent further execution
-			throw new FetchError("Authentication required", 401, "Redirecting to login");
-		}
-		// On server, we'll let the request proceed without a token
-		// The API should handle unauthorized requests appropriately
-		console.warn("Failed to get access token:", error);
+	// Add authorization header if token is provided
+	if (token) {
+		requestHeaders.Authorization = `Bearer ${token}`;
 	}
 
-	const baseUrl = internal
-		? getPublicEnv("APP_PUBLIC_URL")
-		: getPublicEnv("APP_PUBLIC_SERVER_API_URL");
-
+	const baseUrl = getPublicEnv("APP_PUBLIC_SERVER_API_URL");
 	const url = `${baseUrl}${endpoint}`;
 
-	// Determine if we need to stringify the body
+	// Handle body serialization
 	let processedBody: BodyInit | null | undefined;
 	if (init.body) {
 		if (init.body instanceof FormData) {
 			processedBody = init.body;
-			// FormData sets its own Content-Type header with boundary
-			// Create new headers object without Content-Type
+			// Remove Content-Type for FormData (browser sets it with boundary)
 			requestHeaders = Object.fromEntries(
 				Object.entries(requestHeaders).filter(
 					([key]) => key !== "Content-Type",
@@ -96,29 +53,21 @@ export async function fetchApi<T>(
 	});
 
 	if (!response.ok) {
-		// Handle 401 Unauthorized - likely expired token
+		// Handle 401 Unauthorized - token expired
 		if (response.status === 401) {
 			console.warn("Unauthorized request - token may be expired");
-			
-			// If on client-side, redirect to login
-			if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
-				window.location.href = "/api/auth/login";
-				throw new FetchError(
-					"Unauthorized - Redirecting to login",
-					401,
-					"Token expired or invalid",
-				);
-			}
+			// Auth0 will handle token refresh automatically
+			// Just throw the error and let React Query retry
 		}
-		
-		const errorData = await response.json();
+
+		const errorData = await response.json().catch(() => ({}));
 		console.error(
 			`fetchApi error: ${response.status} - ${response.statusText}`,
 		);
 		throw new FetchError(
 			response.statusText,
 			response.status,
-			errorData.detail,
+			errorData.detail || "Request failed",
 		);
 	}
 
@@ -127,7 +76,7 @@ export async function fetchApi<T>(
 		return response.blob() as Promise<T>;
 	}
 
-	// Handle responses that might have no content:
+	// Handle no content
 	if (response.status === 204) {
 		return {} as T;
 	}
