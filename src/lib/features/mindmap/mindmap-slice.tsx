@@ -21,6 +21,7 @@ export type MindmapSlice = {
 	onSelectionDrag: (selection: Selection) => void;
 	onSelectionDragEnd: (selection: Selection) => void;
 	removeSelection: () => void;
+	updateNodeData: (nodeId: string, data: Partial<Node["data"]>) => void;
 };
 
 export const createMindmapSlice = lens<MindmapSlice>((set) => ({
@@ -96,4 +97,12 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 				selection: undefined,
 			};
 		}),
+	updateNodeData: (nodeId, data) =>
+		set((state) => ({
+			nodes: state.nodes.map((node) =>
+				node.id === nodeId
+					? { ...node, data: { ...node.data, ...data } }
+					: node,
+			),
+		})),
 }));
