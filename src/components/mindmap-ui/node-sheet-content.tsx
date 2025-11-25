@@ -5,34 +5,46 @@ import {
 	SheetContent,
 	SheetClose,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { MindmapNodeData } from "@/types/mindmap";
 import { TiptapEditor } from "../tiptap-editor/tiptap";
+import { useAppStore } from "@/providers/store-provider";
 
 interface NodeSheetContentProps {
-	nodeData: MindmapNodeData;
+	nodeId: string;
 	onClose: () => void;
 }
 
-export function NodeSheetContent({ nodeData, onClose }: NodeSheetContentProps) {
+export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
+	// Get the latest node data directly from the store
+	const node = useAppStore((state) =>
+		state.mindmap.nodes.find((n) => n.id === nodeId),
+	);
+	const updateNodeData = useAppStore((state) => state.mindmap.updateNodeData);
+
+	// If node not found, don't render
+	if (!node) return null;
+
+	const nodeData = node.data;
+	const isRootNode = node.type === "rootNode";
+
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.value);
+		updateNodeData(nodeId, { title: e.target.value });
 	};
 
 	const handleContentChange = (richText: string) => {
-		console.log(richText);
+		updateNodeData(nodeId, { content: richText });
 	};
 
 	return (
 		<SheetContent className="flex flex-col gap-6 min-w-[500px] sm:w-[540px]">
 			<SheetClose onClick={onClose} />
 			<SheetHeader>
-				<SheetTitle>Edit Node</SheetTitle>
+				<SheetTitle>{isRootNode ? "Edit Root Node" : "Edit Node"}</SheetTitle>
 				<SheetDescription>
-					Here you can edit the node, add a description, or add a link. You can
-					write code or format text any way you want.
+					{isRootNode
+						? "Here you can edit the root node title. This is the main topic of your mindmap."
+						: "Here you can edit the node, add a description, or add a link. You can write code or format text any way you want."}
 				</SheetDescription>
 			</SheetHeader>
 			<div className="flex flex-col gap-4 sidebar-content">
@@ -40,14 +52,15 @@ export function NodeSheetContent({ nodeData, onClose }: NodeSheetContentProps) {
 					<Label>Title</Label>
 					<Input
 						type="text"
-						value={nodeData.title}
+						value={nodeData.title || ""}
 						onChange={handleTitleChange}
 					/>
 				</div>
-				{nodeData.content && (
+				{!isRootNode && (
 					<div className="flex flex-col gap-2 sidebar-content">
+						<Label>Content</Label>
 						<TiptapEditor
-							content={nodeData.content}
+							content={nodeData.content || ""}
 							onChange={handleContentChange}
 						/>
 					</div>

@@ -18,10 +18,7 @@ export function MindmapSheet() {
 		<Sheet hideCloseButton open={shouldOpenSheet}>
 			{/* Node Sheet Content */}
 			{selectedNode && (
-				<NodeSheetContent
-					nodeData={selectedNode.data}
-					onClose={removeSelection}
-				/>
+				<NodeSheetContent nodeId={selectedNode.id} onClose={removeSelection} />
 			)}
 			{/* Edge Sheet Content */}
 			{selectedEdge && (
