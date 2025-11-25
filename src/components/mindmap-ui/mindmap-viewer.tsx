@@ -39,6 +39,7 @@ export default function MindmapViewer({
 	return (
 		<div className="w-full" style={{ height: "calc(100vh - 64px - 1rem)" }}>
 			<ReactFlow
+				minZoom={0.15}
 				nodes={nodes}
 				edges={edges}
 				nodeTypes={nodeTypes}

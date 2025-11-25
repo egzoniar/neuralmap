@@ -22,19 +22,19 @@ export function BaseNode({
 	return (
 		<div
 			className={cn(
-				"transform transition-all duration-200",
-				"bg-white text-black rounded-md p-3 shadow-md",
+				"max-w-sm transform transition-all duration-200 cursor-grab active:cursor-grabbing",
+				"bg-white text-gray-900 rounded-lg p-4 shadow-md",
 				{
 					"bg-orange-600 text-white": isRootNode,
-					"border border-gray-300": !isRootNode,
-					"ring-4 border-transparent shadow-none ring-orange-600 ring-offset-4":
+					"border border-gray-200": !isRootNode,
+					"ring-4 border-transparent shadow-lg ring-orange-600 ring-offset-4":
 						selected,
 					className,
 				},
 			)}
 		>
 			<div className="flex items-center justify-between">
-				<div className="flex flex-col items-center gap-2">
+				<div className="flex flex-col gap-3">
 					{children}
 					{isRootNode && (
 						<>
