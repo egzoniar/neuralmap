@@ -22,13 +22,12 @@ export function BaseNode({
 	return (
 		<div
 			className={cn(
-				"max-w-sm transform transition-all duration-200 cursor-grab active:cursor-grabbing",
+				"group max-w-sm transform transition-all duration-200 cursor-grab active:cursor-grabbing",
 				"bg-white text-gray-900 rounded-lg p-4 shadow-md",
 				{
 					"bg-orange-600 text-white": isRootNode,
 					"border border-gray-200": !isRootNode,
-					"ring-4 border-transparent shadow-lg ring-orange-600 ring-offset-4":
-						selected,
+					"ring-4 shadow-lg ring-orange-600 ring-offset-4": selected,
 					className,
 				},
 			)}
@@ -48,6 +47,18 @@ export function BaseNode({
 								type="source"
 								position={Position.Right}
 								id="b"
+								selected={selected}
+							/>
+							<BaseHandle
+								type="source"
+								position={Position.Top}
+								id="root-top"
+								selected={selected}
+							/>
+							<BaseHandle
+								type="source"
+								position={Position.Bottom}
+								id="root-bottom"
 								selected={selected}
 							/>
 						</>
