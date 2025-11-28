@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import ReactFlow, {
 	Background,
 	MiniMap,
@@ -33,16 +32,13 @@ export default function MindmapViewer({
 		selection,
 	} = useAppStore((state) => state.mindmap);
 
-	// Memoize nodeTypes and edgeTypes to prevent recreation on each render
-	const nodeTypes = useMemo(() => ({ ...NODE_TYPES }), []);
-
 	return (
 		<div className="w-full" style={{ height: "calc(100vh - 64px - 1rem)" }}>
 			<ReactFlow
 				minZoom={0.15}
 				nodes={nodes}
 				edges={edges}
-				nodeTypes={nodeTypes}
+				nodeTypes={NODE_TYPES}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
