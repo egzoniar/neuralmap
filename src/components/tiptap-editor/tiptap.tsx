@@ -61,8 +61,11 @@ export function TiptapEditor({
 	);
 
 	const editor = useEditor({
+		immediatelyRender: false,
 		extensions: [
-			StarterKit,
+			StarterKit.configure({
+				codeBlock: false, // Disable StarterKit's codeBlock to use Lowlight instead
+			}),
 			Lowlight.configure({
 				lowlight: lowlight,
 			}),
