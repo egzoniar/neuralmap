@@ -22,7 +22,7 @@ interface EdgeSheetContentProps {
 
 export function EdgeSheetContent({ edgeData, onClose }: EdgeSheetContentProps) {
 	return (
-		<SheetContent className="flex flex-col gap-6 min-w-[500px] sm:w-[540px]">
+		<SheetContent className="flex flex-col gap-6 min-w-[500px] sm:w-[540px] overflow-y-auto">
 			<SheetClose onClick={onClose} />
 			<SheetHeader>
 				<SheetTitle>Edit Edge</SheetTitle>

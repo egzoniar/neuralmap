@@ -16,7 +16,7 @@ interface SidebarProviderProps {
 
 export function AppSidebarProvider({ children }: SidebarProviderProps) {
 	return (
-		<SidebarProvider>
+		<SidebarProvider defaultOpen={false}>
 			<AppSidebar />
 			<SidebarInset className="flex flex-col">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
