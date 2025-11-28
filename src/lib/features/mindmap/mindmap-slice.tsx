@@ -22,7 +22,11 @@ export type MindmapSlice = {
 	onSelectionDragEnd: (selection: Selection) => void;
 	removeSelection: () => void;
 	updateNodeData: (nodeId: string, data: Partial<Node["data"]>) => void;
-	addNodeWithEdge: (sourceNodeId: string, sourceHandleId: string, handlePosition: Position) => void;
+	addNodeWithEdge: (
+		sourceNodeId: string,
+		sourceHandleId: string,
+		handlePosition: Position,
+	) => void;
 	deleteNode: (nodeId: string) => void;
 };
 
@@ -133,28 +137,28 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					// Place new node to the right: sourceRight + padding
 					newPosition = {
 						x: sourceNode.position.x + sourceWidth + padding,
-						y: sourceNode.position.y
+						y: sourceNode.position.y,
 					};
 					break;
 				case Position.Left:
 					// Place new node to the left: sourceLeft - newNodeWidth - padding
 					newPosition = {
 						x: sourceNode.position.x - newNodeWidth - padding,
-						y: sourceNode.position.y
+						y: sourceNode.position.y,
 					};
 					break;
 				case Position.Bottom:
 					// Place new node below: sourceBottom + padding
 					newPosition = {
 						x: sourceNode.position.x,
-						y: sourceNode.position.y + sourceHeight + padding
+						y: sourceNode.position.y + sourceHeight + padding,
 					};
 					break;
 				case Position.Top:
 					// Place new node above: sourceTop - newNodeHeight - padding
 					newPosition = {
 						x: sourceNode.position.x,
-						y: sourceNode.position.y - newNodeHeight - padding
+						y: sourceNode.position.y - newNodeHeight - padding,
 					};
 					break;
 			}
