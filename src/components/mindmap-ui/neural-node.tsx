@@ -21,7 +21,7 @@ export function NeuralNode(props: NodeProps<MindmapNodeData>) {
 	return (
 		<BaseNode {...props}>
 			{props.data.title && (
-				<div className="text-lg font-semibold leading-tight">
+				<div className="text-lg font-semibold leading-tight break-words">
 					{props.data.title}
 				</div>
 			)}
