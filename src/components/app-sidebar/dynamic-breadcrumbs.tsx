@@ -13,7 +13,7 @@ import {
 import { useAppStore } from "@/providers/store-provider";
 
 interface BreadcrumbSegment {
-	label: string;
+	label: string | React.ReactNode;
 	href: string;
 	isCurrentPage: boolean;
 }
@@ -24,6 +24,7 @@ export function DynamicBreadcrumbs() {
 	const activeMindmapId = useAppStore(
 		(state) => state.mindmaps.activeMindmapId,
 	);
+	const nodes = useAppStore((state) => state.mindmap.nodes);
 
 	const breadcrumbs = useMemo((): BreadcrumbSegment[] => {
 		const segments: BreadcrumbSegment[] = [];
@@ -40,9 +41,17 @@ export function DynamicBreadcrumbs() {
 		if (pathname.startsWith("/map/")) {
 			const mindmapId = pathname.split("/")[2];
 			const mindmap = mindmaps.find((m) => m.id === mindmapId);
+			const nodeCount = nodes.length;
 
 			segments.push({
-				label: mindmap?.name || "Mindmap",
+				label: (
+					<>
+						{mindmap?.name || "Mindmap"}{" "}
+						<span className="text-muted-foreground font-normal">
+							({nodeCount} {nodeCount === 1 ? "node" : "nodes"})
+						</span>
+					</>
+				),
 				href: pathname,
 				isCurrentPage: true,
 			});
@@ -52,7 +61,7 @@ export function DynamicBreadcrumbs() {
 		// Example: /settings, /profile, etc.
 
 		return segments;
-	}, [pathname, mindmaps, activeMindmapId]);
+	}, [pathname, mindmaps, activeMindmapId, nodes]);
 
 	return (
 		<Breadcrumb>
