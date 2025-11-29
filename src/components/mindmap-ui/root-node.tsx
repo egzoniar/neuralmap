@@ -8,11 +8,11 @@ export function RootNode(props: NodeProps<MindmapNodeData>) {
 	return (
 		<BaseNode {...props}>
 			{props.data.title ? (
-				<div className="text-2xl font-bold mx-3 break-words">
+				<div className="text-base font-semibold mx-3 break-words">
 					{props.data.title}
 				</div>
 			) : (
-				<div className="text-2xl text-muted-foreground font-bold mx-3">
+				<div className="text-base text-white/80 font-semibold mx-3">
 					What do you have in mind?
 				</div>
 			)}

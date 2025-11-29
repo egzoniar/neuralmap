@@ -21,17 +21,17 @@ export function NeuralNode(props: NodeProps<MindmapNodeData>) {
 	return (
 		<BaseNode {...props}>
 			{props.data.title && (
-				<div className="text-lg font-semibold leading-tight break-words">
+				<div className="text-sm font-semibold leading-tight break-words">
 					{props.data.title}
 				</div>
 			)}
 			{contentExists ? (
 				<div
-					className="text-sm node-content"
+					className="text-xs node-content"
 					dangerouslySetInnerHTML={{ __html: processedContent }}
 				/>
 			) : (
-				<div className="text-sm text-muted-foreground italic opacity-70">
+				<div className="text-xs text-muted-foreground italic opacity-70">
 					Click to add content...
 				</div>
 			)}
