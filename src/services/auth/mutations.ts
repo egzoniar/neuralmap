@@ -11,20 +11,11 @@ export function useLogin() {
 	const { loginWithRedirect } = useAuth0();
 
 	return useMutation({
-		mutationFn: async (options?: LoginOptions) => {
-			await authApiService.logAuthEvent("login_initiated");
-
-			// Merge options with Google connection
-			const loginOptions = {
-				...options,
-				authorizationParams: {
-					...options?.authorizationParams,
-					connection: "google-oauth2", // Skip Auth0 screen, go directly to Google
-				},
-			};
-
-			await loginWithRedirect(loginOptions);
-		},
+		mutationFn: (options?: LoginOptions) =>
+			authApiService.login({
+				loginWithRedirect,
+				options,
+			}),
 	});
 }
 
@@ -35,13 +26,9 @@ export function useLogout() {
 	const { logout } = useAuth0();
 
 	return useMutation({
-		mutationFn: async () => {
-			await authApiService.logAuthEvent("logout_initiated");
-			logout({
-				logoutParams: {
-					returnTo: window.location.origin + "/login",
-				},
-			});
-		},
+		mutationFn: () =>
+			authApiService.logout({
+				logout,
+			}),
 	});
 }
