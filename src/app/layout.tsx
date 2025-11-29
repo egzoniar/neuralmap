@@ -33,15 +33,15 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-			<Auth0Provider>
-				<StoreProvider>
-					<QueryProvider>
-						{children}
-						<Toaster richColors />
-						<DialogRenderer />
-					</QueryProvider>
-				</StoreProvider>
-			</Auth0Provider>
+				<Auth0Provider>
+					<StoreProvider>
+						<QueryProvider>
+							{children}
+							<Toaster richColors />
+							<DialogRenderer />
+						</QueryProvider>
+					</StoreProvider>
+				</Auth0Provider>
 			</body>
 		</html>
 	);

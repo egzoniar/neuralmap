@@ -34,4 +34,3 @@ export interface CustomDialogConfig<T = any> {
 export type Dialog =
 	| { id: string; type: "confirm"; config: ConfirmConfig }
 	| { id: string; type: "custom"; config: CustomDialogConfig };
-

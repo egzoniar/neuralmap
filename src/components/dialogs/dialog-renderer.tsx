@@ -5,10 +5,10 @@ import { BaseDialog } from "@/components/ui/base-dialog";
 
 /**
  * DialogRenderer component
- * 
+ *
  * This component should be mounted once in your root layout.
  * It listens to the dialog store and renders the appropriate dialog when needed.
- * 
+ *
  * Usage:
  *   const { confirm } = useAppStore((state) => state.dialog);
  *   const result = await confirm({ title: "...", ... });
@@ -48,14 +48,8 @@ export function DialogRenderer() {
 	// Render custom dialog
 	if (current.type === "custom") {
 		const CustomComponent = current.config.component;
-		return (
-			<CustomComponent
-				{...current.config.props}
-				onResolve={_resolve}
-			/>
-		);
+		return <CustomComponent {...current.config.props} onResolve={_resolve} />;
 	}
 
 	return null;
 }
-
