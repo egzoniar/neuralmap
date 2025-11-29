@@ -17,7 +17,7 @@ interface MindmapViewerProps {
 	mindmapId: string;
 }
 
-export default function MindmapViewer({
+export function MindmapViewer({
 	initialNodes,
 	initialEdges,
 	mindmapId,

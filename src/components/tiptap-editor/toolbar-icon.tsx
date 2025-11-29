@@ -118,4 +118,4 @@ const ToolbarIcon = memo(({ iconName, iconSize = 15 }: IconProps) => {
 
 ToolbarIcon.displayName = "ToolbarIcon";
 
-export default ToolbarIcon;
+export { ToolbarIcon };

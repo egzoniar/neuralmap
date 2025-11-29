@@ -1,7 +1,7 @@
 "use client";
 
 import { Toggle } from "@/components/ui/toggle";
-import ToolbarIcon from "@/components/tiptap-editor/toolbar-icon";
+import { ToolbarIcon } from "@/components/tiptap-editor/toolbar-icon";
 import type { useEditor } from "@tiptap/react";
 
 type ToolbarProps = {

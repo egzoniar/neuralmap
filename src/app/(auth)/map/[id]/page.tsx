@@ -1,5 +1,8 @@
-import MindmapViewer from "@/components/mindmap-ui/mindmap-viewer";
-import { NODES_INITIAL_DATA, EDGES_INITIAL_DATA } from "@/constants";
+import { MindmapViewer } from "@/components/mindmap-ui/mindmap-viewer";
+import {
+	NODES_INITIAL_DATA,
+	EDGES_INITIAL_DATA,
+} from "@/constants/initial-data";
 
 interface MindmapPageProps {
 	params: Promise<{
