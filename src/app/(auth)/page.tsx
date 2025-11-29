@@ -37,15 +37,19 @@ export default function HomePage() {
 					</div>
 
 					<div className="space-y-2">
-						<h1 className="text-3xl font-bold">Welcome to NeuralMap</h1>
-						<p className="text-muted-foreground">
+						<h1 className="text-2xl font-semibold">Welcome to NeuralMap</h1>
+						<p className="text-sm text-muted-foreground">
 							Get started by creating your first mind map
 						</p>
 					</div>
 
-					<Button size="lg" className="w-full" onClick={handleCreateMindmap}>
+					<Button
+						size="default"
+						className="w-full"
+						onClick={handleCreateMindmap}
+					>
 						<Plus className="mr-2 size-4" />
-						Create Your First Mind Map
+						<span className="text-sm">Create Your First Mind Map</span>
 					</Button>
 				</div>
 			</div>
@@ -56,8 +60,8 @@ export default function HomePage() {
 		<div className="flex flex-1 items-center justify-center p-6 min-h-0">
 			<div className="mx-auto w-full max-w-2xl space-y-6">
 				<div className="space-y-2 text-center">
-					<h1 className="text-3xl font-bold">Your Mind Maps</h1>
-					<p className="text-muted-foreground">
+					<h1 className="text-2xl font-semibold">Your Mind Maps</h1>
+					<p className="text-sm text-muted-foreground">
 						Select a mind map to continue working
 					</p>
 				</div>
@@ -76,7 +80,7 @@ export default function HomePage() {
 										<Brain className="size-5 text-primary" />
 									</div>
 									<div>
-										<div className="font-semibold">{mindmap.name}</div>
+										<div className="text-sm font-semibold">{mindmap.name}</div>
 										<div className="text-xs text-muted-foreground">
 											{formatShortDate(mindmap.createdAt)}
 										</div>
@@ -89,7 +93,7 @@ export default function HomePage() {
 				</div>
 
 				<Button
-					className="w-full"
+					className="w-full text-sm"
 					variant="secondary"
 					onClick={handleCreateMindmap}
 				>

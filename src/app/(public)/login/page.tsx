@@ -15,7 +15,7 @@ export default function LoginPage() {
 	if (isLoading) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
-				<div className="text-lg">Loading...</div>
+				<div className="text-sm text-muted-foreground">Loading...</div>
 			</div>
 		);
 	}
@@ -37,16 +37,16 @@ export default function LoginPage() {
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="mx-auto w-full max-w-md space-y-6 p-6">
 				<div className="space-y-2 text-center">
-					<h1 className="text-3xl font-bold">Welcome to NeuralMap</h1>
-					<p className="text-muted-foreground">
+					<h1 className="text-2xl font-semibold">Welcome to NeuralMap</h1>
+					<p className="text-sm text-muted-foreground">
 						Sign in to access your mind maps
 					</p>
 				</div>
 
 				<div className="space-y-4">
 					<Button
-						className="w-full"
-						size="lg"
+						className="w-full text-sm"
+						size="default"
 						onClick={handleLogin}
 						disabled={isPending}
 					>
