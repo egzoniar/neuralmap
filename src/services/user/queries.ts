@@ -7,7 +7,7 @@ export function useGetUser() {
 	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
 	return useQuery({
-		queryKey: [queryKeys.user],
+		queryKey: queryKeys.user.all,
 		queryFn: async () => {
 			const token = await getAccessTokenSilently();
 			return userApiService.getUser(token);
@@ -20,7 +20,7 @@ export function useGetUserProfile() {
 	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
 	return useQuery({
-		queryKey: [queryKeys.userProfile],
+		queryKey: queryKeys.user.profile,
 		queryFn: async () => {
 			const token = await getAccessTokenSilently();
 			return userApiService.getUserProfile(token);

@@ -14,7 +14,7 @@ export function useUpdateUserProfile() {
 			return userApiService.updateUserProfile(token, profile);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: [queryKeys.userProfile] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
 		},
 	});
 }
