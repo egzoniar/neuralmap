@@ -10,7 +10,7 @@ import { Trash2 } from "lucide-react";
 export function useMindmapKeyboard() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isDialogOpenRef = useRef(false);
-	const { selection, removeSelection, deleteNode } = useAppStore(
+	const { selection, removeSelection, deleteNodes, deleteEdges } = useAppStore(
 		(state) => state.mindmap,
 	);
 	const { confirm } = useAppStore((state) => state.dialog);
@@ -22,16 +22,9 @@ export function useMindmapKeyboard() {
 				return;
 			}
 
-			// Check if the event target is within our container
-			if (
-				!containerRef.current ||
-				!containerRef.current.contains(event.target as Node)
-			) {
-				return;
-			}
+			const target = event.target;
 
 			// Don't handle shortcuts if user is typing in an input/textarea
-			const target = event.target;
 			if (
 				!(target instanceof HTMLElement) ||
 				target.tagName === "INPUT" ||
@@ -41,7 +34,17 @@ export function useMindmapKeyboard() {
 				return;
 			}
 
-			// Handle Backspace/Delete for node deletion
+			// Check if the event target is within our container OR within a sheet
+			// (sheets can contain edge/node details and should allow keyboard shortcuts)
+			const isInContainer =
+				containerRef.current && containerRef.current.contains(target as Node);
+			const isInSheet = target.closest('[role="dialog"]') !== null;
+
+			if (!isInContainer && !isInSheet) {
+				return;
+			}
+
+			// Handle Backspace/Delete for node and edge deletion
 			if (event.key === "Backspace" || event.key === "Delete") {
 				event.preventDefault();
 
@@ -55,8 +58,13 @@ export function useMindmapKeyboard() {
 					(node) => node.type !== "rootNode",
 				);
 
+				// Check if there are selected edges
+				const edgesToDelete = selection?.edges;
+
+				// Handle node deletion
 				if (nodesToDelete && nodesToDelete.length > 0) {
-					const nodeName = nodesToDelete[0]?.data?.title || "this node";
+					const nodeCount = nodesToDelete.length;
+					const nodeName = nodesToDelete[0]?.data?.title;
 
 					// Mark dialog as open to prevent concurrent calls
 					isDialogOpenRef.current = true;
@@ -64,8 +72,13 @@ export function useMindmapKeyboard() {
 					try {
 						// Show confirmation dialog
 						const isConfirmed = await confirm({
-							title: "Delete Node?",
-							children: <DeleteNodeDescription nodeName={nodeName} />,
+							title: nodeCount > 1 ? "Delete Nodes?" : "Delete Node?",
+							children: (
+								<DeleteNodeDescription
+									nodeName={nodeName}
+									nodeCount={nodeCount}
+								/>
+							),
 							variant: "destructive",
 							confirmText: "Delete Permanently",
 							cancelText: "Cancel",
@@ -74,10 +87,8 @@ export function useMindmapKeyboard() {
 
 						// If confirmed, delete the nodes
 						if (isConfirmed) {
-							// Delete each selected node
-							nodesToDelete.forEach((node) => {
-								deleteNode(node.id);
-							});
+							// Delete all selected nodes in batch
+							deleteNodes(nodesToDelete.map((node) => node.id));
 							// Clear selection after deletion
 							removeSelection();
 						}
@@ -86,9 +97,16 @@ export function useMindmapKeyboard() {
 						isDialogOpenRef.current = false;
 					}
 				}
+				// Handle edge deletion (only if no nodes are selected)
+				else if (edgesToDelete && edgesToDelete.length > 0) {
+					// Delete all selected edges in batch (no confirmation needed)
+					deleteEdges(edgesToDelete.map((edge) => edge.id));
+					// Clear selection after deletion
+					removeSelection();
+				}
 			}
 		},
-		[selection, confirm, deleteNode, removeSelection],
+		[selection, confirm, deleteNodes, deleteEdges, removeSelection],
 	);
 
 	// Set up and clean up keyboard event listener
