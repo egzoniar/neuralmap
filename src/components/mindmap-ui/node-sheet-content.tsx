@@ -46,7 +46,7 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	const handleDeleteNode = async () => {
 		const isConfirmed = await confirm({
 			title: "Delete Node?",
-			children: <DeleteNodeDescription nodeName={nodeData.title} />,
+			children: <DeleteNodeDescription nodeName={nodeData.title} nodeCount={1} />,
 			variant: "destructive",
 			confirmText: "Delete Permanently",
 			cancelText: "Cancel",

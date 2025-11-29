@@ -28,6 +28,9 @@ export type MindmapSlice = {
 		handlePosition: Position,
 	) => void;
 	deleteNode: (nodeId: string) => void;
+	deleteNodes: (nodeIds: string[]) => void;
+	deleteEdge: (edgeId: string) => void;
+	deleteEdges: (edgeIds: string[]) => void;
 };
 
 export const createMindmapSlice = lens<MindmapSlice>((set) => ({
@@ -184,7 +187,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					break;
 			}
 
-			// Create new node
+			// Create new node with selected state
 			const newNode: Node = {
 				id: newNodeId,
 				type: "neuralNode",
@@ -193,6 +196,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					content: "",
 				},
 				position: newPosition,
+				selected: true,
 			};
 
 			// Create new edge
@@ -204,9 +208,18 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 				targetHandle: targetHandleId,
 			};
 
+			// Deselect the source node and add the new node
+			const updatedNodes = state.nodes.map((node) =>
+				node.id === sourceNodeId ? { ...node, selected: false } : node,
+			);
+
 			return {
-				nodes: [...state.nodes, newNode],
+				nodes: [...updatedNodes, newNode],
 				edges: [...state.edges, newEdge],
+				selection: {
+					nodes: [newNode],
+					edges: [],
+				},
 			};
 		}),
 	deleteNode: (nodeId) =>
@@ -217,34 +230,63 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 				return {};
 			}
 
-			// Find parent edges (where this node is the target)
-			const parentEdges = state.edges.filter((edge) => edge.target === nodeId);
-
-			// Find child edges (where this node is the source)
-			const childEdges = state.edges.filter((edge) => edge.source === nodeId);
-
-			// Create new edges to reconnect children to parents
-			const reconnectionEdges: Edge[] = [];
-			parentEdges.forEach((parentEdge) => {
-				childEdges.forEach((childEdge) => {
-					reconnectionEdges.push({
-						id: crypto.randomUUID(),
-						source: parentEdge.source,
-						target: childEdge.target,
-						sourceHandle: childEdge.sourceHandle,
-						targetHandle: childEdge.targetHandle,
-					});
-				});
-			});
-
-			// Remove the node and all edges connected to it
+			// Remove the node and all edges connected to it (no reconnection)
 			const updatedNodes = state.nodes.filter((node) => node.id !== nodeId);
-			const updatedEdges = state.edges
-				.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
-				.concat(reconnectionEdges);
+			const updatedEdges = state.edges.filter(
+				(edge) => edge.source !== nodeId && edge.target !== nodeId,
+			);
 
 			return {
 				nodes: updatedNodes,
+				edges: updatedEdges,
+			};
+		}),
+	deleteNodes: (nodeIds) =>
+		set((state) => {
+			// Filter out root nodes and non-existent nodes
+			const validNodeIds = nodeIds.filter((nodeId) => {
+				const node = state.nodes.find((n) => n.id === nodeId);
+				return node && node.type !== "rootNode";
+			});
+
+			if (validNodeIds.length === 0) {
+				return {};
+			}
+
+			const nodeIdsSet = new Set(validNodeIds);
+
+			// Remove all specified nodes and their connected edges (no reconnection)
+			const updatedNodes = state.nodes.filter((node) => !nodeIdsSet.has(node.id));
+			const updatedEdges = state.edges.filter(
+				(edge) => !nodeIdsSet.has(edge.source) && !nodeIdsSet.has(edge.target),
+			);
+
+			return {
+				nodes: updatedNodes,
+				edges: updatedEdges,
+			};
+		}),
+	deleteEdge: (edgeId) =>
+		set((state) => {
+			// Remove the specified edge
+			const updatedEdges = state.edges.filter((edge) => edge.id !== edgeId);
+
+			return {
+				edges: updatedEdges,
+			};
+		}),
+	deleteEdges: (edgeIds) =>
+		set((state) => {
+			if (edgeIds.length === 0) {
+				return {};
+			}
+
+			// Remove all specified edges
+			const updatedEdges = state.edges.filter(
+				(edge) => !edgeIds.includes(edge.id),
+			);
+
+			return {
 				edges: updatedEdges,
 			};
 		}),
