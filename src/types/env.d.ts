@@ -2,13 +2,6 @@ export {};
 
 declare global {
 	namespace NodeJS {
-		interface PublicEnvs {
-			APP_PUBLIC_SERVER_API_URL: string;
-			APP_PUBLIC_SERVER_WS_URL: string;
-			APP_PUBLIC_URL: string;
-			APP_PUBLIC_SENTRY_ENV: string;
-			APP_PUBLIC_SENTRY_DSN: string;
-		}
 		interface ProcessEnv {
 			NODE_ENV: "development" | "production";
 
@@ -23,15 +16,17 @@ declare global {
 			NEXT_PUBLIC_AUTH0_AUDIENCE: string;
 			NEXT_PUBLIC_AUTH0_REDIRECT_URI: string;
 
-			// Server URLs
+			// Server URLs (server-side only)
 			SERVER_API_URL: string;
-			APP_PUBLIC_SERVER_API_URL: string;
-			APP_PUBLIC_SERVER_WS_URL: string;
-			APP_PUBLIC_URL: string;
+
+			// Server URLs (client-side - exposed to browser with NEXT_PUBLIC_)
+			NEXT_PUBLIC_SERVER_API_URL: string;
+			NEXT_PUBLIC_SERVER_WS_URL: string;
+			NEXT_PUBLIC_URL: string;
 
 			// Sentry
-			APP_PUBLIC_SENTRY_ENV: string;
-			APP_PUBLIC_SENTRY_DSN: string;
+			NEXT_PUBLIC_SENTRY_ENV: string;
+			NEXT_PUBLIC_SENTRY_DSN: string;
 			SENTRY_AUTH_TOKEN: string;
 
 			[key: string]: string | undefined;

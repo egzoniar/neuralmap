@@ -1,5 +1,4 @@
 import { FetchError } from "@/types/errors";
-import { getPublicEnv } from "@/utils/env-config";
 
 type FetchOptions = Omit<RequestInit, "headers" | "body"> & {
 	headers?: Record<string, string>;
@@ -25,7 +24,7 @@ export async function fetchApi<T>(
 		requestHeaders.Authorization = `Bearer ${token}`;
 	}
 
-	const baseUrl = getPublicEnv("APP_PUBLIC_SERVER_API_URL");
+	const baseUrl = process.env.NEXT_PUBLIC_SERVER_API_URL;
 	const url = `${baseUrl}${endpoint}`;
 
 	// Handle body serialization
