@@ -25,7 +25,8 @@ export function DeleteNodeDescription({
 				?
 			</p>
 			<p className="text-sm text-muted-foreground">
-				This action cannot be undone. All connections to {isMultiple ? "these nodes" : "this node"} will be removed.
+				This action cannot be undone. All connections to{" "}
+				{isMultiple ? "these nodes" : "this node"} will be removed.
 			</p>
 		</div>
 	);

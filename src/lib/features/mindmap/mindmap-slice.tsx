@@ -256,7 +256,9 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 			const nodeIdsSet = new Set(validNodeIds);
 
 			// Remove all specified nodes and their connected edges (no reconnection)
-			const updatedNodes = state.nodes.filter((node) => !nodeIdsSet.has(node.id));
+			const updatedNodes = state.nodes.filter(
+				(node) => !nodeIdsSet.has(node.id),
+			);
 			const updatedEdges = state.edges.filter(
 				(edge) => !nodeIdsSet.has(edge.source) && !nodeIdsSet.has(edge.target),
 			);

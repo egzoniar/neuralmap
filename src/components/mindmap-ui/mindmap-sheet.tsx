@@ -10,12 +10,13 @@ import { MultiNodeSheetContent } from "@/components/mindmap-ui/multi-node-sheet-
 export function MindmapSheet() {
 	const selection = useAppStore((state) => state.mindmap.selection);
 	const { removeSelection } = useAppStore((state) => state.mindmap);
-	
+
 	const selectedNodes = selection?.nodes || [];
 	const selectedEdges = selection?.edges || [];
 	const hasMultipleNodes = selectedNodes.length > 1;
 	const hasSingleNode = selectedNodes.length === 1;
-	const hasSingleEdge = selectedEdges.length === 1 && selectedNodes.length === 0;
+	const hasSingleEdge =
+		selectedEdges.length === 1 && selectedNodes.length === 0;
 
 	const shouldOpenSheet = selectedNodes.length > 0 || selectedEdges.length > 0;
 
