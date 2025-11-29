@@ -10,7 +10,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -79,7 +78,7 @@ export function MindmapSwitcher() {
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
 							Mindmaps
 						</DropdownMenuLabel>
-						{mindmaps.map((mindmap, index) => (
+						{mindmaps.map((mindmap) => (
 							<DropdownMenuItem
 								key={mindmap.id}
 								onClick={() => handleSelectMindmap(mindmap.id)}
@@ -89,7 +88,6 @@ export function MindmapSwitcher() {
 									<Brain className="size-4 shrink-0" />
 								</div>
 								{mindmap.name}
-								<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
 							</DropdownMenuItem>
 						))}
 						<DropdownMenuSeparator />

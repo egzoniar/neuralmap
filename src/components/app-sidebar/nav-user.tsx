@@ -1,8 +1,10 @@
 "use client";
 
 import {
-	BadgeCheck,
-	Bell,
+	// TODO: Re-enable when Account feature is ready
+	// BadgeCheck,
+	// TODO: Re-enable when Notifications feature is ready
+	// Bell,
 	ChevronsUpDown,
 	CreditCard,
 	LogOut,
@@ -101,18 +103,20 @@ export function NavUser({
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
+							{/* TODO: Re-enable when feature is ready */}
+							{/* <DropdownMenuItem>
 								<BadgeCheck />
 								Account
-							</DropdownMenuItem>
+							</DropdownMenuItem> */}
 							<DropdownMenuItem>
 								<CreditCard />
 								Billing
 							</DropdownMenuItem>
-							<DropdownMenuItem>
+							{/* TODO: Re-enable when feature is ready */}
+							{/* <DropdownMenuItem>
 								<Bell />
 								Notifications
-							</DropdownMenuItem>
+							</DropdownMenuItem> */}
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={() => logout()}>
