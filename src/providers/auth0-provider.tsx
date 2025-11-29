@@ -9,7 +9,7 @@ export function Auth0Provider({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
 	const onRedirectCallback = (appState?: { returnTo?: string }) => {
-		router.push(appState?.returnTo || "/map/default");
+		router.push(appState?.returnTo || "/");
 	};
 
 	return (

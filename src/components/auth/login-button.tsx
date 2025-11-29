@@ -14,7 +14,7 @@ export function LoginButton({
 	className,
 	variant = "default",
 	size = "default",
-	returnTo = "/map/default",
+	returnTo = "/",
 }: LoginButtonProps) {
 	const { mutate: login, isPending } = useLogin();
 

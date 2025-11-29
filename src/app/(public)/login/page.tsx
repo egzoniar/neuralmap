@@ -8,7 +8,7 @@ export default function LoginPage() {
 	const { mutate: login, isPending } = useLogin();
 	const { isLoading, canRender } = useRouteGuard({
 		requireAuth: false,
-		redirectTo: "/map/default",
+		redirectTo: "/",
 	});
 
 	// Show loading state while checking authentication
@@ -28,7 +28,7 @@ export default function LoginPage() {
 	const handleLogin = () => {
 		login({
 			appState: {
-				returnTo: "/map/default",
+				returnTo: "/",
 			},
 		});
 	};
