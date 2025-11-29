@@ -13,4 +13,5 @@ export type Mindmap = {
 	id: string;
 	name: string;
 	createdAt: string;
+	lastAccessedAt?: string;
 };

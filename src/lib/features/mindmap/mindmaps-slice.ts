@@ -32,23 +32,32 @@ const MOCK_MINDMAPS: Mindmap[] = [
 		id: "550e8400-e29b-41d4-a716-446655440000",
 		name: "My First Mindmap",
 		createdAt: new Date().toISOString(),
+		lastAccessedAt: new Date().toISOString(),
 	},
 	{
 		id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
 		name: "Project Planning",
 		createdAt: new Date().toISOString(),
+		lastAccessedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
 	},
 	{
 		id: "7c9e6679-7425-40de-944b-e07fc1f90ae7",
 		name: "Learning Notes",
 		createdAt: new Date().toISOString(),
+		lastAccessedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
 	},
 ];
 
 export const createMindmapsSlice = lens<MindmapsSlice>((set) => ({
 	mindmaps: MOCK_MINDMAPS,
 	activeMindmapId: MOCK_MINDMAPS[0]?.id || null,
-	setActiveMindmap: (id) => set({ activeMindmapId: id }),
+	setActiveMindmap: (id) =>
+		set((state) => ({
+			activeMindmapId: id,
+			mindmaps: state.mindmaps.map((m) =>
+				m.id === id ? { ...m, lastAccessedAt: new Date().toISOString() } : m,
+			),
+		})),
 	addMindmap: (mindmap) =>
 		set((state) => ({
 			mindmaps: [...state.mindmaps, mindmap],
@@ -64,6 +73,7 @@ export const createMindmapsSlice = lens<MindmapsSlice>((set) => ({
 			id: generateMindmapId(),
 			name,
 			createdAt: new Date().toISOString(),
+			lastAccessedAt: new Date().toISOString(),
 		};
 		set((state) => ({
 			mindmaps: [...state.mindmaps, newMindmap],
