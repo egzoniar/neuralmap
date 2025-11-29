@@ -1,3 +1,12 @@
+/**
+ * External Backend API Endpoints
+ *
+ * Note: These are routes for your external backend server, NOT Next.js API routes.
+ * The base URL is configured via APP_PUBLIC_SERVER_API_URL environment variable.
+ *
+ * Auth0 handles authentication client-side, but these endpoints expect
+ * Bearer token authorization for protected routes.
+ */
 export const API_ENDPOINTS = {
 	AUTH: {
 		LOGIN: "/api/auth/login",
@@ -8,6 +17,11 @@ export const API_ENDPOINTS = {
 		PROFILE: "/api/user/profile",
 		SETTINGS: "/api/user/settings",
 	},
+	// Add more backend endpoints here as you build out your API
+	// MINDMAPS: {
+	// 	LIST: "/api/mindmaps",
+	// 	DETAIL: "/api/mindmaps/:id",
+	// },
 };
 
 export const API_STATUS = {
