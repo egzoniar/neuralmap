@@ -8,13 +8,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { DeleteNodeDialog } from "./delete-node-dialog";
 import { TiptapEditor } from "../tiptap-editor/tiptap";
 import { useAppStore } from "@/providers/store-provider";
 import { NodeDirectionButtons } from "./node-direction-buttons";
 import { Separator } from "@/components/ui/separator";
+import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
 import { Trash2, AlertTriangle, Heading, FileText, Zap } from "lucide-react";
-import { useState } from "react";
 
 interface NodeSheetContentProps {
 	nodeId: string;
@@ -22,14 +21,13 @@ interface NodeSheetContentProps {
 }
 
 export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
 	// Get the latest node data directly from the store
 	const node = useAppStore((state) =>
 		state.mindmap.nodes.find((n) => n.id === nodeId),
 	);
 	const updateNodeData = useAppStore((state) => state.mindmap.updateNodeData);
 	const deleteNode = useAppStore((state) => state.mindmap.deleteNode);
+	const { confirm } = useAppStore((state) => state.dialog);
 
 	// If node not found, don't render
 	if (!node) return null;
@@ -45,9 +43,20 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 		updateNodeData(nodeId, { content: richText });
 	};
 
-	const handleDeleteNode = () => {
-		deleteNode(nodeId);
-		onClose();
+	const handleDeleteNode = async () => {
+		const isConfirmed = await confirm({
+			title: "Delete Node?",
+			children: <DeleteNodeDescription nodeName={nodeData.title} />,
+			variant: "destructive",
+			confirmText: "Delete Permanently",
+			cancelText: "Cancel",
+			icon: <Trash2 className="w-5 h-5" />,
+		});
+
+		if (isConfirmed) {
+			deleteNode(nodeId);
+			onClose();
+		}
 	};
 
 	return (
@@ -132,7 +141,7 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 							<Button
 								variant="destructive"
 								className="w-full"
-								onClick={() => setIsDeleteDialogOpen(true)}
+								onClick={handleDeleteNode}
 							>
 								<Trash2 className="w-4 h-4 mr-2" />
 								Delete Node
@@ -141,14 +150,6 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 					</>
 				)}
 			</div>
-
-			{/* Delete Confirmation Dialog */}
-			<DeleteNodeDialog
-				open={isDeleteDialogOpen}
-				onOpenChange={setIsDeleteDialogOpen}
-				onConfirm={handleDeleteNode}
-				nodeName={nodeData.title}
-			/>
 		</SheetContent>
 	);
 }
