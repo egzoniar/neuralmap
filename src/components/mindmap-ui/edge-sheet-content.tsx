@@ -1,8 +1,9 @@
 import {
-	SheetContent,
 	SheetDescription,
 	SheetHeader,
 	SheetTitle,
+	SheetClose,
+	SheetContent,
 } from "@/components/ui/sheet";
 import {
 	Select,
@@ -15,9 +16,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Edge } from "reactflow";
-import { SheetClose } from "@/components/ui/sheet";
 import { useAppStore } from "@/providers/store-provider";
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, Link2, Settings2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface EdgeSheetContentProps {
 	edgeData: Edge;
@@ -33,49 +34,74 @@ export function EdgeSheetContent({ edgeData, onClose }: EdgeSheetContentProps) {
 	};
 
 	return (
-		<SheetContent className="flex flex-col gap-6 min-w-[500px] sm:w-[540px] overflow-y-auto">
+		<SheetContent
+			className={cn(
+				"p-[.7rem] pr-4 flex flex-col gap-6 min-w-[500px] sm:w-[540px] overflow-y-auto",
+			)}
+		>
 			<SheetClose onClick={onClose} />
 			<SheetHeader>
-				<SheetTitle>Edit Edge</SheetTitle>
-				<SheetDescription>
-					Here you can edit the edge, types, and color.
+				<SheetTitle className="flex items-center gap-2 text-lg">
+					<Link2 className="size-4" />
+					Connection Settings
+				</SheetTitle>
+				<SheetDescription className="text-xs">
+					Customize this connection or remove it from your mindmap
 				</SheetDescription>
 			</SheetHeader>
-			<div className="flex flex-col gap-4">
-				<div className="flex flex-col gap-2">
-					<Label>Type</Label>
-					<Select>
-						<SelectTrigger>
-							<SelectValue placeholder="Select a type" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="default">Default</SelectItem>
-							<SelectItem value="default">Default</SelectItem>
-							<SelectItem value="default">Default</SelectItem>
-							<SelectItem value="default">Default</SelectItem>
-						</SelectContent>
-					</Select>
+			<div className="flex flex-col gap-6">
+				{/* Connection Properties */}
+				<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-2">
+						<Label
+							htmlFor="edge-type"
+							className="text-sm font-semibold flex items-center gap-2"
+						>
+							<Settings2 className="size-4 text-muted-foreground" />
+							Connection Type
+						</Label>
+						<p className="text-xs text-muted-foreground leading-relaxed">
+							Select the type of connection you want to make (coming soon)
+						</p>
+						<Select defaultValue="default" disabled>
+							<SelectTrigger id="edge-type">
+								<SelectValue placeholder="Select connection type" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="default">Default</SelectItem>
+								<SelectItem value="straight">Straight</SelectItem>
+								<SelectItem value="step">Step</SelectItem>
+								<SelectItem value="smoothstep">Smooth Step</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
 				</div>
 
 				<Separator />
 
-				{/* Danger Zone Section */}
-				<div className="flex flex-col gap-3">
-					<div className="flex items-center gap-2">
-						<AlertTriangle className="w-4 h-4 text-destructive" />
-						<Label className="text-base text-destructive">Danger Zone</Label>
+				{/* Danger Zone */}
+				<div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
+					<div className="flex flex-col gap-3">
+						<div className="flex items-center gap-2">
+							<AlertTriangle className="size-4 text-destructive" />
+							<h3 className="text-sm font-semibold text-destructive">
+								Danger Zone
+							</h3>
+						</div>
+						<p className="text-xs text-muted-foreground leading-relaxed">
+							This will permanently remove the connection between the two nodes.
+							This action cannot be undone.
+						</p>
+						<Button
+							variant="destructive"
+							size="sm"
+							className="w-full text-xs"
+							onClick={handleDeleteEdge}
+						>
+							<Trash2 className="size-3.5 mr-2" />
+							Delete Connection
+						</Button>
 					</div>
-					<p className="text-xs text-muted-foreground -mt-1">
-						Permanently remove this connection from your mindmap
-					</p>
-					<Button
-						variant="destructive"
-						className="w-full"
-						onClick={handleDeleteEdge}
-					>
-						<Trash2 className="w-4 h-4 mr-2" />
-						Delete Connection
-					</Button>
 				</div>
 			</div>
 		</SheetContent>

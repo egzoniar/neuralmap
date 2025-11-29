@@ -2,8 +2,8 @@ import {
 	SheetHeader,
 	SheetTitle,
 	SheetDescription,
-	SheetContent,
 	SheetClose,
+	SheetContent,
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,15 @@ import { useAppStore } from "@/providers/store-provider";
 import { NodeDirectionButtons } from "./node-direction-buttons";
 import { Separator } from "@/components/ui/separator";
 import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
-import { Trash2, AlertTriangle, Heading, FileText, Zap } from "lucide-react";
+import {
+	Trash2,
+	AlertTriangle,
+	Heading,
+	FileText,
+	Zap,
+	Edit3,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface NodeSheetContentProps {
 	nodeId: string;
@@ -62,48 +70,65 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	};
 
 	return (
-		<SheetContent className="flex flex-col gap-6 min-w-[500px] sm:w-[540px] overflow-y-auto">
+		<SheetContent
+			className={cn(
+				"p-[.7rem] pr-4 flex flex-col gap-6 min-w-[500px] sm:w-[540px] overflow-y-auto",
+			)}
+		>
 			<SheetClose onClick={onClose} />
 			<SheetHeader>
-				<SheetTitle>{isRootNode ? "Edit Root Node" : "Edit Node"}</SheetTitle>
-				<SheetDescription>
+				<SheetTitle className="flex items-center gap-2 text-lg">
+					<Edit3 className="size-4" />
+					{isRootNode ? "Edit Root Node" : "Edit Node"}
+				</SheetTitle>
+				<SheetDescription className="text-xs">
 					{isRootNode
-						? "Here you can edit the root node title. This is the main topic of your mindmap."
-						: "Here you can edit the node, add a description, or add a link. You can write code or format text any way you want."}
+						? "Edit the main topic of your mindmap. This is the central idea everything connects to."
+						: "Edit node details, add rich content, or quickly create connected nodes."}
 				</SheetDescription>
 			</SheetHeader>
-			<div className="flex flex-col gap-4 sidebar-content">
+			<div className="flex flex-col gap-6">
 				{/* Title Section */}
-				<div className="flex flex-col gap-2">
-					<div className="flex items-center gap-2">
-						<Heading className="w-4 h-4 text-muted-foreground" />
-						<Label className="text-base">Title</Label>
+				<div className="flex flex-col gap-3">
+					<div className="flex flex-col gap-2">
+						<Label
+							htmlFor="node-title"
+							className="text-sm font-semibold flex items-center gap-2"
+						>
+							<Heading className="size-4 text-muted-foreground" />
+							Title
+						</Label>
+						<p className="text-xs text-muted-foreground leading-relaxed">
+							{isRootNode
+								? "The main topic of your mindmap"
+								: "Give your node a clear, concise name"}
+						</p>
+						<Input
+							id="node-title"
+							type="text"
+							placeholder={
+								isRootNode ? "Enter main topic..." : "Enter node title..."
+							}
+							value={nodeData.title || ""}
+							onChange={handleTitleChange}
+						/>
 					</div>
-					<p className="text-xs text-muted-foreground -mt-1 mb-1">
-						{isRootNode
-							? "The main topic of your mindmap"
-							: "Give your node a clear, concise name"}
-					</p>
-					<Input
-						type="text"
-						value={nodeData.title || ""}
-						onChange={handleTitleChange}
-					/>
 				</div>
 
 				{/* Content Section - Only for non-root nodes */}
 				{!isRootNode && (
 					<>
 						<Separator />
-						<div className="flex flex-col gap-2 sidebar-content">
-							<div className="flex items-center gap-2">
-								<FileText className="w-4 h-4 text-muted-foreground" />
-								<Label className="text-base">Content</Label>
+						<div className="flex flex-col gap-3">
+							<div className="flex flex-col gap-2">
+								<Label className="text-sm font-semibold flex items-center gap-2">
+									<FileText className="size-4 text-muted-foreground" />
+									Content
+								</Label>
+								<p className="text-xs text-muted-foreground leading-relaxed">
+									Add detailed notes, code snippets, links, or formatted text
+								</p>
 							</div>
-							<p className="text-xs text-muted-foreground -mt-1 mb-1">
-								Add detailed notes, code snippets, links, or formatted text to
-								this node
-							</p>
 							<TiptapEditor
 								content={nodeData.content || ""}
 								onChange={handleContentChange}
@@ -116,13 +141,15 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 
 				{/* Quick Add Node Section */}
 				<div className="flex flex-col gap-3">
-					<div className="flex items-center gap-2">
-						<Zap className="w-4 h-4 text-muted-foreground" />
-						<Label className="text-base">Quick Add Node</Label>
+					<div className="flex flex-col gap-2">
+						<Label className="text-sm font-semibold flex items-center gap-2">
+							<Zap className="size-4 text-muted-foreground" />
+							Quick Add Node
+						</Label>
+						<p className="text-xs text-muted-foreground leading-relaxed">
+							Create a new connected node in any direction
+						</p>
 					</div>
-					<p className="text-xs text-muted-foreground -mt-1">
-						Create a new connected node in any direction with one click
-					</p>
 					<NodeDirectionButtons nodeId={nodeId} isRootNode={isRootNode} />
 				</div>
 
@@ -130,24 +157,28 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 				{!isRootNode && (
 					<>
 						<Separator />
-						<div className="flex flex-col gap-3">
-							<div className="flex items-center gap-2">
-								<AlertTriangle className="w-4 h-4 text-destructive" />
-								<Label className="text-base text-destructive">
-									Danger Zone
-								</Label>
+						<div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
+							<div className="flex flex-col gap-3">
+								<div className="flex items-center gap-2">
+									<AlertTriangle className="size-4 text-destructive" />
+									<h3 className="text-sm font-semibold text-destructive">
+										Danger Zone
+									</h3>
+								</div>
+								<p className="text-xs text-muted-foreground leading-relaxed">
+									Permanently remove this node and all its connections. This
+									action cannot be undone.
+								</p>
+								<Button
+									variant="destructive"
+									size="sm"
+									className="w-full text-xs"
+									onClick={handleDeleteNode}
+								>
+									<Trash2 className="size-3.5 mr-2" />
+									Delete Node
+								</Button>
 							</div>
-							<p className="text-xs text-muted-foreground -mt-1">
-								Permanently remove this node from your mindmap
-							</p>
-							<Button
-								variant="destructive"
-								className="w-full"
-								onClick={handleDeleteNode}
-							>
-								<Trash2 className="w-4 h-4 mr-2" />
-								Delete Node
-							</Button>
 						</div>
 					</>
 				)}
