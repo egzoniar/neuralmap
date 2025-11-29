@@ -1,7 +1,7 @@
 import { lens } from "@dhmk/zustand-lens";
 import { applyNodeChanges, applyEdgeChanges, Position } from "reactflow";
 import type { Node, Edge, NodeChange, EdgeChange, Connection } from "reactflow";
-import { NODES_INITIAL_DATA, EDGES_INITIAL_DATA } from "@/constants";
+import { NODES_INITIAL_DATA, EDGES_INITIAL_DATA } from "@/constants/initial-data";
 type Selection = {
 	nodes: Node[];
 	edges: Edge[];
