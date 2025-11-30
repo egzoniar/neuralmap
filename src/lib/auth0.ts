@@ -8,5 +8,6 @@ export const auth0Config = {
 	},
 	// Use refresh tokens for better security
 	useRefreshTokens: true,
+	// Using localstorage with refresh tokens
 	cacheLocation: "localstorage" as const,
 };
