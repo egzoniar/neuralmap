@@ -9,7 +9,10 @@ export function Auth0Provider({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
 	const onRedirectCallback = (appState?: { returnTo?: string }) => {
-		router.push(appState?.returnTo || "/");
+		// After Auth0 redirect, navigate to callback page to handle onboarding
+		// The callback page will trigger onboarding and then redirect to final destination
+		const returnTo = appState?.returnTo || "/";
+		router.push(`/callback?returnTo=${encodeURIComponent(returnTo)}`);
 	};
 
 	return (

@@ -1,16 +1,19 @@
 "use client";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useOnboarding } from "@/hooks/use-onboarding";
 
 export default function CallbackPage() {
 	const { error, isLoading } = useAuth0();
+	const searchParams = useSearchParams();
 
-	useEffect(() => {
-		if (error) {
-			console.error("Auth callback error:", error);
-		}
-	}, [error]);
+	// Get the returnTo parameter from query string, default to "/"
+	const returnTo = searchParams.get("returnTo") || "/";
+
+	// React Query handles onboarding automatically when user is authenticated
+	// No useEffect needed - the query is enabled declaratively
+	useOnboarding(true, returnTo);
 
 	if (error) {
 		return (
@@ -34,10 +37,12 @@ export default function CallbackPage() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="text-center">
-				<div className="text-lg">Completing authentication...</div>
-				{isLoading && (
-					<div className="mt-4 animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto" />
-				)}
+				<div className="text-lg">
+					{isLoading
+						? "Completing authentication..."
+						: "Setting up your account..."}
+				</div>
+				<div className="mt-4 animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto" />
 			</div>
 		</div>
 	);
