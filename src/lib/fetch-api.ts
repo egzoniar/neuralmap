@@ -62,6 +62,7 @@ export async function fetchApi<T>(
 		const errorData = await response.json().catch(() => ({}));
 		console.error(
 			`fetchApi error: ${response.status} - ${response.statusText}`,
+			errorData,
 		);
 		throw new FetchError(
 			response.statusText,
