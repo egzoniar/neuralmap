@@ -9,5 +9,6 @@ export const queryKeys = {
 	auth: {
 		user: ["auth", "user"] as const,
 		accessToken: ["auth", "accessToken"] as const,
+		onboarding: ["auth", "onboarding"] as const,
 	},
 } as const;

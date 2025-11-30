@@ -1,11 +1,27 @@
 import type { User } from "@auth0/auth0-react";
 import type { LoginOptions } from "@/types/auth";
+import type { UserOnboardingResponse } from "@/types/user";
+import { fetchApi } from "@/lib/fetch-api";
+import { API_ENDPOINTS } from "@/constants/api";
 
 /**
  * Auth API service
  * Encapsulates Auth0 SDK operations for consistency with other service patterns
  */
 export const authApiService = {
+	/**
+	 * Onboard user after Auth0 authentication
+	 * This should be called after successful login to sync user data with backend
+	 */
+	async onboardUser(token: string): Promise<UserOnboardingResponse> {
+		return await fetchApi<UserOnboardingResponse>(
+			API_ENDPOINTS.AUTH.ONBOARDING,
+			{
+				method: "POST",
+				token,
+			},
+		);
+	},
 	/**
 	 * Get access token from Auth0
 	 */

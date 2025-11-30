@@ -32,3 +32,28 @@ export function useLogout() {
 			}),
 	});
 }
+
+/**
+ * Mutation hook for user onboarding
+ * Call this after successful Auth0 authentication to sync user with backend
+ */
+export function useOnboardUser() {
+	const { getAccessTokenSilently } = useAuth0();
+
+	return useMutation({
+		mutationFn: async () => {
+			const token = await getAccessTokenSilently();
+			return authApiService.onboardUser(token);
+		},
+		onSuccess: (data) => {
+			if (data.is_new_user) {
+				console.log("New user onboarded:", data.user.email);
+			} else {
+				console.log("Existing user synced:", data.user.email);
+			}
+		},
+		onError: (error) => {
+			console.error("Onboarding error:", error);
+		},
+	});
+}
