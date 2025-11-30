@@ -4,7 +4,7 @@ import { userApiService } from "@/services/user/user-api";
 import { queryKeys } from "@/services/queryKeys";
 
 export function useGetUser() {
-	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
 	return useQuery({
 		queryKey: queryKeys.user.all,
@@ -12,12 +12,12 @@ export function useGetUser() {
 			const token = await getAccessTokenSilently();
 			return userApiService.getUser(token);
 		},
-		enabled: isAuthenticated,
+		enabled: isAuthenticated && !isLoading,
 	});
 }
 
 export function useGetUserProfile() {
-	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
 	return useQuery({
 		queryKey: queryKeys.user.profile,
@@ -25,6 +25,6 @@ export function useGetUserProfile() {
 			const token = await getAccessTokenSilently();
 			return userApiService.getUserProfile(token);
 		},
-		enabled: isAuthenticated,
+		enabled: isAuthenticated && !isLoading,
 	});
 }

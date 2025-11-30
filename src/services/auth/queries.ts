@@ -8,7 +8,7 @@ import { authApiService } from "./auth-api";
  * Useful for components that need direct token access
  */
 export function useGetAccessToken() {
-	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
 	return useQuery({
 		queryKey: queryKeys.auth.accessToken,
@@ -17,7 +17,7 @@ export function useGetAccessToken() {
 				getAccessTokenSilently,
 				isAuthenticated,
 			}),
-		enabled: isAuthenticated,
+		enabled: isAuthenticated && !isLoading,
 		staleTime: 10 * 60 * 1000, // 10 minutes
 		gcTime: 15 * 60 * 1000, // 15 minutes (previously cacheTime)
 	});
@@ -27,7 +27,7 @@ export function useGetAccessToken() {
  * Query hook for getting user info from Auth0
  */
 export function useGetAuthUser() {
-	const { user, isAuthenticated } = useAuth0();
+	const { user, isAuthenticated, isLoading } = useAuth0();
 
 	return useQuery({
 		queryKey: queryKeys.auth.user,
@@ -36,7 +36,7 @@ export function useGetAuthUser() {
 				user,
 				isAuthenticated,
 			}),
-		enabled: isAuthenticated && !!user,
+		enabled: isAuthenticated && !isLoading && !!user,
 		staleTime: Infinity, // User data rarely changes
 	});
 }
