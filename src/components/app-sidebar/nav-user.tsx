@@ -28,6 +28,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
 import { ROUTES } from "@/constants/routes";
 
 export function NavUser({
@@ -56,24 +57,28 @@ export function NavUser({
 		<SidebarMenu>
 			<SidebarMenuItem>
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<SidebarMenuButton
-							size="lg"
-							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
-						>
-							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage src={user.avatar} alt={user.name} />
-								<AvatarFallback className="rounded-lg">
-									{getInitials(user.name)}
-								</AvatarFallback>
-							</Avatar>
-							<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-								<span className="truncate font-semibold">{user.name}</span>
-								<span className="truncate text-xs">{user.email}</span>
-							</div>
-							<ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
-						</SidebarMenuButton>
-					</DropdownMenuTrigger>
+					<SidebarTooltip
+						content={<span className="font-medium">{user.name}</span>}
+					>
+						<DropdownMenuTrigger asChild>
+							<SidebarMenuButton
+								size="lg"
+								className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
+							>
+								<Avatar className="h-8 w-8 rounded-lg">
+									<AvatarImage src={user.avatar} alt={user.name} />
+									<AvatarFallback className="rounded-lg">
+										{getInitials(user.name)}
+									</AvatarFallback>
+								</Avatar>
+								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+									<span className="truncate font-semibold">{user.name}</span>
+									<span className="truncate text-xs">{user.email}</span>
+								</div>
+								<ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
+							</SidebarMenuButton>
+						</DropdownMenuTrigger>
+					</SidebarTooltip>
 					<DropdownMenuContent
 						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 						side={isMobile ? "bottom" : "right"}
@@ -96,7 +101,7 @@ export function NavUser({
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
+							<DropdownMenuItem disabled>
 								<Sparkles />
 								Upgrade to Pro
 							</DropdownMenuItem>
@@ -105,18 +110,19 @@ export function NavUser({
 						<DropdownMenuGroup>
 							{/* TODO: Re-enable when feature is ready */}
 							{/* <DropdownMenuItem>
-								<BadgeCheck />
-								Account
-							</DropdownMenuItem> */}
-							<DropdownMenuItem>
-								<CreditCard />
-								Billing
-							</DropdownMenuItem>
+							<BadgeCheck />
+							Account
+						</DropdownMenuItem> */}
 							{/* TODO: Re-enable when feature is ready */}
 							{/* <DropdownMenuItem>
-								<Bell />
-								Notifications
-							</DropdownMenuItem> */}
+							<CreditCard />
+							Billing
+						</DropdownMenuItem> */}
+							{/* TODO: Re-enable when feature is ready */}
+							{/* <DropdownMenuItem>
+							<Bell />
+							Notifications
+						</DropdownMenuItem> */}
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={() => logout()}>

@@ -12,6 +12,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
 import { ROUTES } from "@/constants/routes";
 import { useAppStore } from "@/providers/store-provider";
 
@@ -49,12 +50,16 @@ export function NavQuickActions() {
 						</div>
 					</SidebarMenuItem>
 					<SidebarMenuItem>
-						<SidebarMenuButton onClick={handleCreateMindmap}>
-							<div className="flex aspect-square size-6 items-center justify-center rounded-md border bg-background">
-								<Plus className="size-4" />
-							</div>
-							<span className="font-medium">New Mindmap</span>
-						</SidebarMenuButton>
+						<SidebarTooltip
+							content={<span className="font-medium">New Mindmap</span>}
+						>
+							<SidebarMenuButton onClick={handleCreateMindmap}>
+								<div className="flex aspect-square size-6 items-center justify-center rounded-md border bg-background">
+									<Plus className="size-4" />
+								</div>
+								<span className="font-medium">New Mindmap</span>
+							</SidebarMenuButton>
+						</SidebarTooltip>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarGroupContent>
