@@ -46,7 +46,7 @@ export function DynamicBreadcrumbs() {
 			segments.push({
 				label: (
 					<>
-						{mindmap?.name || "Mindmap"}{" "}
+						{mindmap?.title || "Mindmap"}{" "}
 						<span className="text-muted-foreground font-normal">
 							({nodeCount} {nodeCount === 1 ? "node" : "nodes"})
 						</span>
