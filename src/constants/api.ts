@@ -15,11 +15,10 @@ export const API_ENDPOINTS = {
 	USER: {
 		ME: "/users/me",
 	},
-	// Add more backend endpoints here as you build out your API
-	// MINDMAPS: {
-	// 	LIST: "/mindmaps",
-	// 	DETAIL: "/mindmaps/:id",
-	// },
+	MINDMAPS: {
+		LIST: "/mindmaps/",
+		DETAIL: (id: string) => `/mindmaps/${id}`,
+	},
 };
 
 export const API_STATUS = {

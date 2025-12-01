@@ -11,4 +11,9 @@ export const queryKeys = {
 		accessToken: ["auth", "accessToken"] as const,
 		onboarding: ["auth", "onboarding"] as const,
 	},
+	mindmaps: {
+		all: ["mindmaps"] as const,
+		list: ["mindmaps", "list"] as const,
+		detail: (id: string) => ["mindmaps", "detail", id] as const,
+	},
 } as const;
