@@ -1,79 +1,66 @@
 "use client";
 
-import { Brain, Clock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Clock } from "lucide-react";
 import { useMemo } from "react";
 
-import {
-	SidebarGroup,
-	SidebarGroupLabel,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { ROUTES } from "@/constants/routes";
+import { MindmapRecentItem } from "@/components/app-sidebar/mindmap-recent-item";
+import { ItemGroup } from "@/components/ui/item";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
+import { useListMindmaps } from "@/services/mindmap/queries";
 import { useAppStore } from "@/providers/store-provider";
-import { formatTimeAgo } from "@/utils/date";
 
 export function NavRecent() {
-	const router = useRouter();
-	const setActiveMindmap = useAppStore(
-		(state) => state.mindmaps.setActiveMindmap,
-	);
 	const activeMindmapId = useAppStore(
 		(state) => state.mindmaps.activeMindmapId,
 	);
-	// Subscribe to mindmaps array
-	const mindmaps = useAppStore((state) => state.mindmaps.mindmaps);
+	const { data: mindmaps, isLoading, isFetching } = useListMindmaps();
 
-	// Cache the computation to prevent infinite loop
+	// Backend returns mindmaps ordered by most recently updated first
+	// Just take the first 3 (most recent)
 	const recentMindmaps = useMemo(() => {
-		return mindmaps
-			.filter((m) => m.lastAccessedAt)
-			.sort((a, b) => {
-				const timeA = new Date(a.lastAccessedAt!).getTime();
-				const timeB = new Date(b.lastAccessedAt!).getTime();
-				return timeB - timeA;
-			})
-			.slice(0, 5);
+		if (!mindmaps) return [];
+		return mindmaps.slice(0, 3);
 	}, [mindmaps]);
 
-	const handleSelectMindmap = (id: string) => {
-		setActiveMindmap(id);
-		router.push(ROUTES.MAP(id));
-	};
+	// Show loading skeleton when:
+	// 1. React Query is fetching data, OR
+	// 2. We don't have data yet (covers Auth0 initialization)
+	const showLoading = isLoading || isFetching || !mindmaps;
 
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Recent</SidebarGroupLabel>
-			<SidebarMenu>
-				{recentMindmaps.length === 0 ? (
-					<div className="flex items-center gap-2 px-2 py-6 text-sm text-muted-foreground/70 group-data-[collapsible=icon]:hidden">
-						<Clock className="size-4 shrink-0" />
-						<span className="text-xs leading-relaxed">
-							Open a mindmap to see it here
-						</span>
-					</div>
-				) : (
-					recentMindmaps.map((mindmap) => (
-						<SidebarMenuItem key={mindmap.id}>
-							<SidebarMenuButton
-								onClick={() => handleSelectMindmap(mindmap.id)}
-								isActive={mindmap.id === activeMindmapId}
-								tooltip={mindmap.name}
-							>
-								<Brain className="size-4" />
-								<span className="truncate">{mindmap.name}</span>
-								{mindmap.lastAccessedAt && (
-									<span className="ml-auto text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
-										{formatTimeAgo(mindmap.lastAccessedAt)}
-									</span>
-								)}
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					))
-				)}
-			</SidebarMenu>
+			<SidebarGroupLabel>Recent Mindmaps</SidebarGroupLabel>
+			{showLoading ? (
+				<div className="space-y-2 px-2 group-data-[collapsible=icon]:hidden">
+					{[...Array(3)].map((_, i) => (
+						<div key={i} className="flex items-center gap-2.5">
+							<Skeleton className="size-7 shrink-0 rounded-md" />
+							<div className="flex-1 space-y-1.5">
+								<Skeleton className="h-3 w-3/4" />
+								<Skeleton className="h-2.5 w-1/2" />
+							</div>
+						</div>
+					))}
+				</div>
+			) : recentMindmaps.length === 0 ? (
+				<div className="flex items-center gap-2 px-2 py-6 text-sm text-muted-foreground/70 group-data-[collapsible=icon]:hidden">
+					<Clock className="size-4 shrink-0" />
+					<span className="text-xs leading-relaxed">
+						Open a mindmap to see it here
+					</span>
+				</div>
+			) : (
+				<ItemGroup>
+					{recentMindmaps.map((mindmap) => (
+						<MindmapRecentItem
+							key={mindmap.id}
+							mindmap={mindmap}
+							isActive={mindmap.id === activeMindmapId}
+						/>
+					))}
+				</ItemGroup>
+			)}
 		</SidebarGroup>
 	);
 }
