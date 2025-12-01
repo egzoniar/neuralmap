@@ -28,6 +28,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
 
 // TODO: Re-enable this sample data when features are ready
@@ -148,30 +149,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		avatar: user?.picture || "",
 	};
 
-	// Hide mindmap switcher on home page (/)
-	const showMindmapSwitcher = pathname !== "/";
+	// On home page (/), show mindmap switcher and recent items
+	const isHomePage = pathname === "/";
 
 	return (
-		<Sidebar collapsible="icon" {...props}>
-			<SidebarHeader>
-				{showMindmapSwitcher && <MindmapSwitcher />}
-			</SidebarHeader>
-			<SidebarContent>
-				{showMindmapSwitcher && (
-					<>
-						<NavQuickActions />
-						<NavRecent />
-						<NavStats />
-					</>
-				)}
-				{/* TODO: Re-enable these sections when features are ready */}
-				{/* <NavMain items={data.navMain} /> */}
-				{/* <NavProjects projects={data.projects} /> */}
-			</SidebarContent>
-			<SidebarFooter>
-				<NavUser user={userData} />
-			</SidebarFooter>
-			<SidebarRail />
-		</Sidebar>
+		<TooltipProvider delayDuration={300}>
+			<Sidebar collapsible="icon" {...props}>
+				<SidebarHeader>
+					<MindmapSwitcher />
+				</SidebarHeader>
+				<SidebarContent>
+					<NavQuickActions />
+					<NavRecent />
+					{!isHomePage && <NavStats />}
+					{/* TODO: Re-enable these sections when features are ready */}
+					{/* <NavMain items={data.navMain} /> */}
+					{/* <NavProjects projects={data.projects} /> */}
+				</SidebarContent>
+				<SidebarFooter>
+					<NavUser user={userData} />
+				</SidebarFooter>
+				{!isHomePage && <SidebarRail />}
+			</Sidebar>
+		</TooltipProvider>
 	);
 }

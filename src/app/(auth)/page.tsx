@@ -80,9 +80,9 @@ export default function HomePage() {
 										<Brain className="size-5 text-primary" />
 									</div>
 									<div>
-										<div className="text-sm font-semibold">{mindmap.name}</div>
+										<div className="text-sm font-semibold">{mindmap.title}</div>
 										<div className="text-xs text-muted-foreground">
-											{formatShortDate(mindmap.createdAt)}
+											{formatShortDate(mindmap.created_at)}
 										</div>
 									</div>
 								</div>
