@@ -11,7 +11,10 @@ import {
  * Format a date string into a human-readable relative time
  * Example: "2 hours ago", "3 days ago"
  */
-export function formatTimeAgo(dateString: string): string {
+export function formatTimeAgo(dateString: string | null | undefined): string {
+	if (!dateString) {
+		return "Never";
+	}
 	try {
 		const date = parseISO(dateString);
 		return formatDistanceToNow(date, { addSuffix: true });
@@ -25,7 +28,10 @@ export function formatTimeAgo(dateString: string): string {
  * Format a date string into a short, readable format
  * Example: "Jan 15, 2024"
  */
-export function formatShortDate(dateString: string): string {
+export function formatShortDate(dateString: string | null | undefined): string {
+	if (!dateString) {
+		return "No date";
+	}
 	try {
 		const date = parseISO(dateString);
 		return format(date, "MMM d, yyyy");
