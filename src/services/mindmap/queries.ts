@@ -24,8 +24,8 @@ export function useListMindmaps() {
 }
 
 /**
- * Hook to fetch a specific mindmap by ID
- * @todo Implement when backend endpoint is ready
+ * Hook to fetch a specific mindmap by ID with full content
+ * Returns complete mindmap including nodes and edges
  */
 export function useGetMindmap(id: string) {
 	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
@@ -37,5 +37,6 @@ export function useGetMindmap(id: string) {
 			return mindmapApiService.getMindmap(token, id);
 		},
 		enabled: isAuthenticated && !isLoading && !!id,
+		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
 	});
 }

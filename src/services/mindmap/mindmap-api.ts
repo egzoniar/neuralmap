@@ -1,6 +1,6 @@
 import { fetchApi } from "@/lib/fetch-api";
 import { API_ENDPOINTS } from "@/constants/api";
-import type { Mindmap } from "@/types/mindmap";
+import type { Mindmap, MindmapResponse } from "@/types/mindmap";
 
 /**
  * Mindmap API service
@@ -20,11 +20,11 @@ export const mindmapApiService = {
 	},
 
 	/**
-	 * Get a specific mindmap by ID
-	 * @todo Implement when backend endpoint is ready
+	 * Get a specific mindmap by ID with full content
+	 * Returns complete mindmap data including nodes and edges
 	 */
-	async getMindmap(token: string, id: string): Promise<Mindmap> {
-		return await fetchApi<Mindmap>(API_ENDPOINTS.MINDMAPS.DETAIL(id), {
+	async getMindmap(token: string, id: string): Promise<MindmapResponse> {
+		return await fetchApi<MindmapResponse>(API_ENDPOINTS.MINDMAPS.DETAIL(id), {
 			method: "GET",
 			token,
 		});

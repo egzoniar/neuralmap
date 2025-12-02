@@ -5,6 +5,8 @@ import {
 	NODES_INITIAL_DATA,
 	EDGES_INITIAL_DATA,
 } from "@/constants/initial-data";
+import { NODE_TYPE } from "@/constants/ui";
+
 type Selection = {
 	nodes: Node[];
 	edges: Edge[];
@@ -14,6 +16,7 @@ export type MindmapSlice = {
 	nodes: Node[];
 	edges: Edge[];
 	selection?: Selection;
+	initializeMindmap: (nodes: Node[], edges: Edge[]) => void;
 	onNodesChange: (changes: NodeChange[]) => void;
 	onEdgesChange: (changes: EdgeChange[]) => void;
 	onConnect: (connection: Connection) => void;
@@ -37,8 +40,21 @@ export type MindmapSlice = {
 };
 
 export const createMindmapSlice = lens<MindmapSlice>((set) => ({
+	// Initial state with default nodes/edges (will be replaced when mindmap loads)
 	nodes: NODES_INITIAL_DATA as Node[],
 	edges: EDGES_INITIAL_DATA as Edge[],
+
+	/**
+	 * Initialize working copy with server data.
+	 * Called once per mindmap when React Query fetches succeed.
+	 * After this, all changes are local until saved via mutations.
+	 */
+	initializeMindmap: (nodes, edges) =>
+		set({
+			nodes,
+			edges,
+			selection: undefined,
+		}),
 	onNodesChange: (changes) =>
 		set((state) => ({
 			nodes: applyNodeChanges(changes, state.nodes),
@@ -193,7 +209,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 			// Create new node with selected state
 			const newNode: Node = {
 				id: newNodeId,
-				type: "neuralNode",
+				type: NODE_TYPE.NEURAL,
 				data: {
 					title: "New Node",
 					content: "",
@@ -229,7 +245,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 		set((state) => {
 			// Don't allow deletion of root node
 			const nodeToDelete = state.nodes.find((node) => node.id === nodeId);
-			if (!nodeToDelete || nodeToDelete.type === "rootNode") {
+			if (!nodeToDelete || nodeToDelete.type === NODE_TYPE.ROOT) {
 				return {};
 			}
 
@@ -249,7 +265,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 			// Filter out root nodes and non-existent nodes
 			const validNodeIds = nodeIds.filter((nodeId) => {
 				const node = state.nodes.find((n) => n.id === nodeId);
-				return node && node.type !== "rootNode";
+				return node && node.type !== NODE_TYPE.ROOT;
 			});
 
 			if (validNodeIds.length === 0) {

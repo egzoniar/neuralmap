@@ -1,12 +1,28 @@
+import type { Node, Edge } from "reactflow";
+
+/**
+ * Node data structure for mindmap nodes
+ * - title: Required for all node types
+ * - content: Optional, only present for neural nodes (not root nodes)
+ */
 export type MindmapNodeData = {
 	title: string;
 	content?: string;
 };
 
-export type MindmapEdge = {
-	id: string;
-	source: string;
-	target: string;
+/**
+ * Mindmap node with proper ReactFlow typing
+ * Backend always provides: id, type, data, position
+ */
+export type MindmapNode = Node<MindmapNodeData>;
+
+/**
+ * Mindmap edge with proper ReactFlow typing
+ * Includes optional handle IDs for multi-handle connections
+ */
+export type MindmapEdge = Edge & {
+	sourceHandle?: string;
+	targetHandle?: string;
 };
 
 /**
@@ -26,6 +42,34 @@ export type Mindmap = {
 	visibility: MindmapVisibility;
 	user_id: string;
 	project_id?: string | null;
+	view_count: number;
+	last_viewed_at?: string | null;
+	created_at: string;
+	updated_at: string;
+};
+
+/**
+ * Mindmap content structure stored in the content field
+ * Backend guarantees all nodes have required properties (id, type, data, position)
+ */
+export type MindmapContent = {
+	nodes: MindmapNode[];
+	edges: MindmapEdge[];
+};
+
+/**
+ * Full mindmap response matching backend MindmapResponse schema
+ * Used for single mindmap views with complete content
+ */
+export type MindmapResponse = {
+	id: string;
+	title: string;
+	description?: string | null;
+	icon?: string | null;
+	visibility: MindmapVisibility;
+	user_id: string;
+	project_id?: string | null;
+	content: MindmapContent;
 	view_count: number;
 	last_viewed_at?: string | null;
 	created_at: string;
