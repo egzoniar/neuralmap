@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
-import { DynamicBreadcrumbs } from "@/components/app-sidebar/dynamic-breadcrumbs";
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamic-breadcrumbs";
+import { getRouteType } from "@/constants/routes";
 
 interface SidebarProviderProps {
 	children: ReactNode;
@@ -17,10 +18,16 @@ interface SidebarProviderProps {
 
 export function AppSidebarProvider({ children }: SidebarProviderProps) {
 	const pathname = usePathname();
-	const isHomePage = pathname === "/";
+	const routeType = getRouteType(pathname);
+	const isHomePage = routeType === "home";
+	const isMindmapPage = routeType === "mindmap";
+
+	// Determine default open state based on route type
+	// Home: open, Mindmap: collapsed, Other: collapsed
+	const defaultOpen = isHomePage;
 
 	return (
-		<SidebarProvider defaultOpen={isHomePage}>
+		<SidebarProvider key={routeType} defaultOpen={defaultOpen}>
 			<AppSidebar />
 			<SidebarInset className="flex flex-col">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

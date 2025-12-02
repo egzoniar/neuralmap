@@ -6,3 +6,11 @@ export const ROUTES = {
 	API_AUTH_LOGOUT: "/api/auth/logout",
 	API_AUTH_CALLBACK: "/api/auth/callback",
 } as const;
+
+export type RouteType = "home" | "mindmap" | "other";
+
+export function getRouteType(pathname: string): RouteType {
+	if (pathname === "/") return "home";
+	if (/^\/map\/[^/]+$/.test(pathname)) return "mindmap";
+	return "other";
+}

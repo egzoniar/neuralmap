@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAppStore } from "@/providers/store-provider";
 import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
 import { Trash2 } from "lucide-react";
+import { NODE_TYPE } from "@/constants/ui";
 
 /**
  * Custom hook to handle keyboard shortcuts for the mindmap
@@ -55,7 +56,7 @@ export function useMindmapKeyboard() {
 
 				// Check if there are selected nodes (excluding root nodes)
 				const nodesToDelete = selection?.nodes?.filter(
-					(node) => node.type !== "rootNode",
+					(node) => node.type !== NODE_TYPE.ROOT,
 				);
 
 				// Check if there are selected edges

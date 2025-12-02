@@ -1,24 +1,23 @@
+import { NODE_TYPE } from "./ui";
+
 export const NODES_INITIAL_DATA = [
 	{
 		id: "1",
-		type: "rootNode",
+		type: NODE_TYPE.ROOT,
 		data: {
 			title: "Root Node",
+			// Note: Root nodes don't have content property
 		},
 		position: { x: 0, y: 0 },
-		// sourcePosition: "right",
-		// targetPosition: "left",
 	},
 	{
 		id: "2",
-		type: "neuralNode",
+		type: NODE_TYPE.NEURAL,
 		data: {
 			title: "Neural Node",
 			content: "This is the neural node",
 		},
 		position: { x: 300, y: 0 },
-		// sourcePosition: "right",
-		// targetPosition: "left",
 	},
 ];
 

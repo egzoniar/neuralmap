@@ -27,9 +27,23 @@ export const UI = {
 	},
 };
 
+/**
+ * Node type constants - Single source of truth for node types
+ * Use these instead of hardcoded strings throughout the codebase
+ */
+export const NODE_TYPE = {
+	ROOT: "root",
+	NEURAL: "neural",
+} as const;
+
+/**
+ * Type helper for node types
+ */
+export type NodeType = (typeof NODE_TYPE)[keyof typeof NODE_TYPE];
+
 export const NODE_TYPES: NodeTypes = {
-	rootNode: RootNode,
-	neuralNode: NeuralNode,
+	[NODE_TYPE.ROOT]: RootNode,
+	[NODE_TYPE.NEURAL]: NeuralNode,
 };
 
 export const EDGE_TYPES: EdgeTypes = {
