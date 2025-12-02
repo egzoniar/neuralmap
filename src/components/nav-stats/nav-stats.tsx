@@ -56,7 +56,7 @@ export function NavStats() {
 					<Separator className="my-2.5" />
 					<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
 						<Calendar className="size-3.5" />
-						<span>Created {formatShortDate(activeMindmap.createdAt)}</span>
+						<span>Created {formatShortDate(activeMindmap.created_at)}</span>
 					</div>
 				</div>
 			</SidebarGroupContent>

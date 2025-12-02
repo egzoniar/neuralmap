@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, BrainCircuit } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -12,10 +12,12 @@ import {
 	ItemTitle,
 } from "@/components/ui/item";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
+import { MindmapIcon } from "@/components/mindmap/mindmap-icon";
 import { ROUTES } from "@/constants/routes";
 import { useAppStore } from "@/providers/store-provider";
 import type { Mindmap } from "@/types/mindmap";
 import { formatTimeAgo } from "@/utils/date";
+import { cn } from "@/lib/utils";
 
 interface MindmapRecentItemProps {
 	mindmap: Mindmap;
@@ -30,8 +32,17 @@ export function MindmapRecentItem({
 	const setActiveMindmap = useAppStore(
 		(state) => state.mindmaps.setActiveMindmap,
 	);
+	const setNavigatingToMindmap = useAppStore(
+		(state) => state.application.setNavigatingToMindmap,
+	);
+	const navigatingToMindmapId = useAppStore(
+		(state) => state.application.navigatingToMindmapId,
+	);
+
+	const isNavigating = navigatingToMindmapId === mindmap.id;
 
 	const handleClick = () => {
+		setNavigatingToMindmap(mindmap.id);
 		setActiveMindmap(mindmap.id);
 		router.push(ROUTES.MAP(mindmap.id));
 	};
@@ -41,7 +52,10 @@ export function MindmapRecentItem({
 			<Item
 				size="sm"
 				variant={isActive ? "muted" : "default"}
-				className="group/mindmap-item relative min-h-0 cursor-pointer gap-2.5 px-2 py-2 transition-all duration-200 hover:bg-accent/80 active:scale-[0.98] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+				className={cn(
+					"group/mindmap-item relative min-h-0 cursor-pointer gap-1 p-2 transition-all duration-200 active:scale-[0.98] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-1",
+					isActive ? "bg-gray-200" : "bg-transparent hover:bg-accent",
+				)}
 				onClick={handleClick}
 			>
 				{isActive && (
@@ -50,19 +64,19 @@ export function MindmapRecentItem({
 
 				{/* Icon shown only when collapsed */}
 				<ItemMedia className="shrink-0 group-data-[collapsible=icon]:flex">
-					<div
-						className={`flex size-7 items-center justify-center rounded-md transition-colors ${
-							isActive
-								? "bg-primary/10 text-primary"
-								: "bg-muted text-muted-foreground"
-						}`}
-					>
-						<BrainCircuit size={18} />
+					<div className="flex size-7 items-center justify-center">
+						<MindmapIcon
+							mindmap={mindmap}
+							isLoading={isNavigating}
+							spinnerStrokeWidth={1.5}
+							spinnerWidth={18}
+							iconClassName="text-lg"
+						/>
 					</div>
 				</ItemMedia>
 
 				<ItemContent className="min-w-0 flex-1 gap-0.5 group-data-[collapsible=icon]:hidden">
-					<ItemTitle className="truncate text-xs font-medium leading-tight transition-colors group-hover/mindmap-item:text-foreground">
+					<ItemTitle className="block w-full min-w-0 truncate text-xs font-medium leading-tight transition-colors group-hover/mindmap-item:text-foreground">
 						{mindmap.title}
 					</ItemTitle>
 					{mindmap.updated_at && (

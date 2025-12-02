@@ -1,11 +1,11 @@
 "use client";
 
-import { Clock } from "lucide-react";
 import { useMemo } from "react";
 
-import { MindmapRecentItem } from "@/components/app-sidebar/mindmap-recent-item";
+import { MindmapRecentItem } from "./mindmap-recent-item";
+import { RecentLoadingSkeleton } from "./recent-loading-skeleton";
+import { RecentEmptyState } from "./recent-empty-state";
 import { ItemGroup } from "@/components/ui/item";
-import { Skeleton } from "@/components/ui/skeleton";
 import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 import { useListMindmaps } from "@/services/mindmap/queries";
 import { useAppStore } from "@/providers/store-provider";
@@ -32,24 +32,9 @@ export function NavRecent() {
 		<SidebarGroup>
 			<SidebarGroupLabel>Recent Mindmaps</SidebarGroupLabel>
 			{showLoading ? (
-				<div className="space-y-2 px-2 group-data-[collapsible=icon]:hidden">
-					{[...Array(3)].map((_, i) => (
-						<div key={i} className="flex items-center gap-2.5">
-							<Skeleton className="size-7 shrink-0 rounded-md" />
-							<div className="flex-1 space-y-1.5">
-								<Skeleton className="h-3 w-3/4" />
-								<Skeleton className="h-2.5 w-1/2" />
-							</div>
-						</div>
-					))}
-				</div>
+				<RecentLoadingSkeleton />
 			) : recentMindmaps.length === 0 ? (
-				<div className="flex items-center gap-2 px-2 py-6 text-sm text-muted-foreground/70 group-data-[collapsible=icon]:hidden">
-					<Clock className="size-4 shrink-0" />
-					<span className="text-xs leading-relaxed">
-						Open a mindmap to see it here
-					</span>
-				</div>
+				<RecentEmptyState />
 			) : (
 				<ItemGroup>
 					{recentMindmaps.map((mindmap) => (

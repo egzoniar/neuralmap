@@ -1,26 +1,13 @@
 "use client";
 
 import * as React from "react";
-// TODO: Re-enable these imports when features are ready
-// import {
-// 	BookOpen,
-// 	Bot,
-// 	Frame,
-// 	Map,
-// 	PieChart,
-// 	Settings2,
-// 	SquareTerminal,
-// } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-// TODO: Re-enable these imports when features are ready
-// import { NavMain } from "@/components/app-sidebar/nav-main";
-// import { NavProjects } from "@/components/app-sidebar/nav-projects";
-import { NavUser } from "@/components/app-sidebar/nav-user";
-import { MindmapSwitcher } from "@/components/app-sidebar/mindmap-switcher";
-import { NavQuickActions } from "@/components/app-sidebar/nav-quick-actions";
-import { NavRecent } from "@/components/app-sidebar/nav-recent";
-import { NavStats } from "@/components/app-sidebar/nav-stats";
+import { NavUser } from "@/components/nav-user/nav-user";
+import { MindmapSwitcher } from "@/components/mindmap-switcher/mindmap-switcher";
+import { NavQuickActions } from "@/components/nav-quick-actions/nav-quick-actions";
+import { NavRecent } from "@/components/nav-recent/nav-recent";
+import { NavStats } from "@/components/nav-stats/nav-stats";
 import {
 	Sidebar,
 	SidebarContent,
@@ -30,114 +17,6 @@ import {
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
-
-// TODO: Re-enable this sample data when features are ready
-// const data = {
-// 	navMain: [
-// 		{
-// 			title: "Playground",
-// 			url: "#",
-// 			icon: SquareTerminal,
-// 			isActive: true,
-// 			items: [
-// 				{
-// 					title: "History",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Starred",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Settings",
-// 					url: "#",
-// 				},
-// 			],
-// 		},
-// 		{
-// 			title: "Models",
-// 			url: "#",
-// 			icon: Bot,
-// 			items: [
-// 				{
-// 					title: "Genesis",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Explorer",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Quantum",
-// 					url: "#",
-// 				},
-// 			],
-// 		},
-// 		{
-// 			title: "Documentation",
-// 			url: "#",
-// 			icon: BookOpen,
-// 			items: [
-// 				{
-// 					title: "Introduction",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Get Started",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Tutorials",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Changelog",
-// 					url: "#",
-// 				},
-// 			],
-// 		},
-// 		{
-// 			title: "Settings",
-// 			url: "#",
-// 			icon: Settings2,
-// 			items: [
-// 				{
-// 					title: "General",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Team",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Billing",
-// 					url: "#",
-// 				},
-// 				{
-// 					title: "Limits",
-// 					url: "#",
-// 				},
-// 			],
-// 		},
-// 	],
-// 	projects: [
-// 		{
-// 			name: "Design Engineering",
-// 			url: "#",
-// 			icon: Frame,
-// 		},
-// 		{
-// 			name: "Sales & Marketing",
-// 			url: "#",
-// 			icon: PieChart,
-// 		},
-// 		{
-// 			name: "Travel",
-// 			url: "#",
-// 			icon: Map,
-// 		},
-// 	],
-// };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useAuth();
@@ -162,9 +41,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<NavQuickActions />
 					<NavRecent />
 					{!isHomePage && <NavStats />}
-					{/* TODO: Re-enable these sections when features are ready */}
-					{/* <NavMain items={data.navMain} /> */}
-					{/* <NavProjects projects={data.projects} /> */}
 				</SidebarContent>
 				<SidebarFooter>
 					<NavUser user={userData} />

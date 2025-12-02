@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { ChevronsUpDown, Plus, Brain } from "lucide-react";
+import { useMemo, useCallback } from "react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -19,13 +19,16 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
+import { MindmapTrigger } from "./mindmap-trigger";
+import { MindmapList } from "./mindmap-list";
 import { useAppStore } from "@/providers/store-provider";
 import { ROUTES } from "@/constants/routes";
+import { useListMindmaps } from "@/services/mindmap/queries";
 
 export function MindmapSwitcher() {
 	const router = useRouter();
 	const { isMobile } = useSidebar();
-	const mindmaps = useAppStore((state) => state.mindmaps.mindmaps);
+	const { data: mindmaps, isLoading, isFetching } = useListMindmaps();
 	const activeMindmapId = useAppStore(
 		(state) => state.mindmaps.activeMindmapId,
 	);
@@ -34,18 +37,27 @@ export function MindmapSwitcher() {
 	);
 	const createMindmap = useAppStore((state) => state.mindmaps.createMindmap);
 
-	const activeMindmap = mindmaps.find((m) => m.id === activeMindmapId);
+	const activeMindmap = useMemo(
+		() => mindmaps?.find((m) => m.id === activeMindmapId),
+		[mindmaps, activeMindmapId],
+	);
 
-	const handleSelectMindmap = (id: string) => {
-		setActiveMindmap(id);
-		router.push(ROUTES.MAP(id));
-	};
+	const mindmapCount = useMemo(() => mindmaps?.length ?? 0, [mindmaps]);
+	const showLoading = isLoading || isFetching || !mindmaps;
 
-	const handleCreateMindmap = () => {
-		const name = `New Mindmap ${mindmaps.length + 1}`;
+	const handleSelectMindmap = useCallback(
+		(id: string) => {
+			setActiveMindmap(id);
+			router.push(ROUTES.MAP(id));
+		},
+		[setActiveMindmap, router],
+	);
+
+	const handleCreateMindmap = useCallback(() => {
+		const name = `New Mindmap ${mindmapCount + 1}`;
 		const newId = createMindmap(name);
 		router.push(ROUTES.MAP(newId));
-	};
+	}, [mindmapCount, createMindmap, router]);
 
 	return (
 		<SidebarMenu>
@@ -63,18 +75,11 @@ export function MindmapSwitcher() {
 								size="lg"
 								className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
 							>
-								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-									<Brain className="size-4" />
-								</div>
-								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-									<span className="truncate font-semibold">
-										{activeMindmap?.title || "No Mindmap"}
-									</span>
-									<span className="truncate text-xs">
-										{mindmaps.length} mindmap{mindmaps.length !== 1 ? "s" : ""}
-									</span>
-								</div>
-								<ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
+								<MindmapTrigger
+									mindmap={activeMindmap}
+									mindmapCount={mindmapCount}
+									isLoading={showLoading}
+								/>
 							</SidebarMenuButton>
 						</DropdownMenuTrigger>
 					</SidebarTooltip>
@@ -87,22 +92,16 @@ export function MindmapSwitcher() {
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
 							Mindmaps
 						</DropdownMenuLabel>
-						{mindmaps.map((mindmap) => (
-							<DropdownMenuItem
-								key={mindmap.id}
-								onClick={() => handleSelectMindmap(mindmap.id)}
-								className="gap-2 p-2"
-							>
-								<div className="flex size-6 items-center justify-center rounded-sm border">
-									<Brain className="size-4 shrink-0" />
-								</div>
-								{mindmap.title}
-							</DropdownMenuItem>
-						))}
+						<MindmapList
+							mindmaps={mindmaps}
+							isLoading={showLoading}
+							onSelectMindmap={handleSelectMindmap}
+						/>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							className="gap-2 p-2"
 							onClick={handleCreateMindmap}
+							disabled={showLoading}
 						>
 							<div className="flex size-6 items-center justify-center rounded-md border bg-background">
 								<Plus className="size-4" />
