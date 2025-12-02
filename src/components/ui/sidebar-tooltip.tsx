@@ -36,7 +36,7 @@ export function SidebarTooltip({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>{children}</TooltipTrigger>
-			<TooltipContent side={side} className={className}>
+			<TooltipContent side={side} sideOffset={15} className={className}>
 				{content}
 			</TooltipContent>
 		</Tooltip>
