@@ -16,11 +16,16 @@ import {
 	createDialogSlice,
 	type DialogSlice,
 } from "@/lib/features/dialog/dialog-slice";
+import {
+	createApplicationSlice,
+	type ApplicationSlice,
+} from "@/lib/features/application/application-slice";
 
 export interface Store {
 	mindmap: MindmapSlice;
 	mindmaps: MindmapsSlice;
 	dialog: DialogSlice;
+	application: ApplicationSlice;
 }
 
 export type StoreApi = ReturnType<typeof createStore>;
@@ -32,6 +37,7 @@ const createStore = (initialProps?: Partial<Store>) =>
 				mindmap: createMindmapSlice,
 				mindmaps: createMindmapsSlice,
 				dialog: createDialogSlice,
+				application: createApplicationSlice,
 				...initialProps,
 			}),
 		),
