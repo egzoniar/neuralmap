@@ -22,6 +22,7 @@ import {
 	Edit3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NODE_TYPE } from "@/constants/ui";
 
 interface NodeSheetContentProps {
 	nodeId: string;
@@ -41,7 +42,7 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	if (!node) return null;
 
 	const nodeData = node.data;
-	const isRootNode = node.type === "rootNode";
+	const isRootNode = node.type === NODE_TYPE.ROOT;
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		updateNodeData(nodeId, { title: e.target.value });

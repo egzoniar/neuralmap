@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import type { Node } from "reactflow";
 import { cn } from "@/lib/utils";
+import { NODE_TYPE } from "@/constants/ui";
 
 interface MultiNodeSheetContentProps {
 	selectedNodes: Node[];
@@ -37,7 +38,7 @@ export function MultiNodeSheetContent({
 
 	// Filter out root nodes from the selection
 	const deletableNodes = selectedNodes.filter(
-		(node) => node.type !== "rootNode",
+		(node) => node.type !== NODE_TYPE.ROOT,
 	);
 	const nodeCount = selectedNodes.length;
 	const deletableCount = deletableNodes.length;
@@ -120,7 +121,7 @@ export function MultiNodeSheetContent({
 											<span className="font-medium truncate flex-1">
 												{node.data.title || "Untitled Node"}
 											</span>
-											{node.type === "rootNode" && (
+											{node.type === NODE_TYPE.ROOT && (
 												<Badge variant="secondary" className="text-xs">
 													Root
 												</Badge>

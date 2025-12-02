@@ -5,6 +5,7 @@ import type { MindmapNodeData } from "@/types/mindmap";
 import { cn } from "@/lib/utils";
 import { Position } from "reactflow";
 import { BaseHandle } from "@/components/mindmap-ui/base-handle";
+import { NODE_TYPE } from "@/constants/ui";
 
 interface BaseNodeProps extends NodeProps<MindmapNodeData> {
 	children?: React.ReactNode;
@@ -17,7 +18,7 @@ export function BaseNode({
 	selected,
 	children,
 }: BaseNodeProps) {
-	const isRootNode = type === "rootNode";
+	const isRootNode = type === NODE_TYPE.ROOT;
 
 	return (
 		<div

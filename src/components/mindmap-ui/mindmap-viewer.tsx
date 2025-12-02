@@ -1,39 +1,84 @@
 "use client";
 
-import ReactFlow, {
-	Background,
-	MiniMap,
-	type Edge,
-	type Node,
-} from "reactflow";
+import { useMemo } from "react";
+import ReactFlow, { Background, MiniMap } from "reactflow";
 import "reactflow/dist/style.css";
 import { useAppStore } from "@/providers/store-provider";
 import { NODE_TYPES } from "@/constants/ui";
 import { useMindmapKeyboard } from "@/hooks/use-mindmap-keyboard";
+import { useMindmapNavigation } from "@/hooks/use-mindmap-navigation";
+import { useGetMindmap } from "@/services/mindmap/queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useMindmapStore } from "@/hooks/use-mindmap-store";
 
 interface MindmapViewerProps {
-	initialNodes: Node[];
-	initialEdges: Edge[];
 	mindmapId: string;
 }
 
-export function MindmapViewer({
-	initialNodes,
-	initialEdges,
-	mindmapId,
-}: MindmapViewerProps) {
-	// Use your Zustand store instead of ReactFlow's hooks
-	const {
-		nodes,
-		edges,
-		onNodesChange,
-		onEdgesChange,
-		onConnect,
-		onSelectionChange,
-	} = useAppStore((state) => state.mindmap);
+export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
+	// Fetch mindmap data
+	const { data: mindmap, isLoading, error } = useGetMindmap(mindmapId);
+
+	// Get Zustand actions for handling interactions
+	const { onNodesChange, onEdgesChange, onConnect, onSelectionChange } =
+		useAppStore((state) => state.mindmap);
+
+	// Sync server state with client state
+	// The hook has built-in guards against stale cached data
+	const { nodes, edges } = useMindmapStore(
+		mindmap?.content.nodes,
+		mindmap?.content.edges,
+		mindmapId,
+	);
 
 	// Handle keyboard shortcuts with custom hook
 	const { containerRef } = useMindmapKeyboard();
+
+	// Manage navigation loading state (clears sidebar spinner when data loads)
+	useMindmapNavigation(mindmapId, !!mindmap);
+
+	// Memoize nodeTypes to prevent ReactFlow warning about object recreation
+	const nodeTypes = useMemo(() => NODE_TYPES, []);
+
+	// Early returns AFTER all hooks
+	if (isLoading) {
+		return (
+			<div
+				style={{ height: "calc(100vh - 64px - 1rem)" }}
+				className="flex w-full items-center justify-center bg-gray-50/50"
+			>
+				<div className="relative w-full h-full flex items-center justify-center border-2">
+					{/* Center Root Node Skeleton */}
+					<div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2">
+						<Skeleton className="h-20 w-48 rounded-lg shadow-md" />
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex h-full w-full items-center justify-center">
+				<div className="text-center space-y-2">
+					<h2 className="text-2xl font-semibold text-destructive">
+						Failed to load mindmap
+					</h2>
+					<p className="text-muted-foreground">
+						{error instanceof Error ? error.message : "Unknown error occurred"}
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (!mindmap || !nodes || !edges) {
+		return (
+			<div className="flex h-full w-full items-center justify-center">
+				<p className="text-muted-foreground">Mindmap not found</p>
+			</div>
+		);
+	}
 
 	return (
 		<div
@@ -46,7 +91,7 @@ export function MindmapViewer({
 				minZoom={0.15}
 				nodes={nodes}
 				edges={edges}
-				nodeTypes={NODE_TYPES}
+				nodeTypes={nodeTypes}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
