@@ -18,6 +18,7 @@ import { NewMindmapForm } from "./new-mindmap-form";
 export function NewMindmapButton() {
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
+	const [description, setDescription] = useState("");
 	const [icon, setIcon] = useState<string | undefined>(undefined);
 	const router = useRouter();
 	const createMindmap = useCreateMindmap();
@@ -25,10 +26,15 @@ export function NewMindmapButton() {
 	const handleCreate = () => {
 		if (name.trim() && !createMindmap.isPending) {
 			createMindmap.mutate(
-				{ title: name.trim(), icon },
+				{
+					title: name.trim(),
+					description: description.trim() || undefined,
+					icon,
+				},
 				{
 					onSuccess: (mindmap) => {
 						setName("");
+						setDescription("");
 						setIcon(undefined);
 						setOpen(false);
 						router.push(ROUTES.MAP(mindmap.id));
@@ -40,7 +46,7 @@ export function NewMindmapButton() {
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<SidebarTooltip content="Create New Mindmap" side="right">
+			<SidebarTooltip content="Create new mindmap" side="right">
 				<PopoverTrigger asChild>
 					<Button
 						size="sm"
@@ -49,7 +55,7 @@ export function NewMindmapButton() {
 					>
 						<Plus size={18} className="shrink-0" />
 						<span className="group-data-[collapsible=icon]:hidden">
-							Create New Mindmap
+							Create new mindmap
 						</span>
 					</Button>
 				</PopoverTrigger>
@@ -63,6 +69,8 @@ export function NewMindmapButton() {
 				<NewMindmapForm
 					name={name}
 					onNameChange={setName}
+					description={description}
+					onDescriptionChange={setDescription}
 					icon={icon}
 					onIconChange={setIcon}
 					onSubmit={handleCreate}
