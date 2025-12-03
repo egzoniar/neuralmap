@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
-import { Plus } from "lucide-react";
+import { useMemo, useCallback, useState } from "react";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -19,6 +19,11 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
+import {
+	InputGroup,
+	InputGroupInput,
+	InputGroupAddon,
+} from "@/components/ui/input-group";
 import { MindmapTrigger } from "./mindmap-trigger";
 import { MindmapList } from "./mindmap-list";
 import { useAppStore } from "@/providers/store-provider";
@@ -35,7 +40,8 @@ export function MindmapSwitcher() {
 	const setActiveMindmap = useAppStore(
 		(state) => state.mindmaps.setActiveMindmap,
 	);
-	const createMindmap = useAppStore((state) => state.mindmaps.createMindmap);
+
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const activeMindmap = useMemo(
 		() => mindmaps?.find((m) => m.id === activeMindmapId),
@@ -45,6 +51,16 @@ export function MindmapSwitcher() {
 	const mindmapCount = useMemo(() => mindmaps?.length ?? 0, [mindmaps]);
 	const showLoading = isLoading || isFetching || !mindmaps;
 
+	const filteredMindmaps = useMemo(() => {
+		if (!mindmaps) return [];
+		if (!searchQuery.trim()) return mindmaps;
+
+		const query = searchQuery.toLowerCase().trim();
+		return mindmaps.filter((mindmap) =>
+			mindmap.title.toLowerCase().includes(query),
+		);
+	}, [mindmaps, searchQuery]);
+
 	const handleSelectMindmap = useCallback(
 		(id: string) => {
 			setActiveMindmap(id);
@@ -53,16 +69,16 @@ export function MindmapSwitcher() {
 		[setActiveMindmap, router],
 	);
 
-	const handleCreateMindmap = useCallback(() => {
-		const name = `New Mindmap ${mindmapCount + 1}`;
-		const newId = createMindmap(name);
-		router.push(ROUTES.MAP(newId));
-	}, [mindmapCount, createMindmap, router]);
+	const handleOpenChange = useCallback((open: boolean) => {
+		if (!open) {
+			setSearchQuery("");
+		}
+	}, []);
 
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
-				<DropdownMenu>
+				<DropdownMenu onOpenChange={handleOpenChange}>
 					<SidebarTooltip
 						content={
 							<span className="font-medium">
@@ -84,32 +100,39 @@ export function MindmapSwitcher() {
 						</DropdownMenuTrigger>
 					</SidebarTooltip>
 					<DropdownMenuContent
-						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+						className="w-96 rounded-lg"
 						align="start"
 						side={isMobile ? "bottom" : "right"}
-						sideOffset={4}
+						sideOffset={15}
 					>
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
-							Mindmaps
+							Your Mindmaps
 						</DropdownMenuLabel>
+						<div className="px-2 py-1.5">
+							<InputGroup>
+								<InputGroupInput
+									placeholder="Search mindmaps..."
+									value={searchQuery}
+									onChange={(e) => setSearchQuery(e.target.value)}
+									className="pl-0 h-7"
+								/>
+								<InputGroupAddon className="p-2">
+									<Search size={14} />
+								</InputGroupAddon>
+								{searchQuery && (
+									<InputGroupAddon align="inline-end">
+										{filteredMindmaps.length}{" "}
+										{filteredMindmaps.length === 1 ? "result" : "results"}
+									</InputGroupAddon>
+								)}
+							</InputGroup>
+						</div>
+						<DropdownMenuSeparator />
 						<MindmapList
-							mindmaps={mindmaps}
+							mindmaps={filteredMindmaps}
 							isLoading={showLoading}
 							onSelectMindmap={handleSelectMindmap}
 						/>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem
-							className="gap-2 p-2"
-							onClick={handleCreateMindmap}
-							disabled={showLoading}
-						>
-							<div className="flex size-6 items-center justify-center rounded-md border bg-background">
-								<Plus className="size-4" />
-							</div>
-							<div className="font-medium text-muted-foreground">
-								Add mindmap
-							</div>
-						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>

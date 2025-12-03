@@ -9,19 +9,22 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useAppStore } from "@/providers/store-provider";
+import { useGetMindmap } from "@/services/mindmap/queries";
 import { formatShortDate } from "@/utils/date";
 
 export function NavStats() {
 	const nodes = useAppStore((state) => state.mindmap.nodes);
 	const edges = useAppStore((state) => state.mindmap.edges);
-	const mindmaps = useAppStore((state) => state.mindmaps.mindmaps);
 	const activeMindmapId = useAppStore(
 		(state) => state.mindmaps.activeMindmapId,
 	);
 
-	const activeMindmap = mindmaps.find((m) => m.id === activeMindmapId);
+	// Fetch mindmap metadata from React Query (source of truth)
+	// This reuses the cache from MindmapViewer if we're on a mindmap page
+	const { data: activeMindmap, error } = useGetMindmap(activeMindmapId || "");
 
-	if (!activeMindmap) {
+	// Don't render if no active mindmap, data hasn't loaded, or fetch failed
+	if (!activeMindmapId || !activeMindmap || error) {
 		return null;
 	}
 

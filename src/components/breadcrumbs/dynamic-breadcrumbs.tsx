@@ -23,6 +23,11 @@ export function DynamicBreadcrumbs() {
 	const pathname = usePathname();
 	const nodes = useAppStore((state) => state.mindmap.nodes);
 
+	// Don't show breadcrumbs on the root page
+	if (pathname === "/") {
+		return null;
+	}
+
 	// Extract mindmap ID from URL if on a map page
 	const mindmapId = pathname.startsWith("/map/") ? pathname.split("/")[2] : "";
 
@@ -34,12 +39,11 @@ export function DynamicBreadcrumbs() {
 	const breadcrumbs = useMemo((): BreadcrumbSegment[] => {
 		const segments: BreadcrumbSegment[] = [];
 
-		// Always include home
-		const isHomePage = pathname === "/";
+		// Always include home as a link
 		segments.push({
-			label: "NeuralMap",
+			label: "Home",
 			href: "/",
-			isCurrentPage: isHomePage,
+			isCurrentPage: false,
 		});
 
 		// Handle /map/[id] routes
@@ -51,9 +55,9 @@ export function DynamicBreadcrumbs() {
 					<>
 						{mindmap?.icon && <span className="mr-2">{mindmap.icon}</span>}
 						{mindmap?.title || "Mindmap"}{" "}
-						<span className="text-muted-foreground font-normal">
+						{/* <span className="text-muted-foreground font-normal">
 							({nodeCount} {nodeCount === 1 ? "node" : "nodes"})
-						</span>
+						</span> */}
 					</>
 				),
 				href: pathname,
@@ -68,27 +72,29 @@ export function DynamicBreadcrumbs() {
 	}, [pathname, mindmap, nodes]);
 
 	return (
-		<Breadcrumb>
-			<BreadcrumbList>
-				{breadcrumbs.map((segment, index) => {
-					const isLast = index === breadcrumbs.length - 1;
+		<div className="flex items-center gap-5">
+			<Breadcrumb>
+				<BreadcrumbList>
+					{breadcrumbs.map((segment, index) => {
+						const isLast = index === breadcrumbs.length - 1;
 
-					return (
-						<div key={segment.href} className="contents">
-							<BreadcrumbItem className="hidden md:block">
-								{segment.isCurrentPage || isLast ? (
-									<BreadcrumbPage>{segment.label}</BreadcrumbPage>
-								) : (
-									<BreadcrumbLink href={segment.href}>
-										{segment.label}
-									</BreadcrumbLink>
-								)}
-							</BreadcrumbItem>
-							{!isLast && <BreadcrumbSeparator className="hidden md:block" />}
-						</div>
-					);
-				})}
-			</BreadcrumbList>
-		</Breadcrumb>
+						return (
+							<div key={segment.href} className="contents">
+								<BreadcrumbItem className="hidden md:block h-6">
+									{segment.isCurrentPage || isLast ? (
+										<BreadcrumbPage>{segment.label}</BreadcrumbPage>
+									) : (
+										<BreadcrumbLink href={segment.href} className="h-6">
+											{segment.label}
+										</BreadcrumbLink>
+									)}
+								</BreadcrumbItem>
+								{!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+							</div>
+						);
+					})}
+				</BreadcrumbList>
+			</Breadcrumb>
+		</div>
 	);
 }

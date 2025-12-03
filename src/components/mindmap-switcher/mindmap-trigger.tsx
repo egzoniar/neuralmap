@@ -1,4 +1,4 @@
-import { ChevronsUpDown } from "lucide-react";
+import { Brain, ChevronsUpDown } from "lucide-react";
 import { MindmapIcon } from "@/components/mindmap/mindmap-icon";
 import type { Mindmap } from "@/types/mindmap";
 
@@ -21,7 +21,11 @@ export function MindmapTrigger({
 	return (
 		<>
 			<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-				<MindmapIcon mindmap={mindmap} isLoading={isLoading} />
+				<MindmapIcon
+					mindmap={mindmap}
+					isLoading={isLoading}
+					fallback={<Brain className="size-4 text-orange-600" />}
+				/>
 			</div>
 			<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
 				<span className="truncate font-semibold">{displayTitle}</span>

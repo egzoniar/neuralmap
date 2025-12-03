@@ -8,6 +8,7 @@ interface MindmapIconProps {
 	spinnerStrokeWidth?: number;
 	spinnerWidth?: number;
 	iconClassName?: string;
+	fallback?: React.ReactNode;
 }
 
 export function MindmapIcon({
@@ -16,6 +17,7 @@ export function MindmapIcon({
 	spinnerStrokeWidth = 2,
 	spinnerWidth = 20,
 	iconClassName,
+	fallback,
 }: MindmapIconProps) {
 	if (isLoading) {
 		return <Spinner strokeWidth={spinnerStrokeWidth} width={spinnerWidth} />;
@@ -27,5 +29,5 @@ export function MindmapIcon({
 		);
 	}
 
-	return null;
+	return fallback ?? null;
 }

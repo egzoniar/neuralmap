@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -12,6 +12,7 @@ import {
 	ItemTitle,
 } from "@/components/ui/item";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
+import { useSidebar } from "@/components/ui/sidebar";
 import { MindmapIcon } from "@/components/mindmap/mindmap-icon";
 import { ROUTES } from "@/constants/routes";
 import { useAppStore } from "@/providers/store-provider";
@@ -29,6 +30,7 @@ export function MindmapRecentItem({
 	isActive,
 }: MindmapRecentItemProps) {
 	const router = useRouter();
+	const { state } = useSidebar();
 	const setActiveMindmap = useAppStore(
 		(state) => state.mindmaps.setActiveMindmap,
 	);
@@ -40,8 +42,10 @@ export function MindmapRecentItem({
 	);
 
 	const isNavigating = navigatingToMindmapId === mindmap.id;
+	const isCollapsed = state === "collapsed";
 
 	const handleClick = () => {
+		if (isActive) return;
 		setNavigatingToMindmap(mindmap.id);
 		setActiveMindmap(mindmap.id);
 		router.push(ROUTES.MAP(mindmap.id));
@@ -53,23 +57,28 @@ export function MindmapRecentItem({
 				size="sm"
 				variant={isActive ? "muted" : "default"}
 				className={cn(
-					"group/mindmap-item relative min-h-0 cursor-pointer gap-1 p-2 transition-all duration-200 active:scale-[0.98] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-1",
+					"group/mindmap-item relative min-h-0 cursor-pointer gap-1 px-2 py-1.5 transition-all duration-200 active:scale-[0.98] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-1",
 					isActive ? "bg-gray-200" : "bg-transparent hover:bg-accent",
 				)}
 				onClick={handleClick}
 			>
 				{isActive && (
-					<div className="absolute left-0 top-1/2 h-3/5 w-0.5 -translate-y-1/2 rounded-r-full bg-primary transition-all group-data-[collapsible=icon]:hidden" />
+					<div className="absolute left-0 top-1/2 h-3/5 w-0.5 -translate-y-1/2 rounded-r-full bg-primary transition-all " />
 				)}
 
 				{/* Icon shown only when collapsed */}
-				<ItemMedia className="shrink-0 group-data-[collapsible=icon]:flex">
+				<ItemMedia className="shrink-0 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:min-h-[27px]">
 					<div className="flex size-7 items-center justify-center">
 						<MindmapIcon
 							mindmap={mindmap}
 							isLoading={isNavigating}
 							spinnerStrokeWidth={1.5}
 							spinnerWidth={18}
+							fallback={
+								isCollapsed ? (
+									<ImageOff size={16} className="text-muted-foreground" />
+								) : undefined
+							}
 							iconClassName="text-lg"
 						/>
 					</div>
@@ -79,9 +88,9 @@ export function MindmapRecentItem({
 					<ItemTitle className="block w-full min-w-0 truncate text-xs font-medium leading-tight transition-colors group-hover/mindmap-item:text-foreground">
 						{mindmap.title}
 					</ItemTitle>
-					{mindmap.updated_at && (
+					{mindmap.last_viewed_at && (
 						<ItemDescription className="truncate text-[0.7rem] leading-tight text-muted-foreground/60 transition-colors group-hover/mindmap-item:text-muted-foreground/80">
-							last updated {formatTimeAgo(mindmap.updated_at)}
+							last viewed {formatTimeAgo(mindmap.last_viewed_at)}
 						</ItemDescription>
 					)}
 				</ItemContent>
