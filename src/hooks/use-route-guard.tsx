@@ -40,7 +40,15 @@ export function useRouteGuard({ requireAuth, redirectTo }: RouteGuardOptions) {
 		const shouldRedirect = requireAuth ? !isAuthenticated : isAuthenticated;
 
 		if (shouldRedirect) {
-			router.replace(redirectTo);
+			// If redirecting to login (requireAuth=true but not authenticated),
+			// preserve the current URL as returnTo parameter
+			if (requireAuth && redirectTo === "/login") {
+				const currentPath = window.location.pathname;
+				const loginUrl = `/login?returnTo=${encodeURIComponent(currentPath)}`;
+				router.replace(loginUrl);
+			} else {
+				router.replace(redirectTo);
+			}
 		}
 	}, [isLoading, isAuthenticated, requireAuth, redirectTo, router]);
 
