@@ -20,6 +20,55 @@ import { BaseEdge } from "@/components/mindmap-ui/base-edge";
 export const SIDEBAR_WIDTH = "16rem";
 export const SIDEBAR_WIDTH_MOBILE = "18rem";
 
+/**
+ * Curated emoji list for mindmap icons
+ * Easy to extend - just add more emojis to the array
+ */
+export const MINDMAP_ICONS = [
+	// Thinking & Ideas
+	"🧠",
+	"💡",
+	"💭",
+	"🤔",
+	"✨",
+	// Goals & Achievement
+	"🎯",
+	"⭐",
+	"🏆",
+	"🚀",
+	"🔥",
+	// Work & Productivity
+	"📝",
+	"📚",
+	"💼",
+	"📊",
+	"📈",
+	// Creative
+	"🎨",
+	"🎬",
+	"🎵",
+	"📸",
+	"✏️",
+	// Tech & Science
+	"💻",
+	"🔬",
+	"⚡",
+	"🔮",
+	"🛠️",
+	// Nature & Life
+	"🌟",
+	"🌱",
+	"🌍",
+	"💎",
+	"🌈",
+	// Communication
+	"💬",
+	"📣",
+	"🔔",
+	"💌",
+	"🤝",
+] as const;
+
 export const UI = {
 	BUTTON: {
 		PRIMARY: "primary",

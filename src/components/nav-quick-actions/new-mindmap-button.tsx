@@ -1,87 +1,74 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
+import { ROUTES } from "@/constants/routes";
+import { useCreateMindmap } from "@/services/mindmap/mutations";
+import { NewMindmapForm } from "./new-mindmap-form";
 
 export function NewMindmapButton() {
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
+	const [icon, setIcon] = useState<string | undefined>(undefined);
+	const router = useRouter();
+	const createMindmap = useCreateMindmap();
 
 	const handleCreate = () => {
-		if (name.trim()) {
-			// TODO: Handle mindmap creation
-			console.log("Creating mindmap:", name);
-			setName("");
-			setOpen(false);
-		}
-	};
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter") {
-			e.preventDefault();
-			handleCreate();
+		if (name.trim() && !createMindmap.isPending) {
+			createMindmap.mutate(
+				{ title: name.trim(), icon },
+				{
+					onSuccess: (mindmap) => {
+						setName("");
+						setIcon(undefined);
+						setOpen(false);
+						router.push(ROUTES.MAP(mindmap.id));
+					},
+				},
+			);
 		}
 	};
 
 	return (
-		<SidebarMenuItem>
-			<Popover open={open} onOpenChange={setOpen}>
-				<SidebarTooltip
-					content={<span className="font-medium">New Mindmap</span>}
-				>
-					<PopoverTrigger asChild>
-						<SidebarMenuButton>
-							<div className="flex aspect-square size-6 items-center justify-center rounded-md border bg-background">
-								<Plus className="size-4" />
-							</div>
-							<span className="font-medium">New Mindmap</span>
-						</SidebarMenuButton>
-					</PopoverTrigger>
-				</SidebarTooltip>
-				<PopoverContent
-					className="w-80 p-3"
-					align="start"
-					side="right"
-					sideOffset={15}
-				>
-					<div className="space-y-2">
-						<h4 className="text-sm font-medium">Create New Mindmap</h4>
-						<p className="text-xs text-muted-foreground leading-relaxed">
-							Start organizing your thoughts and ideas visually.
-						</p>
-						<div className="space-y-1.5">
-							<Label htmlFor="mindmap-title" className="text-xs">
-								Mindmap Title
-							</Label>
-							<Input
-								id="mindmap-title"
-								placeholder="Enter title..."
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								onKeyDown={handleKeyDown}
-								className="h-8 text-sm"
-								autoFocus
-							/>
-						</div>
-						<div className="flex justify-end">
-							<Button onClick={handleCreate} size="sm" disabled={!name.trim()}>
-								Create
-							</Button>
-						</div>
-					</div>
-				</PopoverContent>
-			</Popover>
-		</SidebarMenuItem>
+		<Popover open={open} onOpenChange={setOpen}>
+			<SidebarTooltip content="Create New Mindmap" side="right">
+				<PopoverTrigger asChild>
+					<Button
+						size="sm"
+						variant="ghost"
+						className="w-full justify-start group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-0"
+					>
+						<Plus size={18} className="shrink-0" />
+						<span className="group-data-[collapsible=icon]:hidden">
+							Create New Mindmap
+						</span>
+					</Button>
+				</PopoverTrigger>
+			</SidebarTooltip>
+			<PopoverContent
+				className="w-80 p-3"
+				align="start"
+				side="right"
+				sideOffset={15}
+			>
+				<NewMindmapForm
+					name={name}
+					onNameChange={setName}
+					icon={icon}
+					onIconChange={setIcon}
+					onSubmit={handleCreate}
+					isLoading={createMindmap.isPending}
+				/>
+			</PopoverContent>
+		</Popover>
 	);
 }
