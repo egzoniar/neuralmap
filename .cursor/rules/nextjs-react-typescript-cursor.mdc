@@ -1,246 +1,66 @@
 ---
-description: Strict rules for client-side React + TypeScript + Next.js app with FastAPI backend
-globs: 
+alwaysApply: false
 ---
+# Critical Rules
 
-# CRITICAL RULES - NEVER VIOLATE THESE
+## Component Separation
+- **ONE COMPONENT PER FILE** - no exceptions, even for tiny components
+- **NO INLINE JSX** - extract `{items.map(item => <div>...</div>)}` to separate component files
+- Related components go in same directory with lowercase-with-dashes naming
 
-## Component Separation (STRICTLY ENFORCED)
-
-**RULE #1: ONE COMPONENT PER FILE - NO EXCEPTIONS**
-- Every React component MUST be in its own file
-- NEVER define multiple components in a single file
-- NEVER inline component definitions (e.g., loading skeletons, empty states, icons)
-- If you need a loading skeleton → create `loading-skeleton.tsx`
-- If you need an empty state → create `empty-state.tsx`
-- Even tiny components like list items or cards → separate files
-
-**RULE #2: NO INLINE JSX COMPONENTS**
-- NEVER use inline JSX patterns like: `{items.map(item => <div>...</div>)}`
-- Instead: Extract to separate component file and map over that component
-- Example: Create `list-item.tsx` and use `{items.map(item => <ListItem {...item} />)}`
-
-**RULE #3: Component File Location**
-- Related components go in the same directory
-- Use lowercase-with-dashes for directories (e.g., `components/mindmap-ui/`)
-- One component per file, named after the component (e.g., `base-node.tsx`)
-
-## Side Effects (STRICTLY ENFORCED)
-
-**RULE #4: NO SIDE EFFECTS IN UI COMPONENTS**
-- UI components in `components/` are for PRESENTATION ONLY
-- NEVER use `useEffect`, `useLayoutEffect`, or event listeners in UI components
-- Side effects belong in specific places - think carefully about where
-
-**Valid side effect locations:**
-- ✅ Custom hooks (`use-keyboard-shortcuts.tsx`, `use-sync-data.tsx`)
-- ✅ Provider components (`store-provider.tsx`, `auth0-provider.tsx`)
-- ✅ Page components (when page-specific and not reusable)
-- ❌ UI components in `components/` directories
-- ❌ Reusable components
-
-**If you need side effects - DISCUSS FIRST:**
-1. **STOP** - Don't immediately create a custom hook
-2. **Research** - Search the codebase for similar patterns
-3. **Analyze** - Is this side effect:
-   - Reusable across components? → Custom hook
-   - Page-specific setup/teardown? → Maybe page component is OK
-   - Global app concern? → Maybe provider is better
-   - Data synchronization? → Look at existing patterns (e.g., `use-mindmap-store.tsx`)
-4. **Discuss** with user - Explain the situation and propose solution
-5. **Document** - Add architectural comments explaining WHY
+## Side Effects
+- **NO useEffect/useLayoutEffect in UI components** - components are PRESENTATION ONLY
+- Side effects belong in: custom hooks (`hooks/`), providers (`providers/`), or page components
+- Before adding side effects: search codebase for similar patterns, then discuss
 
 ---
 
-# Architecture Patterns (Follow Strictly)
+# Architecture
 
 ## State Management
-
-**Client State: Zustand**
-- Use Zustand with lenses and immer for client/working state
-- All slices go in `src/lib/features/[feature]/[feature]-slice.ts`
+**Zustand** = working copy (client state)
+- Slices in `src/lib/features/[feature]/[feature]-slice.ts`
 - Access via `useAppStore` from `store-provider.tsx`
-- Zustand = working copy, mutations happen here first
 
-**Server State: React Query (TanStack Query)**
-- React Query is the SINGLE SOURCE OF TRUTH for server data
-- All API calls MUST use React Query (queries/mutations)
-- Queries go in `src/services/[resource]/queries.ts`
-- Mutations go in `src/services/[resource]/mutations.ts`
-- API functions go in `src/services/[resource]/[resource]-api.ts`
+**React Query** = source of truth (server state)
+- Queries: `src/services/[resource]/queries.ts`
+- Mutations: `src/services/[resource]/mutations.ts`
+- API functions: `src/services/[resource]/[resource]-api.ts`
 
-**Data Flow Pattern:**
+**Data Flow:**
 ```
-React Query (server) → Zustand (working copy) → User edits → Mutations → React Query refetch → Zustand update
+React Query → Zustand (working copy) → User edits → Mutations → React Query refetch
 ```
-
-**Key principle:** 
-- React Query = source of truth (persistent)
-- Zustand = ephemeral working copy (changes before save)
-- Use `useLayoutEffect` in custom hooks to sync them (see `use-mindmap-store.tsx`)
 
 ## Project Structure
-
 ```
 src/
-├── app/                    # Next.js pages (route groups)
-├── components/             # All React components (one per file!)
-│   ├── [feature]/         # Feature-specific components
-│   ├── ui/                # Reusable UI primitives (shadcn)
-├── constants/             # Static constants, configs
-├── hooks/                 # Custom hooks (use-* pattern)
-├── lib/
-│   ├── features/          # Zustand slices by feature
-│   └── utils.ts           # Utility functions
-├── providers/             # React context providers
-├── services/              # API layer (queries, mutations, api functions)
-├── types/                 # TypeScript types/interfaces
-└── utils/                 # Pure utility functions
+├── app/           # Next.js pages
+├── components/    # UI components (one per file!)
+├── constants/     # Static constants
+├── hooks/         # Custom hooks (side effects live here)
+├── lib/features/  # Zustand slices
+├── providers/     # React context providers
+├── services/      # API layer (queries, mutations)
+├── types/         # TypeScript types
+└── utils/         # Pure utility functions
 ```
 
-## TypeScript Usage
-
-- Use TypeScript for ALL code
-- Prefer `interface` over `type` for object shapes
-- Avoid enums; use const objects or union types instead
-- Export types/interfaces alongside implementation
-- Use proper generic constraints
-
-## Code Style and Structure
-
-**Functions:**
-- Use `function` keyword for named functions (React components, utilities)
-- Use arrow functions for callbacks and inline functions
-- Use descriptive names with auxiliary verbs (e.g., `isLoading`, `hasError`)
-
-**Naming Conventions:**
-- Components: PascalCase (`BaseNode.tsx`, `MindmapSheet.tsx`)
-- Files: lowercase-with-dashes (`base-node.tsx`, `mindmap-sheet.tsx`)
-- Hooks: camelCase with `use` prefix (`useMindmapStore`, `useAuth`)
-- Directories: lowercase-with-dashes (`app-sidebar/`, `mindmap-ui/`)
-- Favor named exports over default exports
-
-**Component Structure (in order):**
-1. Imports (external, then internal)
-2. Types/interfaces
-3. Main component
-4. Helper functions (if needed, but prefer extracting to utils/)
-
-**File Organization:**
-- Keep files focused and small (< 200 lines ideal)
-- Extract complex logic to custom hooks
-- Extract utilities to `utils/` or `lib/utils.ts`
-- Group related components in feature directories
-
-## React Patterns
-
-**Components:**
-- Functional components only (no classes)
-- Use TypeScript interfaces for props
-- Props interface should be named `[ComponentName]Props`
-- Destructure props in function signature
-- Keep components pure and focused
-
-**Hooks Usage:**
-- Custom hooks for ALL reusable logic
-- Custom hooks for ALL side effects
-- Document complex hooks with architectural comments
-- Return objects from hooks (not arrays) for clarity
-
-**State:**
-- Use Zustand via `useAppStore` for global state
-- Local state for component-specific UI state only
-- Never prop-drill - use context or Zustand instead
-
-**Events:**
-- Prefix handlers with `handle` or `on` (`handleClick`, `onSubmit`)
-- Keep handlers simple - extract logic to custom hooks if complex
-- Use callbacks from custom hooks when possible
-
-## API and Data Fetching
-
-**Never fetch data directly in components:**
-- ❌ `fetch()` calls in components
-- ❌ Axios calls in components
-- ✅ Use React Query hooks from `services/[resource]/queries.ts`
-- ✅ Use mutation hooks from `services/[resource]/mutations.ts`
-
-**Pattern:**
-```typescript
-// services/resource/queries.ts
-export function useGetResource(id: string) {
-  const { getAccessTokenSilently } = useAuth0();
-  return useQuery({
-    queryKey: queryKeys.resource.detail(id),
-    queryFn: async () => {
-      const token = await getAccessTokenSilently();
-      return resourceApi.getResource(token, id);
-    },
-    enabled: !!id,
-  });
-}
-
-// Component usage
-function Component() {
-  const { data, isLoading } = useGetResource(id);
-  // ...
-}
-```
-
-## UI and Styling
-
-- Use **Shadcn UI** and **Radix UI** for all UI components
-- Use **Tailwind CSS** for all styling (no CSS files except globals.css)
-- Mobile-first approach - use responsive Tailwind classes
-- Use `cn()` utility for conditional classes
-- No inline styles except for dynamic values
-
-## Performance
-
-- Use `React.memo()` sparingly (only when proven necessary)
-- Avoid premature optimization
-- Use proper dependency arrays in hooks
-- Use `useCallback` for functions passed to memoized children
-- Use `useMemo` for expensive computations only
-
-## Error Handling
-
-- Use React Query's built-in error handling
-- Show user-friendly error messages
-- Use error boundaries for critical sections
-- Log errors appropriately (not to console in production)
-
-## Documentation
-
-- Add JSDoc comments to complex functions and hooks
-- Use inline comments sparingly - code should be self-documenting
-- Document WHY, not WHAT (code shows what)
-- Add architectural comments for non-obvious patterns (see `use-mindmap-store.tsx`)
-
-## Testing Approach
-
-- Write code that's easy to test (pure functions, separated concerns)
-- Custom hooks should be testable in isolation
-- Components should be presentational and easy to test
+## Naming Conventions
+| Type | Convention | Example |
+|------|------------|---------|
+| Components | PascalCase | `BaseNode` |
+| Files | lowercase-with-dashes | `base-node.tsx` |
+| Hooks | camelCase with `use` | `useMindmapStore` |
+| Props | `[Component]Props` | `BaseNodeProps` |
 
 ---
 
-# Common Patterns in This Codebase
-
-## Custom Hook Pattern
-```typescript
-// src/hooks/use-feature.tsx
-export function useFeature() {
-  // Side effects here (useEffect, etc.)
-  // Business logic here
-  // Return data and callbacks
-  return { data, actions };
-}
-```
+# Patterns
 
 ## Query Pattern
 ```typescript
-// src/services/resource/queries.ts
+// services/resource/queries.ts
 export function useGetResource(id: string) {
   const { getAccessTokenSilently } = useAuth0();
   return useQuery({
@@ -256,7 +76,7 @@ export function useGetResource(id: string) {
 
 ## Mutation Pattern
 ```typescript
-// src/services/resource/mutations.ts
+// services/resource/mutations.ts
 export function useUpdateResource() {
   const queryClient = useQueryClient();
   const { getAccessTokenSilently } = useAuth0();
@@ -275,10 +95,7 @@ export function useUpdateResource() {
 
 ## Component Pattern
 ```typescript
-// src/components/feature/component.tsx
 "use client";
-
-import { ComponentDependency } from "@/components/other/component-dependency";
 
 interface ComponentProps {
   data: string;
@@ -286,53 +103,31 @@ interface ComponentProps {
 }
 
 export function Component({ data, onAction }: ComponentProps) {
-  return (
-    <div>
-      <ComponentDependency />
-    </div>
-  );
+  // NO useEffect here - use custom hooks for side effects
+  return <div>{data}</div>;
 }
 ```
 
 ---
 
-# BEFORE YOU CODE - CHECKLIST
+# Quick Reference
 
-Before creating or modifying code, verify:
+## Do
+- ✅ One component per file
+- ✅ React Query for ALL API calls
+- ✅ Zustand via `useAppStore` for global state
+- ✅ Side effects in custom hooks
+- ✅ Named exports
+- ✅ `interface` over `type` for objects
+- ✅ `function` keyword for components
+- ✅ Shadcn UI + Tailwind CSS
+- ✅ `cn()` for conditional classes
 
-1. ✅ Is each component in its own file?
-2. ✅ Are side effects in appropriate places (NOT in UI components)?
-3. ✅ Am I using React Query for ALL API calls?
-4. ✅ Am I using Zustand correctly (via useAppStore)?
-5. ✅ Are file names lowercase-with-dashes?
-6. ✅ Are components presentational and focused?
-7. ✅ Have I documented complex logic?
-8. ✅ Am I following the data flow pattern?
-9. ✅ Have I checked for similar patterns in the codebase?
-
----
-
-# ANTI-PATTERNS - NEVER DO THIS
-
-❌ Multiple components in one file
-❌ Inline component definitions (even small ones)
-❌ useEffect in UI components
-❌ Direct fetch/axios calls
-❌ Classes or OOP patterns
-❌ Enums
-❌ Default exports (prefer named)
-❌ Prop drilling (use Zustand/context)
-❌ Mixing concerns (UI + logic together)
-❌ Large components (> 200 lines)
-
----
-
-# When in Doubt
-
-1. **SEARCH FIRST** - Look at existing patterns in the codebase (especially in `hooks/`, `services/`, `components/`)
-2. **DISCUSS** - If unsure about architecture decisions, discuss with user
-3. Separate concerns aggressively
-4. Keep components dumb and presentational
-5. Ask yourself: "Can this be reused?" → Separate file
-6. Ask yourself: "Is this a side effect?" → Research similar cases, then discuss
-7. Ask yourself: "Does this pattern already exist?" → Follow existing pattern
+## Don't
+- ❌ Multiple components in one file
+- ❌ useEffect in UI components
+- ❌ Direct fetch/axios calls in components
+- ❌ Enums (use const objects/unions)
+- ❌ Default exports
+- ❌ Prop drilling (use Zustand/context)
+- ❌ Components > 200 lines
