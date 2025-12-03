@@ -17,7 +17,11 @@ export const API_ENDPOINTS = {
 	},
 	MINDMAPS: {
 		LIST: "/mindmaps/",
+		CREATE: "/mindmaps/",
+		RECENT: "/mindmaps/recent",
 		DETAIL: (id: string) => `/mindmaps/${id}`,
+		UPDATE: (id: string) => `/mindmaps/${id}`,
+		VIEW: (id: string) => `/mindmaps/${id}/view`,
 	},
 };
 

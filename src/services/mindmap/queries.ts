@@ -24,6 +24,26 @@ export function useListMindmaps() {
 }
 
 /**
+ * Hook to fetch recently viewed mindmaps
+ * Returns mindmaps ordered by last viewed timestamp (most recent first)
+ * Only includes mindmaps that have been viewed at least once
+ */
+export function useListRecentMindmaps(limit: number = 3) {
+	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
+
+	return useQuery({
+		queryKey: queryKeys.mindmaps.recent(limit),
+		queryFn: async () => {
+			const token = await getAccessTokenSilently();
+			return mindmapApiService.listRecentMindmaps(token, limit);
+		},
+		enabled: isAuthenticated && !isLoading,
+		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+		refetchOnWindowFocus: true, // Refetch when user returns to tab
+	});
+}
+
+/**
  * Hook to fetch a specific mindmap by ID with full content
  * Returns complete mindmap including nodes and edges
  */

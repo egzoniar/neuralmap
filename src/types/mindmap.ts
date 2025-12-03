@@ -77,6 +77,30 @@ export type MindmapResponse = {
 };
 
 /**
+ * Request body for creating a new mindmap
+ * Only title is required - backend generates root node automatically
+ */
+export type MindmapCreate = {
+	title: string;
+	description?: string;
+	icon?: string;
+	visibility?: MindmapVisibility;
+};
+
+/**
+ * Request body for updating a mindmap
+ * All fields are optional - only send what needs to be updated
+ * Content updates are validated by backend (e.g., root node must exist)
+ */
+export type MindmapUpdate = {
+	title?: string;
+	description?: string;
+	icon?: string;
+	visibility?: MindmapVisibility;
+	content?: MindmapContent;
+};
+
+/**
  * Legacy type for backward compatibility with local store
  * @deprecated Use Mindmap type instead
  */

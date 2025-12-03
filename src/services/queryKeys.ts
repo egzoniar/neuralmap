@@ -14,6 +14,7 @@ export const queryKeys = {
 	mindmaps: {
 		all: ["mindmaps"] as const,
 		list: ["mindmaps", "list"] as const,
+		recent: (limit: number) => ["mindmaps", "recent", limit] as const,
 		detail: (id: string) => ["mindmaps", "detail", id] as const,
 	},
 } as const;
