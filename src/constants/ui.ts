@@ -21,6 +21,12 @@ export const SIDEBAR_WIDTH = "16rem";
 export const SIDEBAR_WIDTH_MOBILE = "18rem";
 
 /**
+ * Minimum screen width required for the app (768px = tablet size)
+ * Below this breakpoint, users will see an unsupported screen message
+ */
+export const MIN_SUPPORTED_WIDTH = 768;
+
+/**
  * Curated emoji list for mindmap icons
  * Easy to extend - just add more emojis to the array
  */

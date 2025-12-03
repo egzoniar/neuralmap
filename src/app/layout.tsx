@@ -4,6 +4,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { StoreProvider } from "@/providers/store-provider";
 import { Auth0Provider } from "@/providers/auth0-provider";
 import { DialogRenderer } from "@/components/dialogs/dialog-renderer";
+import { ScreenSizeGuard } from "@/components/unsupported-screen/screen-size-guard";
 
 import "@/app/globals.css";
 import { Toaster } from "sonner";
@@ -36,9 +37,11 @@ export default function RootLayout({
 				<Auth0Provider>
 					<StoreProvider>
 						<QueryProvider>
-							{children}
-							<Toaster richColors />
-							<DialogRenderer />
+							<ScreenSizeGuard>
+								{children}
+								<Toaster richColors />
+								<DialogRenderer />
+							</ScreenSizeGuard>
 						</QueryProvider>
 					</StoreProvider>
 				</Auth0Provider>
