@@ -72,3 +72,18 @@ export function useAppStore<T>(selector: (store: Store) => T): T {
 
 	return useStore(storeContext, selector);
 }
+
+/**
+ * Hook to get imperative access to store methods
+ * Use this when you need to call store methods and read fresh state
+ * in the same synchronous operation (e.g., for immediate backend sync)
+ */
+export function useAppStoreApi() {
+	const storeContext = useContext(StoreContext);
+
+	if (!storeContext) {
+		throw new Error("useAppStoreApi must be used within StoreProvider");
+	}
+
+	return storeContext;
+}

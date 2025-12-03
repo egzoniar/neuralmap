@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAppStore } from "@/providers/store-provider";
 import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
+import { useDeleteNode } from "@/hooks/use-delete-node";
+import { useDeleteEdge } from "@/hooks/use-delete-edge";
 import { Trash2 } from "lucide-react";
 import { NODE_TYPE } from "@/constants/ui";
 
@@ -11,10 +13,12 @@ import { NODE_TYPE } from "@/constants/ui";
 export function useMindmapKeyboard() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isDialogOpenRef = useRef(false);
-	const { selection, removeSelection, deleteNodes, deleteEdges } = useAppStore(
-		(state) => state.mindmap,
-	);
+	const { selection, removeSelection } = useAppStore((state) => state.mindmap);
 	const { confirm } = useAppStore((state) => state.dialog);
+
+	// Hooks for immediate backend sync
+	const { deleteNodes } = useDeleteNode();
+	const { deleteEdges } = useDeleteEdge();
 
 	const handleKeyDown = useCallback(
 		async (event: globalThis.KeyboardEvent) => {
