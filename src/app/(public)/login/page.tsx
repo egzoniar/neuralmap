@@ -1,14 +1,20 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/services/auth/mutations";
 import { useRouteGuard } from "@/hooks/use-route-guard";
 
 export default function LoginPage() {
+	const searchParams = useSearchParams();
 	const { mutate: login, isPending } = useLogin();
+
+	// Get the returnTo parameter from query string, default to "/"
+	const returnTo = searchParams.get("returnTo") || "/";
+
 	const { isLoading, canRender } = useRouteGuard({
 		requireAuth: false,
-		redirectTo: "/",
+		redirectTo: returnTo, // Redirect to returnTo if user is already authenticated
 	});
 
 	// Show loading state while checking authentication
@@ -28,7 +34,7 @@ export default function LoginPage() {
 	const handleLogin = () => {
 		login({
 			appState: {
-				returnTo: "/",
+				returnTo,
 			},
 		});
 	};
