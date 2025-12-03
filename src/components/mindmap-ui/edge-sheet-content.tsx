@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Edge } from "reactflow";
-import { useAppStore } from "@/providers/store-provider";
+import { useDeleteEdge } from "@/hooks/use-delete-edge";
 import { Trash2, AlertTriangle, Link2, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,10 +26,11 @@ interface EdgeSheetContentProps {
 }
 
 export function EdgeSheetContent({ edgeData, onClose }: EdgeSheetContentProps) {
-	const deleteEdge = useAppStore((state) => state.mindmap.deleteEdge);
+	// Hook for immediate edge deletion with backend sync
+	const { deleteEdges } = useDeleteEdge();
 
 	const handleDeleteEdge = () => {
-		deleteEdge(edgeData.id);
+		deleteEdges([edgeData.id]);
 		onClose();
 	};
 

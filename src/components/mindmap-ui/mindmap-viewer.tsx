@@ -1,15 +1,20 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import ReactFlow, { Background, MiniMap } from "reactflow";
 import "reactflow/dist/style.css";
 import { useAppStore } from "@/providers/store-provider";
 import { NODE_TYPES } from "@/constants/ui";
 import { useMindmapKeyboard } from "@/hooks/use-mindmap-keyboard";
 import { useMindmapNavigation } from "@/hooks/use-mindmap-navigation";
+import { useQueryAuthError } from "@/hooks/use-query-auth-error";
 import { useGetMindmap } from "@/services/mindmap/queries";
+import { useCreateEdge } from "@/hooks/use-create-edge";
+import { useNodeDragSync } from "@/hooks/use-node-drag-sync";
+import { useSelectionSync } from "@/hooks/use-selection-sync";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMindmapStore } from "@/hooks/use-mindmap-store";
+import { MindmapErrorState } from "@/components/mindmap-ui/mindmap-error-state";
 
 interface MindmapViewerProps {
 	mindmapId: string;
@@ -19,9 +24,38 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 	// Fetch mindmap data
 	const { data: mindmap, isLoading, error } = useGetMindmap(mindmapId);
 
+	// Handle Auth0 errors with automatic redirect to login
+	useQueryAuthError(error, `/map/${mindmapId}`);
+
 	// Get Zustand actions for handling interactions
-	const { onNodesChange, onEdgesChange, onConnect, onSelectionChange } =
-		useAppStore((state) => state.mindmap);
+	const {
+		onNodesChange,
+		onEdgesChange,
+		onSelectionChange: onSelectionChangeStore,
+	} = useAppStore((state) => state.mindmap);
+
+	// Hook for immediate edge creation with backend sync
+	const { createEdge } = useCreateEdge();
+
+	// Hook for debounced node position sync (500ms after drag ends)
+	const { onNodeDragStop } = useNodeDragSync();
+
+	// Hook for debounced selection state sync (1000ms after selection changes)
+	const { syncSelection } = useSelectionSync();
+
+	// Memoize the selection change handler to prevent infinite loops
+	// Sync both selection AND deselection to backend
+	const onSelectionChange = useCallback(
+		(selection: { nodes: any[]; edges: any[] }) => {
+			// 1. Update local state immediately
+			onSelectionChangeStore(selection);
+
+			// 2. Queue debounced backend sync (for both selection and deselection)
+			// This allows users to return to their mindmap in the exact state they left it
+			syncSelection();
+		},
+		[onSelectionChangeStore, syncSelection],
+	);
 
 	// Sync server state with client state
 	// The hook has built-in guards against stale cached data
@@ -58,18 +92,7 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 	}
 
 	if (error) {
-		return (
-			<div className="flex h-full w-full items-center justify-center">
-				<div className="text-center space-y-2">
-					<h2 className="text-2xl font-semibold text-destructive">
-						Failed to load mindmap
-					</h2>
-					<p className="text-muted-foreground">
-						{error instanceof Error ? error.message : "Unknown error occurred"}
-					</p>
-				</div>
-			</div>
-		);
+		return <MindmapErrorState error={error} />;
 	}
 
 	if (!mindmap || !nodes || !edges) {
@@ -94,8 +117,9 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 				nodeTypes={nodeTypes}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
-				onConnect={onConnect}
+				onConnect={createEdge}
 				onSelectionChange={onSelectionChange}
+				onNodeDragStop={onNodeDragStop}
 				deleteKeyCode={null} // Disable delete/backspace key (we handle with custom dialog)
 				panActivationKeyCode={null} // Disable pan activation key
 				zoomActivationKeyCode={null} // Disable zoom activation key

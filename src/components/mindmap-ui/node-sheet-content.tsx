@@ -8,11 +8,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { IconPicker } from "@/components/ui/icon-picker";
 import { TiptapEditor } from "../tiptap-editor/tiptap";
 import { useAppStore } from "@/providers/store-provider";
 import { NodeDirectionButtons } from "./node-direction-buttons";
 import { Separator } from "@/components/ui/separator";
 import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
+import { useUpdateMindmapMetadata } from "@/services/mindmap/mutations";
+import { useDebouncedContentUpdate } from "@/hooks/use-debounced-content-update";
+import { useDeleteNode } from "@/hooks/use-delete-node";
+import { useGetMindmap } from "@/services/mindmap/queries";
+import { useParams } from "next/navigation";
 import {
 	Trash2,
 	AlertTriangle,
@@ -30,13 +36,27 @@ interface NodeSheetContentProps {
 }
 
 export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
+	const params = useParams();
+	const mindmapId = params?.id as string;
+
 	// Get the latest node data directly from the store
 	const node = useAppStore((state) =>
 		state.mindmap.nodes.find((n) => n.id === nodeId),
 	);
 	const updateNodeData = useAppStore((state) => state.mindmap.updateNodeData);
-	const deleteNode = useAppStore((state) => state.mindmap.deleteNode);
 	const { confirm } = useAppStore((state) => state.dialog);
+
+	// Get mindmap metadata for icon (source of truth is React Query)
+	const { data: mindmap } = useGetMindmap(mindmapId);
+
+	// Hook for immediate metadata updates (icon)
+	const updateMetadata = useUpdateMindmapMetadata();
+
+	// Hook for debounced content updates (title, content)
+	const { queueUpdate: queueContentUpdate } = useDebouncedContentUpdate(2000);
+
+	// Hook for immediate node deletion with backend sync
+	const { deleteNode } = useDeleteNode();
 
 	// If node not found, don't render
 	if (!node) return null;
@@ -45,11 +65,26 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	const isRootNode = node.type === NODE_TYPE.ROOT;
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// 1. Update local state immediately (optimistic update)
 		updateNodeData(nodeId, { title: e.target.value });
+		// 2. Queue debounced backend sync (2 seconds)
+		queueContentUpdate();
 	};
 
 	const handleContentChange = (richText: string) => {
+		// 1. Update local state immediately (optimistic update)
 		updateNodeData(nodeId, { content: richText });
+		// 2. Queue debounced backend sync (2 seconds)
+		queueContentUpdate();
+	};
+
+	const handleIconChange = (icon: string | undefined) => {
+		// Immediate backend sync (no debounce)
+		if (!mindmapId) return;
+		updateMetadata.mutate({
+			mindmapId,
+			update: { icon },
+		});
 	};
 
 	const handleDeleteNode = async () => {
@@ -97,22 +132,37 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 							className="text-sm font-semibold flex items-center gap-2"
 						>
 							<Heading className="size-4 text-muted-foreground" />
-							Title
+							{isRootNode ? "Mindmap Title" : "Title"}
 						</Label>
 						<p className="text-xs text-muted-foreground leading-relaxed">
 							{isRootNode
 								? "The main topic of your mindmap"
 								: "Give your node a clear, concise name"}
 						</p>
-						<Input
-							id="node-title"
-							type="text"
-							placeholder={
-								isRootNode ? "Enter main topic..." : "Enter node title..."
-							}
-							value={nodeData.title || ""}
-							onChange={handleTitleChange}
-						/>
+						{isRootNode ? (
+							<div className="flex gap-2">
+								<IconPicker
+									value={mindmap?.icon ?? undefined}
+									onChange={handleIconChange}
+								/>
+								<Input
+									id="node-title"
+									type="text"
+									placeholder="Enter main topic..."
+									value={nodeData.title || ""}
+									onChange={handleTitleChange}
+									className="flex-1"
+								/>
+							</div>
+						) : (
+							<Input
+								id="node-title"
+								type="text"
+								placeholder="Enter node title..."
+								value={nodeData.title || ""}
+								onChange={handleTitleChange}
+							/>
+						)}
 					</div>
 				</div>
 

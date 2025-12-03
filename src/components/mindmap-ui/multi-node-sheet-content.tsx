@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/providers/store-provider";
+import { useDeleteNode } from "@/hooks/use-delete-node";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +34,10 @@ export function MultiNodeSheetContent({
 	selectedNodes,
 	onClose,
 }: MultiNodeSheetContentProps) {
-	const deleteNodes = useAppStore((state) => state.mindmap.deleteNodes);
 	const { confirm } = useAppStore((state) => state.dialog);
+
+	// Hook for immediate node deletion with backend sync
+	const { deleteNodes } = useDeleteNode();
 
 	// Filter out root nodes from the selection
 	const deletableNodes = selectedNodes.filter(
