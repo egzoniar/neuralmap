@@ -11,6 +11,8 @@ import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamic-breadcrumbs";
 import { getRouteType } from "@/constants/routes";
+import { SyncStatusBadge } from "@/components/sync-status-badge";
+import { cn } from "@/lib/utils";
 
 interface SidebarProviderProps {
 	children: ReactNode;
@@ -31,14 +33,24 @@ export function AppSidebarProvider({ children }: SidebarProviderProps) {
 			<AppSidebar />
 			<SidebarInset className="flex flex-col">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-					<div className="flex items-center gap-2 px-4">
-						{!isHomePage && (
-							<>
-								<SidebarTrigger className="-ml-1" />
-								<Separator orientation="vertical" className="mr-2 h-4" />
-							</>
+					<div
+						className={cn(
+							"flex items-center gap-4 px-4 py-1.5 w-full border-b",
+							isMindmapPage
+								? "border-b shadow-sm shadow-gray-300"
+								: "border-b-0",
 						)}
-						<DynamicBreadcrumbs />
+					>
+						<div className="flex items-center gap-2">
+							{!isHomePage && (
+								<>
+									<SidebarTrigger className="-ml-1" />
+									<Separator orientation="vertical" className="mr-2 h-4" />
+								</>
+							)}
+							<DynamicBreadcrumbs />
+						</div>
+						{isMindmapPage && <SyncStatusBadge />}
 					</div>
 				</header>
 				<div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0">
