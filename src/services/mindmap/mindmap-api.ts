@@ -29,7 +29,10 @@ export const mindmapApiService = {
 	 * Returns mindmaps ordered by last viewed timestamp (most recent first)
 	 * Only includes mindmaps that have been viewed at least once
 	 */
-	async listRecentMindmaps(token: string, limit: number = 10): Promise<Mindmap[]> {
+	async listRecentMindmaps(
+		token: string,
+		limit: number = 10,
+	): Promise<Mindmap[]> {
 		const url = `${API_ENDPOINTS.MINDMAPS.RECENT}?limit=${limit}`;
 		return await fetchApi<Mindmap[]>(url, {
 			method: "GET",
@@ -67,7 +70,7 @@ export const mindmapApiService = {
 	 */
 	async createMindmap(
 		token: string,
-		data: MindmapCreate
+		data: MindmapCreate,
 	): Promise<MindmapResponse> {
 		return await fetchApi<MindmapResponse>(API_ENDPOINTS.MINDMAPS.CREATE, {
 			method: "POST",
@@ -84,7 +87,7 @@ export const mindmapApiService = {
 	async updateMindmap(
 		token: string,
 		id: string,
-		data: MindmapUpdate
+		data: MindmapUpdate,
 	): Promise<MindmapResponse> {
 		return await fetchApi<MindmapResponse>(API_ENDPOINTS.MINDMAPS.UPDATE(id), {
 			method: "PUT",
