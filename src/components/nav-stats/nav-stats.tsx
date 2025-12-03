@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, GitBranch, Layers } from "lucide-react";
+import { Calendar, GitBranch, Globe, Layers, Lock } from "lucide-react";
 
 import {
 	SidebarGroup,
@@ -57,9 +57,19 @@ export function NavStats() {
 						</div>
 					</div>
 					<Separator className="my-2.5" />
-					<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-						<Calendar className="size-3.5" />
-						<span>Created {formatShortDate(activeMindmap.created_at)}</span>
+					<div className="flex flex-col gap-1.5">
+						<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+							{activeMindmap.visibility === "private" ? (
+								<Lock className="size-3.5" />
+							) : (
+								<Globe className="size-3.5" />
+							)}
+							<span className="capitalize">{activeMindmap.visibility}</span>
+						</div>
+						<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+							<Calendar className="size-3.5" />
+							<span>Created {formatShortDate(activeMindmap.created_at)}</span>
+						</div>
 					</div>
 				</div>
 			</SidebarGroupContent>

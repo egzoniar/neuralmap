@@ -1,6 +1,6 @@
 "use client";
 
-import { Smile } from "lucide-react";
+import { ImageOff } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
 					{value ? (
 						value
 					) : (
-						<Smile size={16} className="text-muted-foreground" />
+						<ImageOff size={16} className="text-muted-foreground" />
 					)}
 				</Button>
 			</PopoverTrigger>

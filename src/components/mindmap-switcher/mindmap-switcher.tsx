@@ -111,7 +111,7 @@ export function MindmapSwitcher() {
 						<div className="px-2 py-1.5">
 							<InputGroup>
 								<InputGroupInput
-									placeholder="Search mindmaps..."
+									placeholder="Search..."
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="pl-0 h-7"

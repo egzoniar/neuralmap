@@ -42,7 +42,7 @@ export function NavRecent() {
 
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Recent Mindmaps</SidebarGroupLabel>
+			<SidebarGroupLabel>Recent</SidebarGroupLabel>
 			{renderContent()}
 		</SidebarGroup>
 	);
