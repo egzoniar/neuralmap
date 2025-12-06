@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Edge } from "reactflow";
-import { useDeleteEdge } from "@/hooks/use-delete-edge";
+import { useMindmapActions } from "@/contexts/mindmap-actions-context";
 import { Trash2, AlertTriangle, Link2, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +26,8 @@ interface EdgeSheetContentProps {
 }
 
 export function EdgeSheetContent({ edgeData, onClose }: EdgeSheetContentProps) {
-	// Hook for immediate edge deletion with backend sync
-	const { deleteEdges } = useDeleteEdge();
+	// Get actions from context (works for both auth and demo)
+	const { deleteEdges } = useMindmapActions();
 
 	const handleDeleteEdge = () => {
 		deleteEdges([edgeData.id]);

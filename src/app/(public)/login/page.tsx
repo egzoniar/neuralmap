@@ -1,13 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@/services/auth/mutations";
+import { GoogleSignInButton } from "@/components/auth/google-signin-button";
 import { useRouteGuard } from "@/hooks/use-route-guard";
+import { ROUTES } from "@/constants/routes";
 
 export default function LoginPage() {
 	const searchParams = useSearchParams();
-	const { mutate: login, isPending } = useLogin();
+	const router = useRouter();
 
 	// Get the returnTo parameter from query string, default to "/"
 	const returnTo = searchParams.get("returnTo") || "/";
@@ -31,14 +32,6 @@ export default function LoginPage() {
 		return null;
 	}
 
-	const handleLogin = () => {
-		login({
-			appState: {
-				returnTo,
-			},
-		});
-	};
-
 	return (
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="mx-auto w-full max-w-md space-y-6 p-6">
@@ -50,13 +43,30 @@ export default function LoginPage() {
 				</div>
 
 				<div className="space-y-4">
+					<GoogleSignInButton
+						returnTo={returnTo}
+						fullWidth
+						className="text-sm"
+					/>
+
+					<div className="relative">
+						<div className="absolute inset-0 flex items-center">
+							<span className="w-full border-t" />
+						</div>
+						<div className="relative flex justify-center text-xs uppercase">
+							<span className="bg-background px-2 text-muted-foreground">
+								Or
+							</span>
+						</div>
+					</div>
+
 					<Button
+						variant="outline"
 						className="w-full text-sm"
 						size="default"
-						onClick={handleLogin}
-						disabled={isPending}
+						onClick={() => router.push(ROUTES.DEMO)}
 					>
-						{isPending ? "Redirecting to Google..." : "Sign in with Google"}
+						Try Demo
 					</Button>
 
 					<p className="text-center text-xs text-muted-foreground">

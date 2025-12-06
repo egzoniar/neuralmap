@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Handle, useNodeId } from "reactflow";
 import type { HandleProps } from "reactflow";
-import { useCreateNode } from "@/hooks/use-create-node";
+import { useMindmapActions } from "@/contexts/mindmap-actions-context";
 
 interface BaseHandleProps extends HandleProps {
 	selected?: boolean;
@@ -11,17 +11,23 @@ interface BaseHandleProps extends HandleProps {
 
 export function BaseHandle({ id, type, position, selected }: BaseHandleProps) {
 	const nodeId = useNodeId();
-	const { createNode, isPending } = useCreateNode();
+	const { createNode, isCreateNodePending } = useMindmapActions();
 
 	const isSource = type === "source";
 	const isTarget = type === "target";
 
 	const handleClick = (event: React.MouseEvent) => {
-		// Don't create node if mutation is in progress
-		if (isSource && nodeId && id && !isPending) {
-			event.stopPropagation();
-			createNode(nodeId, id, position);
-		}
+		// Only source handles create nodes (targets just receive connections)
+		if (!isSource) return;
+
+		// Guard: Don't create node if mutation is in progress
+		if (isCreateNodePending) return;
+
+		// Guard: Ensure we have required data (defensive programming)
+		if (!nodeId || !id) return;
+
+		event.stopPropagation();
+		createNode(nodeId, id, position);
 	};
 
 	return (
@@ -34,8 +40,10 @@ export function BaseHandle({ id, type, position, selected }: BaseHandleProps) {
 				"transition-opacity duration-200 opacity-30",
 				{ invisible: isTarget },
 				{ "source-handle-scale": isSource },
-				{ "cursor-pointer hover:opacity-100": isSource && !isPending },
-				{ "cursor-not-allowed opacity-20": isSource && isPending },
+				{
+					"cursor-pointer hover:opacity-100": isSource && !isCreateNodePending,
+				},
+				{ "cursor-not-allowed opacity-20": isSource && isCreateNodePending },
 			)}
 		/>
 	);

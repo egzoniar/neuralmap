@@ -32,7 +32,7 @@ export function AppSidebarProvider({ children }: SidebarProviderProps) {
 		<SidebarProvider key={routeType} defaultOpen={defaultOpen}>
 			<AppSidebar />
 			<SidebarInset className="flex flex-col">
-				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+				<header className="flex shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
 					<div
 						className={cn(
 							"flex items-center gap-4 px-4 py-1.5 w-full border-b",
@@ -53,7 +53,7 @@ export function AppSidebarProvider({ children }: SidebarProviderProps) {
 						{isMindmapPage && <SyncStatusBadge />}
 					</div>
 				</header>
-				<div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-0">
+				<div className="flex flex-1 flex-col gap-4 pt-0 min-h-0">
 					{children}
 				</div>
 			</SidebarInset>

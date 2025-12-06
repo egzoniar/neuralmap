@@ -13,6 +13,7 @@ import {
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
 import { ROUTES } from "@/constants/routes";
 import { useCreateMindmap } from "@/services/mindmap/mutations";
+import { useCheckMindmapLimit } from "@/hooks/use-check-mindmap-limit";
 import { NewMindmapForm } from "./new-mindmap-form";
 
 export function NewMindmapButton() {
@@ -22,9 +23,17 @@ export function NewMindmapButton() {
 	const [icon, setIcon] = useState<string | undefined>(undefined);
 	const router = useRouter();
 	const createMindmap = useCreateMindmap();
+	const checkMindmapLimit = useCheckMindmapLimit();
 
-	const handleCreate = () => {
+	const handleCreate = async () => {
 		if (name.trim() && !createMindmap.isPending) {
+			// Check limit first (shows prompt if at limit)
+			const canCreate = await checkMindmapLimit();
+
+			// If limit reached, stop here
+			if (!canCreate) return;
+
+			// Under limit - proceed with backend creation
 			createMindmap.mutate(
 				{
 					title: name.trim(),

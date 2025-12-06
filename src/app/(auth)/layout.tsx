@@ -1,8 +1,8 @@
 "use client";
 
 import { AppSidebarProvider } from "@/providers/app-sidebar-provider";
-import { MindmapSheet } from "@/components/mindmap-ui/mindmap-sheet";
 import { useRouteGuard } from "@/hooks/use-route-guard";
+import { useSyncUserTier } from "@/hooks/use-sync-user-tier";
 
 export default function AuthLayout({
 	children,
@@ -13,6 +13,9 @@ export default function AuthLayout({
 		requireAuth: true,
 		redirectTo: "/login",
 	});
+
+	// Sync user tier from backend
+	useSyncUserTier();
 
 	// Show loading state while checking authentication
 	if (isLoading) {
@@ -28,10 +31,5 @@ export default function AuthLayout({
 		return null;
 	}
 
-	return (
-		<>
-			<MindmapSheet />
-			<AppSidebarProvider>{children}</AppSidebarProvider>
-		</>
-	);
+	return <AppSidebarProvider>{children}</AppSidebarProvider>;
 }

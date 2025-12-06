@@ -9,19 +9,23 @@ import { useMindmapKeyboard } from "@/hooks/use-mindmap-keyboard";
 import { useMindmapNavigation } from "@/hooks/use-mindmap-navigation";
 import { useQueryAuthError } from "@/hooks/use-query-auth-error";
 import { useGetMindmap } from "@/services/mindmap/queries";
-import { useCreateEdge } from "@/hooks/use-create-edge";
 import { useNodeDragSync } from "@/hooks/use-node-drag-sync";
 import { useSelectionSync } from "@/hooks/use-selection-sync";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMindmapStore } from "@/hooks/use-mindmap-store";
 import { MindmapErrorState } from "@/components/mindmap-ui/mindmap-error-state";
+import { DEMO_MINDMAP_ID } from "@/constants/demo-data";
+import { useMindmapActions } from "@/contexts/mindmap-actions-context";
 
 interface MindmapViewerProps {
 	mindmapId: string;
 }
 
 export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
-	// Fetch mindmap data
+	// Check if this is the demo mindmap
+	const isDemo = mindmapId === DEMO_MINDMAP_ID;
+
+	// Fetch mindmap data (disabled for demo)
 	const { data: mindmap, isLoading, error } = useGetMindmap(mindmapId);
 
 	// Handle Auth0 errors with automatic redirect to login
@@ -34,8 +38,8 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 		onSelectionChange: onSelectionChangeStore,
 	} = useAppStore((state) => state.mindmap);
 
-	// Hook for immediate edge creation with backend sync
-	const { createEdge } = useCreateEdge();
+	// Get actions from context (provided at page level)
+	const { createEdge } = useMindmapActions();
 
 	// Hook for debounced node position sync (500ms after drag ends)
 	const { onNodeDragStop } = useNodeDragSync();
@@ -91,11 +95,12 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 		);
 	}
 
-	if (error) {
+	if (error && !isDemo) {
 		return <MindmapErrorState error={error} />;
 	}
 
-	if (!mindmap || !nodes || !edges) {
+	// For demo, only check nodes/edges; for regular mindmaps, also check mindmap data
+	if (!nodes || !edges || (!isDemo && !mindmap)) {
 		return (
 			<div className="flex h-full w-full items-center justify-center">
 				<p className="text-muted-foreground">Mindmap not found</p>
@@ -106,8 +111,7 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 	return (
 		<div
 			ref={containerRef}
-			className="w-full"
-			style={{ height: "calc(100vh - 64px - 1rem)" }}
+			className="w-full h-screen outline-none"
 			tabIndex={-1} // Make div focusable for keyboard events
 		>
 			<ReactFlow

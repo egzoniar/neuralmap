@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
 import { StoreProvider } from "@/providers/store-provider";
@@ -31,17 +32,21 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<head>
+				<Script
+					src="https://cdn.paddle.com/paddle/v2/paddle.js"
+					strategy="afterInteractive"
+				/>
+			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<Auth0Provider>
 					<StoreProvider>
 						<QueryProvider>
-							<ScreenSizeGuard>
-								{children}
-								<Toaster richColors />
-								<DialogRenderer />
-							</ScreenSizeGuard>
+							<ScreenSizeGuard>{children}</ScreenSizeGuard>
+							<Toaster richColors />
+							<DialogRenderer />
 						</QueryProvider>
 					</StoreProvider>
 				</Auth0Provider>

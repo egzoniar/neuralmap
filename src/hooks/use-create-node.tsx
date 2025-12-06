@@ -1,57 +1,77 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { Position } from "reactflow";
 import { useParams } from "next/navigation";
 import { useAppStoreApi } from "@/providers/store-provider";
 import { useUpdateMindmapContent } from "@/services/mindmap/mutations";
+import { useCheckNodeLimit } from "@/hooks/use-check-node-limit";
 import type { MindmapNode, MindmapEdge } from "@/types/mindmap";
 
 /**
  * Hook to create a new node with backend sync
- * Simple approach: disable buttons while mutation is in progress
- * This prevents all race conditions by design
+ * Checks limits before creating, shows upgrade prompt if needed
  */
 export function useCreateNode() {
 	const params = useParams();
 	const mindmapId = params?.id as string;
 	const updateMindmapContent = useUpdateMindmapContent();
 	const storeApi = useAppStoreApi();
+	const checkAndAddNode = useCheckNodeLimit();
+	const isProcessingRef = useRef(false);
 
 	const createNode = useCallback(
-		(
+		async (
 			sourceNodeId: string,
 			sourceHandleId: string,
 			handlePosition: Position,
+			shouldNewNodeBeSelected?: boolean,
 		) => {
-			// Guard: Don't proceed if no mindmapId or if mutation is already in progress
-			if (!mindmapId || updateMindmapContent.isPending) return;
+			// Guard: Prevent concurrent executions and check mutation state
+			if (
+				!mindmapId ||
+				updateMindmapContent.isPending ||
+				isProcessingRef.current
+			) {
+				return;
+			}
 
-			// 1. Update local state immediately (optimistic update)
-			const store = storeApi.getState();
-			store.mindmap.addNodeWithEdge(
-				sourceNodeId,
-				sourceHandleId,
-				handlePosition,
-			);
+			// Lock to prevent race conditions during async limit check
+			isProcessingRef.current = true;
 
-			// 2. Capture state snapshot immediately after update
-			const freshState = storeApi.getState();
-			const capturedNodes = freshState.mindmap.nodes as MindmapNode[];
-			const capturedEdges = freshState.mindmap.edges as MindmapEdge[];
+			try {
+				// 1. Check limit and update local state (shows prompt if at limit)
+				const success = await checkAndAddNode(
+					sourceNodeId,
+					sourceHandleId,
+					handlePosition,
+					shouldNewNodeBeSelected,
+				);
 
-			// 3. Sync to backend (buttons will be disabled via isPending)
-			updateMindmapContent.mutate({
-				mindmapId,
-				update: {
-					content: {
-						nodes: capturedNodes,
-						edges: capturedEdges,
+				// If limit reached, stop here
+				if (!success) return;
+
+				// 2. Capture state snapshot after update
+				const freshState = storeApi.getState();
+				const capturedNodes = freshState.mindmap.nodes as MindmapNode[];
+				const capturedEdges = freshState.mindmap.edges as MindmapEdge[];
+
+				// 3. Sync to backend (buttons will be disabled via isPending)
+				updateMindmapContent.mutate({
+					mindmapId,
+					update: {
+						content: {
+							nodes: capturedNodes,
+							edges: capturedEdges,
+						},
 					},
-				},
-			});
+				});
+			} finally {
+				// Unlock after processing (whether success or failure)
+				isProcessingRef.current = false;
+			}
 		},
-		[mindmapId, updateMindmapContent, storeApi],
+		[mindmapId, updateMindmapContent, storeApi, checkAndAddNode],
 	);
 
 	return {

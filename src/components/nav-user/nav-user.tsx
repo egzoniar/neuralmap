@@ -30,6 +30,9 @@ import {
 } from "@/components/ui/sidebar";
 import { SidebarTooltip } from "@/components/ui/sidebar-tooltip";
 import { ROUTES } from "@/constants/routes";
+import { TierBadge } from "./tier-badge";
+import { useRouter } from "next/navigation";
+import { useAppStore } from "@/providers/store-provider";
 
 export function NavUser({
 	user,
@@ -42,6 +45,8 @@ export function NavUser({
 }) {
 	const { isMobile } = useSidebar();
 	const { mutate: logout } = useLogout();
+	const router = useRouter();
+	const tier = useAppStore((state) => state.application.tier);
 
 	// Generate initials from user's name
 	const getInitials = (name: string) => {
@@ -72,7 +77,10 @@ export function NavUser({
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-									<span className="truncate font-semibold">{user.name}</span>
+									<div className="flex items-center gap-2">
+										<span className="truncate font-semibold">{user.name}</span>
+										<TierBadge />
+									</div>
 									<span className="truncate text-xs">{user.email}</span>
 								</div>
 								<ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
@@ -94,14 +102,20 @@ export function NavUser({
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-semibold">{user.name}</span>
+									<div className="flex items-center gap-2">
+										<span className="truncate font-semibold">{user.name}</span>
+										<TierBadge />
+									</div>
 									<span className="truncate text-xs">{user.email}</span>
 								</div>
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem disabled>
+							<DropdownMenuItem
+								onClick={() => router.push(ROUTES.PRICING)}
+								disabled={tier === "pro"}
+							>
 								<Sparkles />
 								Upgrade to Pro
 							</DropdownMenuItem>

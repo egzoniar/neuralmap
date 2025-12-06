@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { DeleteNodeDescription } from "@/components/dialogs/delete-node-description";
 import { useUpdateMindmapMetadata } from "@/services/mindmap/mutations";
 import { useDebouncedContentUpdate } from "@/hooks/use-debounced-content-update";
-import { useDeleteNode } from "@/hooks/use-delete-node";
+import { useMindmapActions } from "@/contexts/mindmap-actions-context";
 import { useGetMindmap } from "@/services/mindmap/queries";
 import { useParams } from "next/navigation";
 import {
@@ -55,8 +55,8 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	// Hook for debounced content updates (title, content)
 	const { queueUpdate: queueContentUpdate } = useDebouncedContentUpdate(2000);
 
-	// Hook for immediate node deletion with backend sync
-	const { deleteNode } = useDeleteNode();
+	// Get actions from context (works for both auth and demo)
+	const { deleteNodes } = useMindmapActions();
 
 	// If node not found, don't render
 	if (!node) return null;
@@ -100,7 +100,7 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 		});
 
 		if (isConfirmed) {
-			deleteNode(nodeId);
+			deleteNodes([nodeId]);
 			onClose();
 		}
 	};

@@ -4,7 +4,7 @@ import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { Position } from "reactflow";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useCreateNode } from "@/hooks/use-create-node";
+import { useMindmapActions } from "@/contexts/mindmap-actions-context";
 
 interface NodeDirectionButtonsProps {
 	nodeId: string;
@@ -15,7 +15,7 @@ export function NodeDirectionButtons({
 	nodeId,
 	isRootNode = false,
 }: NodeDirectionButtonsProps) {
-	const { createNode, isPending } = useCreateNode();
+	const { createNode, isCreateNodePending } = useMindmapActions();
 
 	const handleIds = {
 		top: isRootNode ? "root-top" : "f",
@@ -25,7 +25,7 @@ export function NodeDirectionButtons({
 	};
 
 	const handleCreateNode = (handleId: string, position: Position) => {
-		createNode(nodeId, handleId, position);
+		createNode(nodeId, handleId, position, true);
 	};
 
 	return (
@@ -34,7 +34,7 @@ export function NodeDirectionButtons({
 				variant="outline"
 				size="sm"
 				onClick={() => handleCreateNode(handleIds.top, Position.Top)}
-				disabled={isPending}
+				disabled={isCreateNodePending}
 				className="absolute top-[24px] left-1/2 -translate-x-1/2 w-8 h-8 p-0"
 				title="Add node above"
 			>
@@ -45,7 +45,7 @@ export function NodeDirectionButtons({
 				variant="outline"
 				size="sm"
 				onClick={() => handleCreateNode(handleIds.left, Position.Left)}
-				disabled={isPending}
+				disabled={isCreateNodePending}
 				className="absolute left-[12px] top-1/2 -translate-y-1/2 w-8 h-8 p-0"
 				title="Add node to the left"
 			>
@@ -76,7 +76,7 @@ export function NodeDirectionButtons({
 				variant="outline"
 				size="sm"
 				onClick={() => handleCreateNode(handleIds.right, Position.Right)}
-				disabled={isPending}
+				disabled={isCreateNodePending}
 				className="absolute right-[12px] top-1/2 -translate-y-1/2 w-8 h-8 p-0"
 				title="Add node to the right"
 			>
@@ -87,7 +87,7 @@ export function NodeDirectionButtons({
 				variant="outline"
 				size="sm"
 				onClick={() => handleCreateNode(handleIds.bottom, Position.Bottom)}
-				disabled={isPending}
+				disabled={isCreateNodePending}
 				className="absolute bottom-[24px] left-1/2 -translate-x-1/2 w-8 h-8 p-0"
 				title="Add node below"
 			>
