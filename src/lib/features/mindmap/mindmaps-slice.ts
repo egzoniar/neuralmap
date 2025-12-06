@@ -4,6 +4,7 @@ import type { Mindmap } from "@/types/mindmap";
 export type MindmapsSlice = {
 	mindmaps: Mindmap[];
 	activeMindmapId: string | null;
+	setMindmaps: (mindmaps: Mindmap[]) => void;
 	setActiveMindmap: (id: string) => void;
 	addMindmap: (mindmap: Mindmap) => void;
 	removeMindmap: (id: string) => void;
@@ -73,6 +74,10 @@ const MOCK_MINDMAPS: Mindmap[] = [
 export const createMindmapsSlice = lens<MindmapsSlice>((set) => ({
 	mindmaps: MOCK_MINDMAPS,
 	activeMindmapId: MOCK_MINDMAPS[0]?.id || null,
+	setMindmaps: (mindmaps) =>
+		set({
+			mindmaps,
+		}),
 	setActiveMindmap: (id) =>
 		set((state) => ({
 			activeMindmapId: id,

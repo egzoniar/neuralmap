@@ -23,6 +23,9 @@ export interface UserResponse {
 	auth0_id: string;
 	email_verified: boolean;
 	is_active: boolean;
+	subscription_tier: "demo" | "free" | "pro";
+	subscription_status: string | null;
+	subscription_ends_at: string | null;
 	created_at: string;
 	last_login_at: string | null;
 }

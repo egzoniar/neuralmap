@@ -78,4 +78,3 @@ export interface SubscriptionStatus {
 		nodes_per_mindmap: Record<string, number>;
 	};
 }
-

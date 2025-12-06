@@ -16,6 +16,8 @@ export type MindmapSlice = {
 	nodes: Node[];
 	edges: Edge[];
 	selection?: Selection;
+	setNodes: (nodes: Node[]) => void;
+	setEdges: (edges: Edge[]) => void;
 	initializeMindmap: (nodes: Node[], edges: Edge[]) => void;
 	onNodesChange: (changes: NodeChange[]) => void;
 	onEdgesChange: (changes: EdgeChange[]) => void;
@@ -32,6 +34,7 @@ export type MindmapSlice = {
 		sourceNodeId: string,
 		sourceHandleId: string,
 		handlePosition: Position,
+		shouldNewNodeBeSelected?: boolean,
 	) => void;
 	deleteNode: (nodeId: string) => void;
 	deleteNodes: (nodeIds: string[]) => void;
@@ -43,6 +46,22 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 	// Initial state with default nodes/edges (will be replaced when mindmap loads)
 	nodes: NODES_INITIAL_DATA as Node[],
 	edges: EDGES_INITIAL_DATA as Edge[],
+
+	/**
+	 * Set nodes directly (useful for demo initialization)
+	 */
+	setNodes: (nodes) =>
+		set({
+			nodes,
+		}),
+
+	/**
+	 * Set edges directly (useful for demo initialization)
+	 */
+	setEdges: (edges) =>
+		set({
+			edges,
+		}),
 
 	/**
 	 * Initialize working copy with server data.
@@ -133,7 +152,12 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					: node,
 			),
 		})),
-	addNodeWithEdge: (sourceNodeId, sourceHandleId, handlePosition) =>
+	addNodeWithEdge: (
+		sourceNodeId,
+		sourceHandleId,
+		handlePosition,
+		shouldNewNodeBeSelected = false,
+	) =>
 		set((state) => {
 			// Find the source node to get its position
 			const sourceNode = state.nodes.find((node) => node.id === sourceNodeId);
@@ -206,7 +230,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					break;
 			}
 
-			// Create new node with selected state
+			// Create new node with conditional selection based on creation source
 			const newNode: Node = {
 				id: newNodeId,
 				type: NODE_TYPE.NEURAL,
@@ -215,7 +239,7 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 					content: "",
 				},
 				position: newPosition,
-				selected: true,
+				selected: shouldNewNodeBeSelected,
 			};
 
 			// Create new edge
@@ -235,10 +259,12 @@ export const createMindmapSlice = lens<MindmapSlice>((set) => ({
 			return {
 				nodes: [...updatedNodes, newNode],
 				edges: [...state.edges, newEdge],
-				selection: {
-					nodes: [newNode],
-					edges: [],
-				},
+				selection: shouldNewNodeBeSelected
+					? {
+							nodes: [newNode],
+							edges: [],
+						}
+					: undefined,
 			};
 		}),
 	deleteNode: (nodeId) =>

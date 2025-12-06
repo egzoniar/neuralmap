@@ -17,4 +17,9 @@ export const queryKeys = {
 		recent: (limit: number) => ["mindmaps", "recent", limit] as const,
 		detail: (id: string) => ["mindmaps", "detail", id] as const,
 	},
+	billing: {
+		all: ["billing"] as const,
+		config: ["billing", "config"] as const,
+		status: ["billing", "status"] as const,
+	},
 } as const;

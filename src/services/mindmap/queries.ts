@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth0 } from "@auth0/auth0-react";
 import { mindmapApiService } from "@/services/mindmap/mindmap-api";
 import { queryKeys } from "@/services/queryKeys";
+import { DEMO_MINDMAP_ID } from "@/constants/demo-data";
 
 /**
  * Hook to fetch all user's mindmaps
@@ -50,13 +51,16 @@ export function useListRecentMindmaps(limit: number = 3) {
 export function useGetMindmap(id: string) {
 	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
+	// Disable query for demo mindmap (it only exists in local state)
+	const isDemo = id === DEMO_MINDMAP_ID;
+
 	return useQuery({
 		queryKey: queryKeys.mindmaps.detail(id),
 		queryFn: async () => {
 			const token = await getAccessTokenSilently();
 			return mindmapApiService.getMindmap(token, id);
 		},
-		enabled: isAuthenticated && !isLoading && !!id,
+		enabled: !isDemo && isAuthenticated && !isLoading && !!id,
 		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
 	});
 }

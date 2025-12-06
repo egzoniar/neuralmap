@@ -1,4 +1,3 @@
-import { userApiService } from "@/services/user/user-api";
 import { queryKeys } from "@/services/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -11,7 +10,7 @@ export function useUpdateUserProfile() {
 	return useMutation({
 		mutationFn: async (profile: UserProfile) => {
 			const token = await getAccessTokenSilently();
-			return userApiService.updateUserProfile(token, profile);
+			// return userApiService.updateUserProfile(token, profile); // Not implemented yet
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
