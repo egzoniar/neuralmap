@@ -1,6 +1,9 @@
 export const ROUTES = {
 	HOME: "/",
 	LOGIN: "/login",
+	DEMO: "/demo",
+	PRICING: "/pricing",
+	CHECKOUT_RETURN: "/checkout/return",
 	MAP: (id: string) => `/map/${id}`,
 	API_AUTH_LOGIN: "/api/auth/login",
 	API_AUTH_LOGOUT: "/api/auth/logout",

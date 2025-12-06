@@ -1,7 +1,11 @@
 import * as React from "react";
 import { MIN_SUPPORTED_WIDTH } from "@/constants/ui";
 
-export function useIsMobile() {
+/**
+ * Hook to detect mobile/small screens
+ * Returns undefined during SSR to prevent hydration mismatch
+ */
+export function useIsMobile(): boolean | undefined {
 	const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
 		undefined,
 	);
@@ -16,5 +20,5 @@ export function useIsMobile() {
 		return () => mql.removeEventListener("change", onChange);
 	}, []);
 
-	return !!isMobile;
+	return isMobile;
 }

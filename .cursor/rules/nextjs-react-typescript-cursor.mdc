@@ -108,6 +108,39 @@ export function Component({ data, onAction }: ComponentProps) {
 }
 ```
 
+## Guard Clause Pattern
+Use early returns for cleaner, more maintainable guard clauses:
+
+```typescript
+// ✅ GOOD: Early return pattern (explicit, self-documenting)
+const handleAction = () => {
+  // Guard: Check primary condition
+  if (!isEnabled) return;
+  
+  // Guard: Check state-based condition
+  if (isPending) return;
+  
+  // Guard: Defensive null checks
+  if (!requiredData) return;
+  
+  // Main logic
+  performAction(requiredData);
+};
+
+// ❌ BAD: Multiple conditions in one if (hard to debug)
+const handleAction = () => {
+  if (isEnabled && requiredData && !isPending) {
+    performAction(requiredData);
+  }
+};
+```
+
+**Benefits:**
+- Each guard has clear intent and can be commented separately
+- Easier to debug (can log which guard failed)
+- More maintainable when conditions change
+- Self-documenting code
+
 ---
 
 # Quick Reference

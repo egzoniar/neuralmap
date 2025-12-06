@@ -23,6 +23,12 @@ export const API_ENDPOINTS = {
 		UPDATE: (id: string) => `/mindmaps/${id}`,
 		VIEW: (id: string) => `/mindmaps/${id}/view`,
 	},
+	BILLING: {
+		CONFIG: "/billing/config",
+		CHECKOUT: "/billing/checkout",
+		CANCEL: "/billing/cancel",
+		STATUS: "/billing/status",
+	},
 };
 
 export const API_STATUS = {
