@@ -127,11 +127,10 @@ export function NavUser({
 							<BadgeCheck />
 							Account
 						</DropdownMenuItem> */}
-							{/* TODO: Re-enable when feature is ready */}
-							{/* <DropdownMenuItem>
-							<CreditCard />
-							Billing
-						</DropdownMenuItem> */}
+							<DropdownMenuItem onClick={() => router.push(ROUTES.BILLING)}>
+								<CreditCard />
+								Billing
+							</DropdownMenuItem>
 							{/* TODO: Re-enable when feature is ready */}
 							{/* <DropdownMenuItem>
 							<Bell />
