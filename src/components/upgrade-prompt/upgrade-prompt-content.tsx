@@ -12,6 +12,17 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Zap } from "lucide-react";
+import {
+	DEMO_TITLE,
+	DEMO_NODES_DESCRIPTION,
+	DEMO_ACTION,
+	FREE_TITLE,
+	FREE_DESCRIPTION,
+	FREE_ACTION,
+	DEFAULT_TITLE,
+	DEFAULT_DESCRIPTION,
+	DEFAULT_ACTION,
+} from "@/constants/upgrade-messages";
 
 interface UpgradePromptContentProps extends CustomDialogProps {
 	limitInfo: LimitReachedInfo;
@@ -21,36 +32,26 @@ export function UpgradePromptContent({
 	limitInfo,
 	onResolve,
 }: UpgradePromptContentProps) {
-	const { type, max, tier } = limitInfo;
+	const { tier } = limitInfo;
 
-	const getMessage = () => {
-		if (tier === "demo") {
-			return {
-				title: "Sign Up to Continue",
-				description: `You've reached the demo limit of ${max} ${type}. Sign up for free to get ${type === "nodes" ? "60 nodes per mindmap" : "3 mindmaps"}!`,
-				action: "Sign Up Free",
-				icon: <Sparkles className="h-4 w-4" />,
-			};
-		}
+	let title = DEFAULT_TITLE;
+	let description = DEFAULT_DESCRIPTION;
+	let action = DEFAULT_ACTION;
+	let icon = <Zap className="h-4 w-4" />;
 
-		if (tier === "free") {
-			return {
-				title: "Upgrade to Pro",
-				description: `You've reached your limit of ${max} ${type}. Upgrade to Pro for ${type === "nodes" ? "600+ nodes per mindmap" : "unlimited mindmaps"}!`,
-				action: "Upgrade to Pro",
-				icon: <Zap className="h-4 w-4 text-yellow-500" />,
-			};
-		}
+	if (tier === "demo") {
+		title = DEMO_TITLE;
+		description = DEMO_NODES_DESCRIPTION;
+		action = DEMO_ACTION;
+		icon = <Sparkles className="h-4 w-4" />;
+	}
 
-		return {
-			title: "Limit Reached",
-			description: "You've reached the maximum limit.",
-			action: "OK",
-			icon: <Zap className="h-4 w-4" />,
-		};
-	};
-
-	const message = getMessage();
+	if (tier === "free") {
+		title = FREE_TITLE;
+		description = FREE_DESCRIPTION;
+		action = FREE_ACTION;
+		icon = <Zap className="h-4 w-4 text-yellow-500" />;
+	}
 
 	const handleAction = () => {
 		if (tier === "demo") {
@@ -66,11 +67,11 @@ export function UpgradePromptContent({
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2 text-base">
-						{message.icon}
-						{message.title}
+						{icon}
+						{title}
 					</DialogTitle>
 					<DialogDescription className="text-sm">
-						{message.description}
+						{description}
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter className="gap-2 sm:gap-0">
@@ -78,7 +79,7 @@ export function UpgradePromptContent({
 						Cancel
 					</Button>
 					<Button onClick={handleAction} size="sm">
-						{message.action}
+						{action}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
