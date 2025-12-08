@@ -14,6 +14,7 @@ export type User = {
 /**
  * User response from backend API
  * Matches the UserResponse schema from the backend
+ * Note: Backend only returns "free" or "pro" - "demo" tier is frontend-only for non-authenticated users
  */
 export interface UserResponse {
 	email: string;
@@ -23,8 +24,9 @@ export interface UserResponse {
 	auth0_id: string;
 	email_verified: boolean;
 	is_active: boolean;
-	subscription_tier: "demo" | "free" | "pro";
+	subscription_tier: "free" | "pro";
 	subscription_status: string | null;
+	cancellation_scheduled: boolean;
 	subscription_ends_at: string | null;
 	created_at: string;
 	last_login_at: string | null;
