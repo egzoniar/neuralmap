@@ -27,6 +27,8 @@ export const API_ENDPOINTS = {
 		CONFIG: "/billing/config",
 		CHECKOUT: "/billing/checkout",
 		CANCEL: "/billing/cancel",
+		RESUME: "/billing/resume",
+		PAYMENT_PORTAL: "/billing/payment-portal",
 		STATUS: "/billing/status",
 	},
 };

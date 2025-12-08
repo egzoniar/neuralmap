@@ -5,6 +5,8 @@ import type {
 	CheckoutRequest,
 	CheckoutResponse,
 	CancelSubscriptionResponse,
+	ResumeSubscriptionResponse,
+	BillingPortalResponse,
 	SubscriptionStatus,
 } from "@/types/subscription";
 
@@ -45,6 +47,34 @@ export const billingApiService = {
 	async cancelSubscription(token: string): Promise<CancelSubscriptionResponse> {
 		return await fetchApi<CancelSubscriptionResponse>(
 			API_ENDPOINTS.BILLING.CANCEL,
+			{
+				method: "POST",
+				token,
+			},
+		);
+	},
+
+	/**
+	 * Resume a canceled subscription
+	 * Removes the cancellation schedule and subscription will renew at the end of billing period
+	 */
+	async resumeSubscription(token: string): Promise<ResumeSubscriptionResponse> {
+		return await fetchApi<ResumeSubscriptionResponse>(
+			API_ENDPOINTS.BILLING.RESUME,
+			{
+				method: "POST",
+				token,
+			},
+		);
+	},
+
+	/**
+	 * Get billing portal URL for payment method management
+	 * Returns URL to Paddle's hosted portal where users can update payment methods
+	 */
+	async getPaymentPortal(token: string): Promise<BillingPortalResponse> {
+		return await fetchApi<BillingPortalResponse>(
+			API_ENDPOINTS.BILLING.PAYMENT_PORTAL,
 			{
 				method: "POST",
 				token,

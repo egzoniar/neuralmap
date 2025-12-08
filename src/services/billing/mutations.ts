@@ -6,6 +6,8 @@ import type {
 	CheckoutRequest,
 	CheckoutResponse,
 	CancelSubscriptionResponse,
+	ResumeSubscriptionResponse,
+	BillingPortalResponse,
 } from "@/types/subscription";
 
 /**
@@ -44,6 +46,45 @@ export function useCancelSubscription() {
 			queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
 			// Invalidate billing status to refresh usage/limits
 			queryClient.invalidateQueries({ queryKey: queryKeys.billing.status });
+		},
+	});
+}
+
+/**
+ * Hook to resume a canceled subscription
+ * Removes the cancellation schedule and subscription will renew at end of billing period
+ * Invalidates user profile and billing status on success
+ */
+export function useResumeSubscription() {
+	const queryClient = useQueryClient();
+	const { getAccessTokenSilently } = useAuth0();
+
+	return useMutation<ResumeSubscriptionResponse, Error, void>({
+		mutationFn: async () => {
+			const token = await getAccessTokenSilently();
+			return billingApiService.resumeSubscription(token);
+		},
+		onSuccess: () => {
+			// Invalidate user profile to refresh subscription info
+			queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
+			// Invalidate billing status to refresh usage/limits
+			queryClient.invalidateQueries({ queryKey: queryKeys.billing.status });
+		},
+	});
+}
+
+/**
+ * Hook to get payment portal URL
+ * Opens Paddle's billing portal in new tab where users can manage payment methods
+ * No invalidation needed - this just returns a URL for redirect
+ */
+export function useGetPaymentPortal() {
+	const { getAccessTokenSilently } = useAuth0();
+
+	return useMutation<BillingPortalResponse, Error, void>({
+		mutationFn: async () => {
+			const token = await getAccessTokenSilently();
+			return billingApiService.getPaymentPortal(token);
 		},
 	});
 }

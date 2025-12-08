@@ -3,6 +3,7 @@ export const ROUTES = {
 	LOGIN: "/login",
 	DEMO: "/demo",
 	PRICING: "/pricing",
+	BILLING: "/settings/billing",
 	CHECKOUT_RETURN: "/checkout/return",
 	MAP: (id: string) => `/map/${id}`,
 	API_AUTH_LOGIN: "/api/auth/login",
