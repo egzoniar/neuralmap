@@ -7,9 +7,9 @@ import {
 	SidebarInset,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
-import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamic-breadcrumbs";
+import { DynamicBreadcrumbs } from "@/components/dynamic-breadcrumbs";
 import { getRouteType } from "@/constants/routes";
 import { SyncStatusBadge } from "@/components/sync-status-badge";
 import { cn } from "@/lib/utils";

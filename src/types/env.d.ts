@@ -28,6 +28,8 @@ declare global {
 			NEXT_PUBLIC_SENTRY_ENV: string;
 			NEXT_PUBLIC_SENTRY_DSN: string;
 			SENTRY_AUTH_TOKEN: string;
+			SENTRY_ORG?: string;
+			SENTRY_PROJECT?: string;
 
 			[key: string]: string | undefined;
 		}

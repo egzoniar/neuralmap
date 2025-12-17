@@ -1,14 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { SubscriptionOverview } from "@/components/billing/subscription-overview";
 import { UsageStats } from "@/components/billing/usage-stats";
+import { PastDueAlert } from "@/components/billing/past-due-alert";
 import { useGetSubscriptionStatus } from "@/services/billing/queries";
 import {
 	useResumeSubscription,
 	useGetPaymentPortal,
 } from "@/services/billing/mutations";
 import { ROUTES } from "@/constants/routes";
+import { SUBSCRIPTION_STATUS } from "@/types/subscription";
 import { Loader2 } from "lucide-react";
 import type { BillingPortalResponse } from "@/types/subscription";
 
@@ -25,7 +28,14 @@ export default function BillingPage() {
 	};
 
 	const handleKeepSubscription = () => {
-		resumeSubscription();
+		resumeSubscription(undefined, {
+			onSuccess: () => {
+				toast.success(
+					"Subscription resumed! You will be charged at the next billing cycle.",
+				);
+			},
+			// Error handling provided by global handler in QueryProvider
+		});
 	};
 
 	const handleManagePayment = () => {
@@ -33,10 +43,9 @@ export default function BillingPage() {
 			onSuccess: (response: BillingPortalResponse) => {
 				// Open portal in new tab
 				window.open(response.portal_url, "_blank", "noopener,noreferrer");
+				toast.info("Opening payment portal...");
 			},
-			onError: (error: Error) => {
-				console.error("Failed to get payment portal:", error);
-			},
+			// Error handling provided by global handler in QueryProvider
 		});
 	};
 
@@ -77,6 +86,9 @@ export default function BillingPage() {
 		);
 	}
 
+	// Check if subscription is past due
+	const isPastDue = subscription.status === SUBSCRIPTION_STATUS.PAST_DUE;
+
 	return (
 		<div className="container max-w-4xl mx-auto p-6 space-y-6">
 			<div>
@@ -88,6 +100,8 @@ export default function BillingPage() {
 				</p>
 			</div>
 
+			{isPastDue && <PastDueAlert />}
+
 			<div className="grid gap-6 md:grid-cols-2">
 				<SubscriptionOverview
 					subscription={subscription}
@@ -96,6 +110,7 @@ export default function BillingPage() {
 					onManagePayment={handleManagePayment}
 					isKeeping={isResuming}
 					isLoadingPortal={isLoadingPortal}
+					isPastDue={isPastDue}
 				/>
 				<UsageStats subscription={subscription} />
 			</div>

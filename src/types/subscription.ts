@@ -9,8 +9,9 @@ export const USER_TIERS = {
 export const SUBSCRIPTION_STATUS = {
 	ACTIVE: "active",
 	CANCELED: "canceled",
-	PAST_DUE: "past_due",
+	PAST_DUE: "past_due", // Payment failed, in grace period
 	TRIALING: "trialing",
+	UNPAID: "unpaid", // Payment retries exhausted, will be downgraded
 } as const;
 
 export interface UserLimits {

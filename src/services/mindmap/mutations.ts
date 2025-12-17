@@ -12,12 +12,16 @@ import type {
  * Hook to increment view count for a mindmap
  * Call this when user opens/views a mindmap
  * Invalidates recent mindmaps query on success to refresh the sidebar list
+ *
+ * Note: Fails silently - view tracking is a background operation
+ * that doesn't need to interrupt the user experience
  */
 export function useIncrementViewCount() {
 	const queryClient = useQueryClient();
 	const { getAccessTokenSilently } = useAuth0();
 
 	return useMutation({
+		mutationKey: ["mindmaps", "increment-view"],
 		mutationFn: async (mindmapId: string) => {
 			const token = await getAccessTokenSilently();
 			return mindmapApiService.incrementViewCount(token, mindmapId);
@@ -25,6 +29,14 @@ export function useIncrementViewCount() {
 		onSuccess: () => {
 			// Invalidate only recent mindmaps to refresh the sidebar list
 			queryClient.invalidateQueries({ queryKey: ["mindmaps", "recent"] });
+		},
+		onError: () => {
+			// Fail silently - view tracking is not critical to user experience
+			// Error is still logged by the global handler, but no toast shown
+		},
+		// Disable global error handler toast for this mutation
+		meta: {
+			suppressToast: true,
 		},
 	});
 }

@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useAppStore } from "@/providers/store-provider";
-import { UpgradePromptContent } from "@/components/upgrade-prompt/upgrade-prompt-content";
+import { UpgradePromptContent } from "@/components/upgrade-prompt-content";
 import type { Position } from "reactflow";
 
 /**

@@ -3,6 +3,7 @@
 import { use } from "react";
 import { MindmapViewer } from "@/components/mindmap-ui/mindmap-viewer";
 import { MindmapSheet } from "@/components/mindmap-ui/mindmap-sheet";
+import { MindmapErrorBoundary } from "@/components/error-boundary/mindmap-error-boundary";
 import { useTrackMindmapView } from "@/hooks/use-track-mindmap-view";
 import { useCreateNode } from "@/hooks/use-create-node";
 import { useCreateEdge } from "@/hooks/use-create-edge";
@@ -41,7 +42,9 @@ export default function MindmapPage({ params }: MindmapPageProps) {
 			}}
 		>
 			<MindmapSheet />
-			<MindmapViewer mindmapId={id} />
+			<MindmapErrorBoundary mindmapId={id}>
+				<MindmapViewer mindmapId={id} />
+			</MindmapErrorBoundary>
 		</MindmapActionsProvider>
 	);
 }

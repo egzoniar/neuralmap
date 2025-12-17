@@ -3,6 +3,7 @@
 import { AppSidebarProvider } from "@/providers/app-sidebar-provider";
 import { useRouteGuard } from "@/hooks/use-route-guard";
 import { useSyncUserTier } from "@/hooks/use-sync-user-tier";
+import { RouteErrorBoundary } from "@/components/error-boundary/route-error-boundary";
 
 export default function AuthLayout({
 	children,
@@ -31,5 +32,9 @@ export default function AuthLayout({
 		return null;
 	}
 
-	return <AppSidebarProvider>{children}</AppSidebarProvider>;
+	return (
+		<RouteErrorBoundary routeName="Auth Routes">
+			<AppSidebarProvider>{children}</AppSidebarProvider>
+		</RouteErrorBoundary>
+	);
 }

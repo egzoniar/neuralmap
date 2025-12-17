@@ -2,7 +2,7 @@
 
 import { DemoMindmapViewer } from "@/components/mindmap-ui/demo-mindmap-viewer";
 import { DemoMindmapSheet } from "@/components/mindmap-ui/demo-mindmap-sheet";
-import { DemoBanner } from "@/components/demo/demo-banner";
+import { DemoBanner } from "@/components/demo-banner";
 import { useDemoInitialization } from "@/hooks/use-demo-initialization";
 import { useCreateNodeDemo } from "@/demo-hooks/use-create-node-demo";
 import { useCreateEdgeDemo } from "@/demo-hooks/use-create-edge-demo";

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/providers/store-provider";
 import { DEMO_MINDMAP_ID, DEMO_NODES, DEMO_EDGES } from "@/constants/demo-data";
+import { USER_TIERS } from "@/types/subscription";
 import type { Mindmap } from "@/types/mindmap";
 
 /**
@@ -20,7 +21,7 @@ export function useDemoInitialization() {
 
 	useEffect(() => {
 		// Set tier to demo
-		setTier("demo");
+		setTier(USER_TIERS.DEMO);
 
 		const now = new Date().toISOString();
 

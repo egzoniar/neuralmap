@@ -1,6 +1,6 @@
 import { lens } from "@dhmk/zustand-lens";
 import type { UserTier, UserLimits } from "@/types/subscription";
-import { TIER_LIMITS } from "@/types/subscription";
+import { TIER_LIMITS, USER_TIERS } from "@/types/subscription";
 
 /**
  * Application-level UI state
@@ -16,8 +16,8 @@ export type ApplicationSlice = {
 
 export const createApplicationSlice = lens<ApplicationSlice>((set) => ({
 	// Default to demo tier
-	tier: "demo",
-	limits: TIER_LIMITS.demo,
+	tier: USER_TIERS.DEMO,
+	limits: TIER_LIMITS[USER_TIERS.DEMO],
 	navigatingToMindmapId: null,
 	setTier: (tier) =>
 		set({

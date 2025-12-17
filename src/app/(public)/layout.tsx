@@ -1,7 +1,15 @@
+"use client";
+
+import { RouteErrorBoundary } from "@/components/error-boundary/route-error-boundary";
+
 export default function PublicLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	return <>{children}</>;
+	return (
+		<RouteErrorBoundary routeName="Public Routes">
+			{children}
+		</RouteErrorBoundary>
+	);
 }
