@@ -85,7 +85,7 @@ export function MindmapViewer({ mindmapId }: MindmapViewerProps) {
 				style={{ height: "calc(100vh - 64px - 1rem)" }}
 				className="flex w-full items-center justify-center bg-gray-50/50"
 			>
-				<div className="relative w-full h-full flex items-center justify-center border-2">
+				<div className="relative w-full h-full flex items-center justify-center">
 					{/* Center Root Node Skeleton */}
 					<div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2">
 						<Skeleton className="h-20 w-48 rounded-lg shadow-md" />

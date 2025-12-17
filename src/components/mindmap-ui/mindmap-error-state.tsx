@@ -1,40 +1,128 @@
 "use client";
 
+import { FetchError } from "@/types/errors";
+import { Button } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
+
 interface MindmapErrorStateProps {
 	error: Error;
 }
 
-/**
- * Presentational component for displaying mindmap loading errors.
- *
- * Architecture:
- * - Pure presentational component (no side effects)
- * - Side effects (redirects) are handled by use-query-auth-error hook
- * - Displays user-friendly error messages based on error type
- *
- * Pattern:
- * - Used in MindmapViewer when data fetching fails
- * - Shows different messages for different error types
- * - Auth errors trigger auto-redirect (handled by hook)
- */
 export function MindmapErrorState({ error }: MindmapErrorStateProps) {
-	// Determine user-friendly error message
+	const router = useRouter();
+
 	const isAuthError =
 		error.message?.includes("Missing Refresh Token") ||
 		error.message?.includes("Login required");
 
-	const title = isAuthError ? "Session Expired" : "Failed to load mindmap";
+	const { title, message } = getUserFriendlyErrorMessage(error, isAuthError);
 
-	const message = isAuthError
-		? "Your session has expired. Redirecting to login..."
-		: error.message || "An unexpected error occurred. Please try again.";
+	const handleGoHome = () => {
+		router.push(ROUTES.HOME);
+	};
+
+	const handleReload = () => {
+		window.location.reload();
+	};
 
 	return (
-		<div className="flex h-full w-full items-center justify-center">
-			<div className="text-center space-y-2 max-w-md px-4">
-				<h2 className="text-2xl font-semibold text-destructive">{title}</h2>
-				<p className="text-muted-foreground">{message}</p>
-			</div>
+		<div className="flex h-full w-full items-center justify-center p-6">
+			<Empty className="max-w-md">
+				<EmptyHeader>
+					<EmptyTitle>{title}</EmptyTitle>
+					<EmptyDescription>{message}</EmptyDescription>
+				</EmptyHeader>
+				<EmptyContent>
+					<div className="flex gap-2">
+						<Button onClick={handleReload}>Try Again</Button>
+						<Button onClick={handleGoHome} variant="outline">
+							Go to Home
+						</Button>
+					</div>
+					<EmptyDescription>
+						Need help?{" "}
+						<a href="#" className="underline">
+							Contact support
+						</a>
+					</EmptyDescription>
+				</EmptyContent>
+			</Empty>
 		</div>
 	);
+}
+
+function getUserFriendlyErrorMessage(
+	error: Error,
+	isAuthError: boolean,
+): { title: string; message: string } {
+	if (isAuthError) {
+		return {
+			title: "Session Expired",
+			message: "Your session has expired. Redirecting to login...",
+		};
+	}
+
+	if (error instanceof FetchError) {
+		switch (error.status) {
+			case 404:
+				return {
+					title: "Mindmap Not Found",
+					message:
+						"This mindmap doesn't exist or has been deleted. Try searching for it on your home page.",
+				};
+			case 422:
+				return {
+					title: "Invalid Mindmap",
+					message:
+						"The mindmap URL is invalid. Please check the link and try again.",
+				};
+			case 403:
+				return {
+					title: "Access Denied",
+					message:
+						"You don't have permission to view this mindmap. Contact the owner for access.",
+				};
+			case 500:
+			case 502:
+			case 503:
+			case 504:
+				return {
+					title: "Server Error",
+					message:
+						"We're experiencing technical difficulties. Please try again in a few moments.",
+				};
+			default:
+				return {
+					title: "Failed to Load Mindmap",
+					message:
+						"We couldn't load your mindmap. Check your connection and try again.",
+				};
+		}
+	}
+
+	if (
+		error.message?.includes("fetch") ||
+		error.message?.includes("network") ||
+		error.message?.includes("Failed to fetch")
+	) {
+		return {
+			title: "Connection Error",
+			message:
+				"Unable to connect to the server. Check your internet connection and try again.",
+		};
+	}
+
+	return {
+		title: "Failed to Load Mindmap",
+		message:
+			"An unexpected error occurred. Try reloading or contact support if the problem persists.",
+	};
 }

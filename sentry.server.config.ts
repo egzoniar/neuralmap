@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 
 /**
  * Sentry server-side configuration
- * 
+ *
  * Captures errors that occur on the server (API routes, SSR, etc.)
  * Only enabled in production to avoid noise in development
  */
@@ -28,4 +28,3 @@ Sentry.init({
 		"Login required",
 	],
 });
-

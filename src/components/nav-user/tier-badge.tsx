@@ -4,22 +4,16 @@ import { useAppStore } from "@/providers/store-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Zap } from "lucide-react";
-import type { UserTier } from "@/types/subscription";
-
-const TIER_VALUES: Record<UserTier, UserTier> = {
-	demo: "demo",
-	free: "free",
-	pro: "pro",
-} as const;
+import { USER_TIERS } from "@/types/subscription";
 
 export function TierBadge() {
 	const tier = useAppStore((state) => state.application.tier);
 
-	if (tier === TIER_VALUES.demo) {
+	if (tier === USER_TIERS.DEMO) {
 		return null;
 	}
 
-	const isPro = tier === TIER_VALUES.pro;
+	const isPro = tier === USER_TIERS.PRO;
 
 	return (
 		<Badge

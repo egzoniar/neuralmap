@@ -24,6 +24,18 @@ export function SubscriptionStatusBadge({
 		);
 	}
 
+	// Guard: Check if past due
+	if (status === SUBSCRIPTION_STATUS.PAST_DUE) {
+		return (
+			<Badge
+				variant="outline"
+				className="bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950 dark:text-amber-100 dark:border-amber-600"
+			>
+				Payment Failed
+			</Badge>
+		);
+	}
+
 	// Guard: Check if active
 	if (status === SUBSCRIPTION_STATUS.ACTIVE) {
 		return (

@@ -33,6 +33,7 @@ import { ROUTES } from "@/constants/routes";
 import { TierBadge } from "./tier-badge";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/providers/store-provider";
+import { USER_TIERS } from "@/types/subscription";
 
 export function NavUser({
 	user,
@@ -111,16 +112,18 @@ export function NavUser({
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem
-								onClick={() => router.push(ROUTES.PRICING)}
-								disabled={tier === "pro"}
-							>
-								<Sparkles />
-								Upgrade to Pro
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
+						{tier !== USER_TIERS.PRO && (
+							<>
+								<DropdownMenuGroup>
+									<DropdownMenuItem onClick={() => router.push(ROUTES.PRICING)}>
+										<Sparkles />
+										Upgrade to Pro
+									</DropdownMenuItem>
+								</DropdownMenuGroup>
+								<DropdownMenuSeparator />
+							</>
+						)}
+
 						<DropdownMenuGroup>
 							{/* TODO: Re-enable when feature is ready */}
 							{/* <DropdownMenuItem>
@@ -129,7 +132,7 @@ export function NavUser({
 						</DropdownMenuItem> */}
 							<DropdownMenuItem onClick={() => router.push(ROUTES.BILLING)}>
 								<CreditCard />
-								Billing
+								Billing & Subscription
 							</DropdownMenuItem>
 							{/* TODO: Re-enable when feature is ready */}
 							{/* <DropdownMenuItem>

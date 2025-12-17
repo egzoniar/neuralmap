@@ -7,7 +7,6 @@ import { useSentryUser } from "@/hooks/use-sentry-user";
  * Place this inside Auth0Provider to track authenticated users
  */
 export function SentryUserContext() {
-  useSentryUser();
-  return null;
+	useSentryUser();
+	return null;
 }
-

@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,12 +43,14 @@ export function NewMindmapButton() {
 				},
 				{
 					onSuccess: (mindmap) => {
+						toast.success("Mindmap created successfully!");
 						setName("");
 						setDescription("");
 						setIcon(undefined);
 						setOpen(false);
 						router.push(ROUTES.MAP(mindmap.id));
 					},
+					// Error handling provided by global handler in QueryProvider
 				},
 			);
 		}

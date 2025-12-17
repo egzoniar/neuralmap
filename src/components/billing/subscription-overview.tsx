@@ -3,13 +3,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Zap, CreditCard, Calendar, ExternalLink } from "lucide-react";
+import { Zap, CreditCard, Calendar, ExternalLink, Loader2 } from "lucide-react";
 import { formatShortDate } from "@/utils/date";
 import { formatPrice } from "@/utils/currency";
 import { SubscriptionStatusBadge } from "./subscription-status-badge";
 import { SubscriptionActionButton } from "./subscription-action-button";
 import { USER_TIERS, SUBSCRIPTION_STATUS } from "@/types/subscription";
 import { SUBSCRIPTION_DISPLAY } from "@/constants/subscription";
+import { cn } from "@/lib/utils";
 import type { SubscriptionStatus } from "@/types/subscription";
 
 interface SubscriptionOverviewProps {
@@ -20,6 +21,7 @@ interface SubscriptionOverviewProps {
 	isUpgrading?: boolean;
 	isKeeping?: boolean;
 	isLoadingPortal?: boolean;
+	isPastDue?: boolean;
 }
 
 export function SubscriptionOverview({
@@ -30,6 +32,7 @@ export function SubscriptionOverview({
 	isUpgrading = false,
 	isKeeping = false,
 	isLoadingPortal = false,
+	isPastDue = false,
 }: SubscriptionOverviewProps) {
 	const {
 		tier,
@@ -122,22 +125,24 @@ export function SubscriptionOverview({
 									: "No payment method on file"}
 							</div>
 						</div>
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={onManagePayment}
-							disabled={isLoadingPortal || !onManagePayment}
-							className="shrink-0 gap-1.5"
-						>
-							{isLoadingPortal ? (
-								"Loading..."
-							) : (
-								<>
-									Manage
-									<ExternalLink className="h-3 w-3" />
-								</>
+						<div className="relative shrink-0">
+							{isPastDue && (
+								<div className="absolute inset-0 rounded-md ring-2 ring-amber-500/50 animate-pulse pointer-events-none" />
 							)}
-						</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={onManagePayment}
+								disabled={isLoadingPortal || !onManagePayment}
+								className="gap-1.5"
+							>
+								{isLoadingPortal && (
+									<Loader2 className="h-3 w-3 animate-spin" />
+								)}
+								Manage
+								{!isLoadingPortal && <ExternalLink className="h-3 w-3" />}
+							</Button>
+						</div>
 					</div>
 				)}
 

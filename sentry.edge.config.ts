@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 
 /**
  * Sentry edge runtime configuration
- * 
+ *
  * Captures errors that occur in edge functions (middleware, edge API routes)
  * Only enabled in production to avoid noise in development
  */
@@ -19,4 +19,3 @@ Sentry.init({
 	// Set environment
 	environment: process.env.NODE_ENV,
 });
-

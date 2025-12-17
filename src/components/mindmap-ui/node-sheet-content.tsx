@@ -29,6 +29,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NODE_TYPE } from "@/constants/ui";
+import { useState } from "react";
+import { validateMindmapTitle } from "@/lib/validations/node-validation";
 
 interface NodeSheetContentProps {
 	nodeId: string;
@@ -58,6 +60,9 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	// Get actions from context (works for both auth and demo)
 	const { deleteNodes } = useMindmapActions();
 
+	// Validation state
+	const [titleError, setTitleError] = useState<string | undefined>();
+
 	// If node not found, don't render
 	if (!node) return null;
 
@@ -65,10 +70,28 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 	const isRootNode = node.type === NODE_TYPE.ROOT;
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = e.target.value;
+
+		// Clear error when user starts typing
+		if (titleError) {
+			setTitleError(undefined);
+		}
+
 		// 1. Update local state immediately (optimistic update)
-		updateNodeData(nodeId, { title: e.target.value });
+		updateNodeData(nodeId, { title: newValue });
 		// 2. Queue debounced backend sync (2 seconds)
 		queueContentUpdate();
+	};
+
+	// Validate on blur for root nodes
+	const handleTitleBlur = () => {
+		if (isRootNode) {
+			const error = validateMindmapTitle(
+				nodeData.title || "",
+				mindmap?.icon ?? undefined,
+			);
+			setTitleError(error);
+		}
 	};
 
 	const handleContentChange = (richText: string) => {
@@ -140,20 +163,30 @@ export function NodeSheetContent({ nodeId, onClose }: NodeSheetContentProps) {
 								: "Give your node a clear, concise name"}
 						</p>
 						{isRootNode ? (
-							<div className="flex gap-2">
-								<IconPicker
-									value={mindmap?.icon ?? undefined}
-									onChange={handleIconChange}
-								/>
-								<Input
-									id="node-title"
-									type="text"
-									placeholder="Enter main topic..."
-									value={nodeData.title || ""}
-									onChange={handleTitleChange}
-									className="flex-1"
-								/>
-							</div>
+							<>
+								<div className="flex gap-2">
+									<IconPicker
+										value={mindmap?.icon ?? undefined}
+										onChange={handleIconChange}
+									/>
+									<Input
+										id="node-title"
+										type="text"
+										placeholder="Enter main topic..."
+										value={nodeData.title || ""}
+										onChange={handleTitleChange}
+										onBlur={handleTitleBlur}
+										className="flex-1"
+										aria-invalid={!!titleError}
+										aria-describedby={titleError ? "title-error" : undefined}
+									/>
+								</div>
+								{titleError && (
+									<p id="title-error" className="text-xs text-destructive">
+										{titleError}
+									</p>
+								)}
+							</>
 						) : (
 							<Input
 								id="node-title"
