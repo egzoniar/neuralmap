@@ -7,7 +7,7 @@ import { NavUser } from "@/components/nav-user/nav-user";
 import { MindmapSwitcher } from "@/components/mindmap-switcher/mindmap-switcher";
 import { NavQuickActions } from "@/components/nav-quick-actions/nav-quick-actions";
 import { NavRecent } from "@/components/nav-recent/nav-recent";
-import { NavStats } from "@/components/nav-stats/nav-stats";
+import { NavStats } from "@/components/nav-stats";
 import {
 	Sidebar,
 	SidebarContent,

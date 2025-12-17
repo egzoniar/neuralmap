@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
+import Link from "next/link";
 import { useMemo } from "react";
 import {
 	Breadcrumb,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useAppStore } from "@/providers/store-provider";
 import { useGetMindmap } from "@/services/mindmap/queries";
+import { ROUTES, getRouteType } from "@/constants/routes";
 
 interface BreadcrumbSegment {
 	label: string | React.ReactNode;
@@ -21,15 +23,16 @@ interface BreadcrumbSegment {
 
 export function DynamicBreadcrumbs() {
 	const pathname = usePathname();
+	const params = useParams<{ id?: string }>();
 	const nodes = useAppStore((state) => state.mindmap.nodes);
 
 	// Don't show breadcrumbs on the root page
-	if (pathname === "/") {
+	if (pathname === ROUTES.HOME) {
 		return null;
 	}
 
-	// Extract mindmap ID from URL if on a map page
-	const mindmapId = pathname.startsWith("/map/") ? pathname.split("/")[2] : "";
+	// Get mindmap ID from route params (Next.js recommended approach)
+	const mindmapId = params.id || "";
 
 	// Read mindmap metadata directly from React Query cache (single source of truth)
 	// This will return cached data immediately without an additional network request
@@ -38,38 +41,46 @@ export function DynamicBreadcrumbs() {
 
 	const breadcrumbs = useMemo((): BreadcrumbSegment[] => {
 		const segments: BreadcrumbSegment[] = [];
+		const routeType = getRouteType(pathname);
 
 		// Always include home as a link
 		segments.push({
 			label: "Home",
-			href: "/",
+			href: ROUTES.HOME,
 			isCurrentPage: false,
 		});
 
-		// Handle /map/[id] routes
-		if (pathname.startsWith("/map/")) {
-			const nodeCount = nodes.length;
+		// Route-specific breadcrumbs using route type helper
 
+		// Handle /map/[id] routes
+		if (routeType === "mindmap" && mindmapId) {
 			segments.push({
 				label: (
 					<>
 						{mindmap?.icon && <span className="mr-2">{mindmap.icon}</span>}
-						{mindmap?.title || "Mindmap"}{" "}
-						{/* <span className="text-muted-foreground font-normal">
-							({nodeCount} {nodeCount === 1 ? "node" : "nodes"})
-						</span> */}
+						{mindmap?.title || "Mindmap"}
 					</>
 				),
-				href: pathname,
+				href: ROUTES.MAP(mindmapId),
 				isCurrentPage: true,
 			});
 		}
 
-		// Add more route patterns here as your app grows
-		// Example: /settings, /profile, etc.
+		// Handle /settings/billing route
+		// Note: No dedicated /settings page exists yet
+		else if (pathname === ROUTES.BILLING) {
+			segments.push({
+				label: "Billing",
+				href: ROUTES.BILLING,
+				isCurrentPage: true,
+			});
+		}
+
+		// Add more route patterns here as needed
+		// Use ROUTES constants and getRouteType() helper for route matching
 
 		return segments;
-	}, [pathname, mindmap, nodes]);
+	}, [pathname, mindmapId, mindmap, nodes]);
 
 	return (
 		<div className="flex items-center gap-5">
@@ -84,8 +95,8 @@ export function DynamicBreadcrumbs() {
 									{segment.isCurrentPage || isLast ? (
 										<BreadcrumbPage>{segment.label}</BreadcrumbPage>
 									) : (
-										<BreadcrumbLink href={segment.href} className="h-6">
-											{segment.label}
+										<BreadcrumbLink asChild className="h-6">
+											<Link href={segment.href}>{segment.label}</Link>
 										</BreadcrumbLink>
 									)}
 								</BreadcrumbItem>

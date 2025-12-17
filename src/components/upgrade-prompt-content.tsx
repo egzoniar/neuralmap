@@ -23,6 +23,7 @@ import {
 	DEFAULT_DESCRIPTION,
 	DEFAULT_ACTION,
 } from "@/constants/upgrade-messages";
+import { USER_TIERS } from "@/types/subscription";
 
 interface UpgradePromptContentProps extends CustomDialogProps {
 	limitInfo: LimitReachedInfo;
@@ -39,14 +40,14 @@ export function UpgradePromptContent({
 	let action = DEFAULT_ACTION;
 	let icon = <Zap className="h-4 w-4" />;
 
-	if (tier === "demo") {
+	if (tier === USER_TIERS.DEMO) {
 		title = DEMO_TITLE;
 		description = DEMO_NODES_DESCRIPTION;
 		action = DEMO_ACTION;
 		icon = <Sparkles className="h-4 w-4" />;
 	}
 
-	if (tier === "free") {
+	if (tier === USER_TIERS.FREE) {
 		title = FREE_TITLE;
 		description = FREE_DESCRIPTION;
 		action = FREE_ACTION;
@@ -54,9 +55,9 @@ export function UpgradePromptContent({
 	}
 
 	const handleAction = () => {
-		if (tier === "demo") {
+		if (tier === USER_TIERS.DEMO) {
 			window.location.href = "/login";
-		} else if (tier === "free") {
+		} else if (tier === USER_TIERS.FREE) {
 			window.location.href = "/pricing";
 		}
 		onResolve(true);
