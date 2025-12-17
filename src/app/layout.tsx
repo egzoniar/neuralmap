@@ -6,6 +6,8 @@ import { StoreProvider } from "@/providers/store-provider";
 import { Auth0Provider } from "@/providers/auth0-provider";
 import { DialogRenderer } from "@/components/dialogs/dialog-renderer";
 import { ScreenSizeGuard } from "@/components/unsupported-screen/screen-size-guard";
+import { AppErrorBoundary } from "@/components/error-boundary/app-error-boundary";
+import { SentryUserContext } from "@/components/sentry-user-context";
 
 import "@/app/globals.css";
 import { Toaster } from "sonner";
@@ -41,15 +43,18 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<Auth0Provider>
-					<StoreProvider>
-						<QueryProvider>
-							<ScreenSizeGuard>{children}</ScreenSizeGuard>
-							<Toaster richColors />
-							<DialogRenderer />
-						</QueryProvider>
-					</StoreProvider>
-				</Auth0Provider>
+				<AppErrorBoundary>
+					<Auth0Provider>
+						<StoreProvider>
+							<SentryUserContext />
+							<QueryProvider>
+								<ScreenSizeGuard>{children}</ScreenSizeGuard>
+								<Toaster richColors />
+								<DialogRenderer />
+							</QueryProvider>
+						</StoreProvider>
+					</Auth0Provider>
+				</AppErrorBoundary>
 			</body>
 		</html>
 	);
