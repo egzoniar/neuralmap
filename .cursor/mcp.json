@@ -1,12 +1,12 @@
 {
-  "mcpServers": {
-    "Figma": {
-      "url": "https://mcp.figma.com/mcp",
-      "headers": {}
-    },
-    "postgres": {
-      "command": "node",
-      "args": ["scripts/run-postgres-mcp.mjs"]
-    }
-  }
+	"mcpServers": {
+		"Figma": {
+			"url": "https://mcp.figma.com/mcp",
+			"headers": {}
+		},
+		"postgres": {
+			"command": "node",
+			"args": ["scripts/run-postgres-mcp.mjs"]
+		}
+	}
 }
