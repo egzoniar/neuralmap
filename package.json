@@ -8,7 +8,7 @@
 		"start": "next start",
 		"format": "biome format --write .",
 		"lint": "biome check .",
-		"prepare": "husky"
+		"prepare": "husky || true"
 	},
 	"dependencies": {
 		"@auth0/auth0-react": "^2.9.0",
